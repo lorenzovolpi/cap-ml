@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "quacc"
+version = "0.1.0"
+description = ""
+authors = ["Lorenzo Volpi <lorenzo.volpi@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+quapy = "^0.1.7"
+
+[tool.poetry.scripts]
+main = "quacc.main:main"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[virtualenvs]
+in-project = true
+

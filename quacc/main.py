@@ -5,6 +5,7 @@ from quapy.data import LabelledCollection
 from quapy.protocol import APP, AbstractStochasticSeededProtocol
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
+from sklearn.svm import LinearSVC
 
 
 # Extended classes
@@ -85,7 +86,10 @@ def extend_and_quantify(
     def quantify_extended(test):
         pred_prob_test = model.predict_proba(test.X)
         _test = extend_collection(test, pred_prob_test)
-        return _test.prevalence(), q_model.quantify(_test.instances)
+        _estim_prev = q_model.quantify(_test.instances)
+        # TODO: check that _estim_prev has all the classes and eventually fill the
+        #       missing ones with 0
+        return _test.prevalence(), _estim_prev
 
     if isinstance(test, LabelledCollection):
         _orig_prev, _true_prev, _estim_prev = quantify_extended(test)
@@ -121,8 +125,8 @@ def get_dataset(name):
         raise KeyError(f"{name} is not available as a dataset")
 
 
-def test_1():
-    train, test = get_dataset("spambase")
+def test_1(dataset_name):
+    train, test = get_dataset(dataset_name)
 
     orig_prevs, true_prevs, estim_prevs, errors = extend_and_quantify(
         LogisticRegression(),
@@ -142,5 +146,16 @@ def test_1():
         print()
 
 
+def main():
+    for dataset_name in [
+        # "hp",
+        # "imdb",
+        "spambase",
+    ]:
+        print(dataset_name)
+        test_1(dataset_name)
+        print("*" * 50)
+
+
 if __name__ == "__main__":
-    test_1()
+    main()
