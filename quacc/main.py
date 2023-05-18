@@ -5,7 +5,6 @@ from quapy.data import LabelledCollection
 from quapy.protocol import APP, AbstractStochasticSeededProtocol
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
-from sklearn.svm import LinearSVC
 
 
 # Extended classes
