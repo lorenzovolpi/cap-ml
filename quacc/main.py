@@ -95,9 +95,9 @@ def extend_and_quantify(
         return _test.prevalence(), _estim_prev
 
     if isinstance(test, LabelledCollection):
-        _orig_prev, _true_prev, _estim_prev = quantify_extended(test)
+        _true_prev, _estim_prev = quantify_extended(test)
         _errors = compute_errors(_true_prev, _estim_prev, test.X.shape[0])
-        return ([_orig_prev], [_true_prev], [_estim_prev], [_errors])
+        return ([test.prevalence()], [_true_prev], [_estim_prev], [_errors])
 
     elif isinstance(test, AbstractStochasticSeededProtocol):
         orig_prevs, true_prevs, estim_prevs, errors = [], [], [], []
