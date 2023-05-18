@@ -13,4 +13,3 @@ class ExtendedCollection(LabelledCollection):
         classes: Optional[List] = None,
     ):
         super().__init__(instances, labels, classes=classes)
-

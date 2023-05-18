@@ -5,7 +5,6 @@ from quapy.method.base import BaseQuantifier
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import cross_val_predict
 
-import quacc as qc
 from .data import ExtendedCollection
 
 
@@ -15,8 +14,10 @@ def _check_prevalence_classes(true_classes, estim_classes, estim_prev):
             estim_prev = np.insert(estim_prev, _cls, [0.0], axis=0)
     return estim_prev
 
+
 def _get_ex_class(classes, true_class, pred_class):
     return true_class * classes + pred_class
+
 
 def _extend_instances(instances, pred_proba):
     if isinstance(instances, sp.csr_matrix):
@@ -28,6 +29,7 @@ def _extend_instances(instances, pred_proba):
         raise ValueError("Unsupported matrix format")
 
     return n_x
+
 
 def _extend_collection(base: LabelledCollection, pred_proba) -> ExtendedCollection:
     n_classes = base.n_classes
