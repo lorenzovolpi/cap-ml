@@ -46,7 +46,7 @@ def _extend_collection(base: LabelledCollection, pred_proba) -> ExtendedCollecti
         ]
     )
 
-    return ExtendedCollection(n_x, n_y, [*range(0, n_classes * n_classes)])
+    return ExtendedCollection(n_x, n_y, classes=[*range(0, n_classes * n_classes)])
 
 
 class AccuracyEstimator:
@@ -65,7 +65,7 @@ class AccuracyEstimator:
         # self.model.fit(*train.Xy)
         if isinstance(train, LabelledCollection):
             pred_prob_train = cross_val_predict(
-                self.model, train.Xy, method="predict_proba"
+                self.model, *train.Xy, method="predict_proba"
             )
 
             self.e_train = _extend_collection(train, pred_prob_train)
@@ -84,5 +84,5 @@ class AccuracyEstimator:
         estim_prev = self.q_model.quantify(e_inst)
 
         return _check_prevalence_classes(
-            e_inst.classes_, self.q_model.classes_, estim_prev
+            self.e_train.classes_, self.q_model.classes_, estim_prev
         )

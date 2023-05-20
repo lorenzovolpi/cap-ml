@@ -2,9 +2,15 @@ import numpy as np
 import quapy as qp
 import scipy.sparse as sp
 from quapy.data import LabelledCollection
+from quapy.method.aggregative import SLD
 from quapy.protocol import APP, AbstractStochasticSeededProtocol
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
+
+import quacc.evaluation as eval
+from quacc.estimator import AccuracyEstimator
+
+qp.environ['SAMPLE_SIZE'] = 100
 
 
 # Extended classes
@@ -86,7 +92,7 @@ def extend_and_quantify(
         pred_prob_test = model.predict_proba(test.X)
         _test = extend_collection(test, pred_prob_test)
         _estim_prev = q_model.quantify(_test.instances)
-        # check that _estim_prev has all the classes and eventually fill the missing 
+        # check that _estim_prev has all the classes and eventually fill the missing
         # ones with 0
         for _cls in _test.classes_:
             if _cls not in q_model.classes_:
@@ -133,9 +139,9 @@ def test_1(dataset_name):
 
     orig_prevs, true_prevs, estim_prevs, errors = extend_and_quantify(
         LogisticRegression(),
-        qp.method.aggregative.SLD(LogisticRegression()),
+        SLD(LogisticRegression()),
         train,
-        APP(test, sample_size=100, n_prevalences=11, repeats=1),
+        APP(test, n_prevalences=11, repeats=1),
     )
 
     for orig_prev, true_prev, estim_prev, _errors in zip(
@@ -149,6 +155,18 @@ def test_1(dataset_name):
         print()
 
 
+def test_2(dataset_name):
+    train, test = get_dataset(dataset_name)
+    model = LogisticRegression()
+    model.fit(*train.Xy)
+    estimator = AccuracyEstimator(model, SLD(LogisticRegression()))
+    estimator.fit(train)
+    df = eval.evaluation_report(
+        estimator, APP(test, n_prevalences=11, repeats=1)
+    )
+    print(df.to_string())
+
+
 def main():
     for dataset_name in [
         # "hp",
@@ -156,7 +174,7 @@ def main():
         "spambase",
     ]:
         print(dataset_name)
-        test_1(dataset_name)
+        test_2(dataset_name)
         print("*" * 50)
 
 

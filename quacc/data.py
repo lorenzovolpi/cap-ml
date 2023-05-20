@@ -7,7 +7,6 @@ from typing import List, Optional
 class ExtendedCollection(LabelledCollection):
     def __init__(
         self,
-        b_coll: LabelledCollection,
         instances: np.ndarray | sp.csr_matrix,
         labels: np.ndarray,
         classes: Optional[List] = None,
