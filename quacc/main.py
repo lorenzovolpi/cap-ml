@@ -16,19 +16,41 @@ pd.set_option("display.float_format", "{:.4f}".format)
 
 def test_2(dataset_name):
     train, test = get_dataset(dataset_name)
+
     model = LogisticRegression()
+
+    print(f"fitting model {model.__class__.__name__}...", end=" ")
     model.fit(*train.Xy)
-    estimator = AccuracyEstimator(model, SLD(LogisticRegression()))
+    print("fit")
+
+    qmodel = SLD(LogisticRegression())
+    estimator = AccuracyEstimator(model, qmodel)
+
+    print(f"fitting qmodel {qmodel.__class__.__name__}...", end=" ")
     estimator.fit(train)
-    df = eval.evaluation_report(estimator, APP(test, n_prevalences=11, repeats=100))
-    # print(df.to_string())
+    print("fit")
+
+    n_prevalences = 21
+    repreats = 1000
+    protocol = APP(test, n_prevalences=n_prevalences, repeats=repreats)
+    print( f"Tests:\n\
+        protocol={protocol.__class__.__name__}\n\
+        n_prevalences={n_prevalences}\n\
+        repreats={repreats}\n\
+        executing...\n"
+    )
+    df = eval.evaluation_report(
+        estimator,
+        protocol,
+        aggregate=True,
+    )
     print(df.to_string())
 
 
 def main():
     for dataset_name in [
-        # "hp",
-        # "imdb",
+        "hp",
+        "imdb",
         "spambase",
     ]:
         print(dataset_name)
