@@ -1,11 +1,14 @@
+from abc import abstractmethod
+import math
+
 import numpy as np
-import scipy.sparse as sp
 from quapy.data import LabelledCollection
-from quapy.method.base import BaseQuantifier
+from quapy.method.aggregative import SLD
 from sklearn.base import BaseEstimator
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
 
-from .data import ExtendedCollection
+from quacc.data import ExtendedCollection as EC
 
 
 def _check_prevalence_classes(true_classes, estim_classes, estim_prev):
@@ -15,60 +18,36 @@ def _check_prevalence_classes(true_classes, estim_classes, estim_prev):
     return estim_prev
 
 
-def _get_ex_class(classes, true_class, pred_class):
-    return true_class * classes + pred_class
-
-
-def _extend_instances(instances, pred_proba):
-    if isinstance(instances, sp.csr_matrix):
-        _pred_proba = sp.csr_matrix(pred_proba)
-        n_x = sp.hstack([instances, _pred_proba])
-    elif isinstance(instances, np.ndarray):
-        n_x = np.concatenate((instances, pred_proba), axis=1)
-    else:
-        raise ValueError("Unsupported matrix format")
-
-    return n_x
-
-
-def _extend_collection(base: LabelledCollection, pred_proba) -> ExtendedCollection:
-    n_classes = base.n_classes
-
-    # n_X = [ X | predicted probs. ]
-    n_x = _extend_instances(base.X, pred_proba)
-
-    # n_y = (exptected y, predicted y)
-    pred = np.asarray([prob.argmax(axis=0) for prob in pred_proba])
-    n_y = np.asarray(
-        [
-            _get_ex_class(n_classes, true_class, pred_class)
-            for (true_class, pred_class) in zip(base.y, pred)
-        ]
-    )
-
-    return ExtendedCollection(n_x, n_y, classes=[*range(0, n_classes * n_classes)])
-
-
 class AccuracyEstimator:
-    def __init__(self, model: BaseEstimator, q_model: BaseQuantifier):
-        self.model = model
-        self.q_model = q_model
-        self.e_train = None
-
-    def extend(self, base: LabelledCollection, pred_proba=None) -> ExtendedCollection:
+    def extend(self, base: LabelledCollection, pred_proba=None) -> EC:
         if not pred_proba:
             pred_proba = self.model.predict_proba(base.X)
-        return _extend_collection(base, pred_proba)
+        return EC.extend_collection(base, pred_proba)
 
-    def fit(self, train: LabelledCollection | ExtendedCollection):
+    @abstractmethod
+    def fit(self, train: LabelledCollection | EC):
+        ...
+
+    @abstractmethod
+    def estimate(self, instances, ext=False):
+        ...
+
+
+class MulticlassAccuracyEstimator(AccuracyEstimator):
+    def __init__(self, c_model: BaseEstimator):
+        self.c_model = c_model
+        self.q_model = SLD(LogisticRegression())
+        self.e_train = None
+
+    def fit(self, train: LabelledCollection | EC):
         # check if model is fit
         # self.model.fit(*train.Xy)
         if isinstance(train, LabelledCollection):
             pred_prob_train = cross_val_predict(
-                self.model, *train.Xy, method="predict_proba"
+                self.c_model, *train.Xy, method="predict_proba"
             )
 
-            self.e_train = _extend_collection(train, pred_prob_train)
+            self.e_train = EC.extend_collection(train, pred_prob_train)
         else:
             self.e_train = train
 
@@ -76,8 +55,8 @@ class AccuracyEstimator:
 
     def estimate(self, instances, ext=False):
         if not ext:
-            pred_prob = self.model.predict_proba(instances)
-            e_inst = _extend_instances(instances, pred_prob)
+            pred_prob = self.c_model.predict_proba(instances)
+            e_inst = EC.extend_instances(instances, pred_prob)
         else:
             e_inst = instances
 
@@ -86,3 +65,51 @@ class AccuracyEstimator:
         return _check_prevalence_classes(
             self.e_train.classes_, self.q_model.classes_, estim_prev
         )
+
+
+class BinaryQuantifierAccuracyEstimator(AccuracyEstimator):
+    def __init__(self, c_model: BaseEstimator):
+        self.c_model = c_model
+        self.q_model_0 = SLD(LogisticRegression())
+        self.q_model_1 = SLD(LogisticRegression())
+        self.e_train: EC = None
+
+    def fit(self, train: LabelledCollection | EC):
+        # check if model is fit
+        # self.model.fit(*train.Xy)
+        if isinstance(train, LabelledCollection):
+            pred_prob_train = cross_val_predict(
+                self.c_model, *train.Xy, method="predict_proba"
+            )
+
+            self.e_train = EC.extend_collection(train, pred_prob_train)
+        else:
+            self.e_train = train
+
+        [e_train_0, e_train_1] = self.e_train.split_by_pred()
+
+        self.q_model_0.fit(self.e_train_0)
+        self.q_model_1.fit(self.e_train_1)
+
+    def estimate(self, instances, ext=False):
+        # TODO: test
+        if not ext:
+            pred_prob = self.c_model.predict_proba(instances)
+            e_inst = EC.extend_instances(instances, pred_prob)
+        else:
+            e_inst = instances
+
+        _ncl = int(math.sqrt(self.e_train.n_classes))
+        [e_inst_0, e_inst_1] = [
+            e_inst[ind] for ind in EC.split_index_by_pred(_ncl, e_inst)
+        ]
+        estim_prev_0 = self.q_model_0.quantify(e_inst_0)
+        estim_prev_1 = self.q_model_1.quantify(e_inst_1)
+
+        estim_prev = []
+        for prev_row in zip(estim_prev_0, estim_prev_1):
+            for prev in prev_row:
+                estim_prev.append(prev)
+
+        return estim_prev
+

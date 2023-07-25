@@ -1,13 +1,12 @@
 import pandas as pd
 import quapy as qp
-from quapy.method.aggregative import SLD
 from quapy.protocol import APP
-from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
 
 import quacc.evaluation as eval
-from quacc.estimator import AccuracyEstimator
+from quacc.estimator import MulticlassAccuracyEstimator
 
-from .data import get_dataset
+from quacc.data import get_dataset
 
 qp.environ["SAMPLE_SIZE"] = 100
 
@@ -17,16 +16,17 @@ pd.set_option("display.float_format", "{:.4f}".format)
 def test_2(dataset_name):
     train, test = get_dataset(dataset_name)
 
-    model = SVC(probability=True)
+    model = LogisticRegression()
 
     print(f"fitting model {model.__class__.__name__}...", end=" ", flush=True)
     model.fit(*train.Xy)
     print("fit")
 
-    qmodel = SLD(SVC(probability=True))
-    estimator = AccuracyEstimator(model, qmodel)
+    estimator = MulticlassAccuracyEstimator(model)
 
-    print(f"fitting qmodel {qmodel.__class__.__name__}...", end=" ", flush=True)
+    print(
+        f"fitting qmodel {estimator.q_model.__class__.__name__}...", end=" ", flush=True
+    )
     estimator.fit(train)
     print("fit")
 
