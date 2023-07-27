@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import List, Optional, Self
 
 import numpy as np
 import math
@@ -44,7 +44,7 @@ class ExtendedCollection(LabelledCollection):
     ):
         super().__init__(instances, labels, classes=classes)
 
-    def split_by_pred(self):
+    def split_by_pred(self) -> List[Self]:
         _ncl = int(math.sqrt(self.n_classes))
         _indexes = ExtendedCollection._split_index_by_pred(_ncl, self.instances)
         if isinstance(self.instances, np.ndarray):
@@ -128,7 +128,9 @@ class ExtendedCollection(LabelledCollection):
         return n_x
 
     @classmethod
-    def extend_collection(cls, base: LabelledCollection, pred_proba: np.ndarray) -> Any:
+    def extend_collection(
+        cls, base: LabelledCollection, pred_proba: np.ndarray
+    ) -> Self:
         n_classes = base.n_classes
 
         # n_X = [ X | predicted probs. ]
