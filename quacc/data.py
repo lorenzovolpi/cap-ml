@@ -46,36 +46,77 @@ class ExtendedCollection(LabelledCollection):
 
     def split_by_pred(self):
         _ncl = int(math.sqrt(self.n_classes))
-        _indexes = ExtendedCollection.split_index_by_pred(_ncl, self.instances)
-        return [
-            ExtendedCollection(
-                self.instances[ind] if len(ind) > 0 else np.asarray([], dtype=int),
-                np.asarray(
-                    [
-                        ExClassManager.get_true(_ncl, lbl)
-                        for lbl in (self.labels[ind] if len(ind) > 0 else [])
-                    ],
-                    dtype=int,
-                ),
-                classes=range(0, _ncl),
+        _indexes = ExtendedCollection._split_index_by_pred(_ncl, self.instances)
+        if isinstance(self.instances, np.ndarray):
+            _instances = [
+                self.instances[ind] if ind.shape[0] > 0 else np.asarray([], dtype=int)
+                for ind in _indexes
+            ]
+        elif isinstance(self.instances, sp.csr_matrix):
+            _instances = [
+                self.instances[ind]
+                if ind.shape[0] > 0
+                else sp.csr_matrix(np.empty((0, 0), dtype=int))
+                for ind in _indexes
+            ]
+        _labels = [
+            np.asarray(
+                [
+                    ExClassManager.get_true(_ncl, lbl)
+                    for lbl in (self.labels[ind] if len(ind) > 0 else [])
+                ],
+                dtype=int,
             )
             for ind in _indexes
         ]
+        return [
+            ExtendedCollection(inst, lbl, classes=range(0, _ncl))
+            for (inst, lbl) in zip(_instances, _labels)
+        ]
 
     @classmethod
-    def split_index_by_pred(
-        cls, n_classes: int, instances: np.ndarray
+    def split_inst_by_pred(
+        cls, n_classes: int, instances: np.ndarray | sp.csr_matrix
+    ) -> (List[np.ndarray | sp.csr_matrix], List[float]):
+        _indexes = cls._split_index_by_pred(n_classes, instances)
+        if isinstance(instances, np.ndarray):
+            _instances = [
+                instances[ind] if ind.shape[0] > 0 else np.asarray([], dtype=int)
+                for ind in _indexes
+            ]
+        elif isinstance(instances, sp.csr_matrix):
+            _instances = [
+                instances[ind]
+                if ind.shape[0] > 0
+                else sp.csr_matrix(np.empty((0, 0), dtype=int))
+                for ind in _indexes
+            ]
+        norms = [inst.shape[0] / instances.shape[0] for inst in _instances]
+        return _instances, norms
+
+    @classmethod
+    def _split_index_by_pred(
+        cls, n_classes: int, instances: np.ndarray | sp.csr_matrix
     ) -> List[np.ndarray]:
-        _pred_label = [np.argmax(inst[-n_classes:], axis=0) for inst in instances]
+        if isinstance(instances, np.ndarray):
+            _pred_label = [np.argmax(inst[-n_classes:], axis=0) for inst in instances]
+        elif isinstance(instances, sp.csr_matrix):
+            _pred_label = [
+                np.argmax(inst[:, -n_classes:].toarray().flatten(), axis=0)
+                for inst in instances
+            ]
+        else:
+            raise ValueError("Unsupported matrix format")
+
         return [
-            np.asarray([j for (j, x) in enumerate(_pred_label) if x == i])
+            np.asarray([j for (j, x) in enumerate(_pred_label) if x == i], dtype=int)
             for i in range(0, n_classes)
         ]
 
     @classmethod
     def extend_instances(
-        cls, instances: np.ndarray, pred_proba: np.ndarray
-    ) -> np.ndarray:
+        cls, instances: np.ndarray | sp.csr_matrix, pred_proba: np.ndarray
+    ) -> np.ndarray | sp.csr_matrix:
         if isinstance(instances, sp.csr_matrix):
             _pred_proba = sp.csr_matrix(pred_proba)
             n_x = sp.hstack([instances, _pred_proba])

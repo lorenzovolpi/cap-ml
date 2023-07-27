@@ -104,7 +104,7 @@ def evaluation_report(
     base_prevs, true_prevs, estim_prevs = estimate(estimator, protocol)
 
     if error_metrics == "all":
-        error_metrics = ["mae", "rae", "mrae", "kld", "nkld", "f1e"]
+        error_metrics = ["ae", "f1"]
 
     error_funcs = [
         error.from_name(e) if isinstance(e, str) else e for e in error_metrics
@@ -112,6 +112,9 @@ def evaluation_report(
     assert all(hasattr(e, "__call__") for e in error_funcs), "invalid error function"
     error_names = [e.__name__ for e in error_funcs]
     error_cols = error_names.copy()
+    if "f1" in error_cols:
+        error_cols.remove("f1")
+        error_cols.extend(["f1_true", "f1_estim", "f1_dist"])
     if "f1e" in error_cols:
         error_cols.remove("f1e")
         error_cols.extend(["f1e_true", "f1e_estim"])
@@ -135,6 +138,12 @@ def evaluation_report(
             if error_name == "f1e":
                 series[("errors", "f1e_true")] = error_metric(true_prev)
                 series[("errors", "f1e_estim")] = error_metric(estim_prev)
+                continue
+            if error_name == "f1":
+                f1_true, f1_estim = error_metric(true_prev), error_metric(estim_prev)
+                series[("errors", "f1_true")] = f1_true
+                series[("errors", "f1_estim")] = f1_estim
+                series[("errors", "f1_dist")] = abs(f1_estim - f1_true)
                 continue
 
             score = error_metric(true_prev, estim_prev)
