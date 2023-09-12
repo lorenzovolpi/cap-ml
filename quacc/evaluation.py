@@ -36,7 +36,7 @@ def estimate(
 _bprev_col_0 = ["base"]
 _bprev_col_1 = ["0", "1"]
 _prev_col_0 = ["true", "estim"]
-_prev_col_1 = ["T0", "F1", "F0", "T1"]
+_prev_col_1 = ["TN", "FP", "FN", "TP"]
 _err_col_0 = ["errors"]
 
 

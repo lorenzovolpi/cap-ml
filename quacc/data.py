@@ -2,7 +2,6 @@ from typing import List, Optional, Self
 
 import numpy as np
 import math
-import quapy as qp
 import scipy.sparse as sp
 from quapy.data import LabelledCollection
 
@@ -147,17 +146,3 @@ class ExtendedCollection(LabelledCollection):
 
         return ExtendedCollection(n_x, n_y, classes=[*range(0, n_classes * n_classes)])
 
-
-def get_dataset(name):
-    datasets = {
-        "spambase": lambda: qp.datasets.fetch_UCIDataset(
-            "spambase", verbose=False
-        ).train_test,
-        "hp": lambda: qp.datasets.fetch_reviews("hp", tfidf=True).train_test,
-        "imdb": lambda: qp.datasets.fetch_reviews("imdb", tfidf=True).train_test,
-    }
-
-    try:
-        return datasets[name]()
-    except KeyError:
-        raise KeyError(f"{name} is not available as a dataset")
