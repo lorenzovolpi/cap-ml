@@ -9,7 +9,7 @@ from quacc.estimator import (
     MulticlassAccuracyEstimator,
 )
 
-from quacc.data import get_dataset
+from quacc.dataset import getImdbTrainTest
 
 qp.environ["SAMPLE_SIZE"] = 100
 
@@ -20,7 +20,7 @@ dataset_name = "imdb"
 
 def estimate_multiclass():
     print(dataset_name)
-    train, test = get_dataset(dataset_name)
+    train, test = getImdbTrainTest(dataset_name)
 
     model = LogisticRegression()
 
@@ -59,7 +59,7 @@ def estimate_multiclass():
 
 def estimate_binary():
     print(dataset_name)
-    train, test = get_dataset(dataset_name)
+    train, test = getImdbTrainTest(dataset_name)
 
     model = LogisticRegression()
 
