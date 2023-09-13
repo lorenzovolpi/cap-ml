@@ -1,12 +1,12 @@
 
 from sklearn.linear_model import LogisticRegression
 from quacc.baseline import kfcv
-from quacc.dataset import get_spambase_traintest
+from quacc.dataset import get_spambase
 
 
 class TestBaseline:
 
     def test_kfcv(self):
-        train, _ = get_spambase_traintest()
+        train, _, _ = get_spambase()
         c_model = LogisticRegression()
         assert "f1_score" in kfcv(c_model, train)
