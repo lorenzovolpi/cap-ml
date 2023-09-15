@@ -99,4 +99,4 @@ def estimate_binary():
 
 
 if __name__ == "__main__":
-    estimate_multiclass()
+    estimate_binary()

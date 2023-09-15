@@ -10,7 +10,7 @@ from garg22_ATC.ATC_helper import (
     get_max_conf,
 )
 import numpy as np
-
+from jiang18_trustscore.trustscore import TrustScore
 
 
 def kfcv(c_model: BaseEstimator, validation: LabelledCollection) -> Dict:
@@ -43,9 +43,10 @@ def ATC_MC(
     ATC_accuracy = get_ATC_acc(ATC_thres, test_scores)
 
     return {
-        "true_acc": 100*np.mean(np.argmax(test_probs, axis=-1) == test.y),
-        "pred_acc": ATC_accuracy
+        "true_acc": 100 * np.mean(np.argmax(test_probs, axis=-1) == test.y),
+        "pred_acc": ATC_accuracy,
     }
+
 
 def ATC_NE(
     c_model: BaseEstimator,
@@ -71,7 +72,23 @@ def ATC_NE(
     ATC_accuracy = get_ATC_acc(ATC_thres, test_scores)
 
     return {
-        "true_acc": 100*np.mean(np.argmax(test_probs, axis=-1) == test.y),
-        "pred_acc": ATC_accuracy
+        "true_acc": 100 * np.mean(np.argmax(test_probs, axis=-1) == test.y),
+        "pred_acc": ATC_accuracy,
     }
+
+
+def trust_score(
+    c_model: BaseEstimator,
+    validation: LabelledCollection,
+    test: LabelledCollection,
+    predict_method="predict",
+):
+    c_model_predict = getattr(c_model, predict_method)
+
+    test_pred = c_model_predict(test.X)
+
+    trust_model = TrustScore()
+    trust_model.fit(validation.X, validation.y)
+
+    return trust_model.get_score(test.X, test_pred)
 
