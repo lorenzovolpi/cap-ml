@@ -1,13 +1,16 @@
 from statistics import mean
-from typing import Dict
+from typing import Dict, assert_type
+from unittest.mock import Base
+from sklearn import clone
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import cross_validate
 from quapy.data import LabelledCollection
+from elsahar19.rca import clone_fit
 import garg22_ATC.ATC_helper as atc
 import numpy as np
 import jiang18_trustscore.trustscore as trustscore
 import guillory21_doc.doc as doc
-
+import elsahar19_rca.rca as rca
 
 def kfcv(c_model: BaseEstimator, validation: LabelledCollection) -> Dict:
     scoring = ["f1_macro"]
@@ -104,3 +107,42 @@ def doc_feat(
 
     v1acc = np.mean(val_preds == val_labels) * 100
     return v1acc + doc.get_doc(val_scores, test_scores)
+
+
+def rca_score(
+    c_model: BaseEstimator,
+    validation: LabelledCollection,
+    test: LabelledCollection,
+    predict_method="predict",
+):
+    c_model_predict = getattr(c_model, predict_method)
+    test_pred = c_model_predict(test.X)
+    c_model2 = rca.clone_fit(test.X, test_pred)
+    c_model2_predict = getattr(c_model2, predict_method)
+
+    val_pred1 = c_model_predict(validation.X)
+    val_pred2 = c_model2_predict(validation.X)
+
+    return rca.get_score(val_pred1, val_pred2, validation.y)
+
+def rca_star_score(
+    c_model: BaseEstimator,
+    validation: LabelledCollection,
+    test: LabelledCollection,
+    predict_method="predict",
+):
+    c_model_predict = getattr(c_model, predict_method)
+    validation1, validation2 = validation.split_stratified(train_prop=0.5)
+    test_pred = c_model_predict(test.X)
+    val1_pred = c_model_predict(validation1.X)
+    c_model1 = rca.clone_fit(validation1.X, val1_pred)
+    c_model2 = rca.clone_fit(test.X, test_pred)
+    c_model1_predict = getattr(c_model1, predict_method)
+    c_model2_predict = getattr(c_model2, predict_method)
+
+    val2_pred1 = c_model1_predict(validation2.X)
+    val2_pred2 = c_model2_predict(validation2.X)
+
+    return rca.get_score(val2_pred1, val2_pred2, validation2.y)
+
+    
