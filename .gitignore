@@ -4,3 +4,4 @@ quavenv/*
 quacc/__pycache__/*
 tests/__pycache__/*
 *.coverage
+.coverage
