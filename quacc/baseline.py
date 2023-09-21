@@ -1,16 +1,18 @@
 from statistics import mean
-from typing import Dict, assert_type
-from unittest.mock import Base
-from sklearn import clone
+from typing import Dict
+
+import numpy as np
+import quapy as qp
+from quapy.data import LabelledCollection
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import cross_validate
-from quapy.data import LabelledCollection
-from elsahar19.rca import clone_fit
-import garg22_ATC.ATC_helper as atc
-import numpy as np
-import jiang18_trustscore.trustscore as trustscore
-import guillory21_doc.doc as doc
+
 import elsahar19_rca.rca as rca
+import garg22_ATC.ATC_helper as atc
+import guillory21_doc.doc as doc
+import jiang18_trustscore.trustscore as trustscore
+import lipton_bbse.labelshift as bbse
+
 
 def kfcv(c_model: BaseEstimator, validation: LabelledCollection) -> Dict:
     scoring = ["f1_macro"]
@@ -146,3 +148,18 @@ def rca_star_score(
     return rca.get_score(val2_pred1, val2_pred2, validation2.y)
 
     
+def bbse_score(
+    c_model: BaseEstimator,
+    validation: LabelledCollection,
+    test: LabelledCollection,
+    predict_method="predict_proba",
+):
+
+    c_model_predict = getattr(c_model, predict_method)
+    val_probs, val_labels = c_model_predict(validation.X), validation.y
+    test_probs = c_model_predict(test.X)
+
+    wt = bbse.estimate_labelshift_ratio(val_labels, val_probs, test_probs, 2)
+    estim_prev = bbse.estimate_target_dist(wt, val_labels, 2)
+    true_prev = test.prevalence()
+    return qp.error.ae(true_prev, estim_prev)
