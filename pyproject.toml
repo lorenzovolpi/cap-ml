@@ -12,8 +12,10 @@ pandas = "^2.0.3"
 jinja2 = "^3.1.2"
 
 [tool.poetry.scripts]
+main = "quacc.main:main"
 multi = "quacc.main:estimate_multiclass"
 bin = "quacc.main:estimate_binary"
+comp = "quacc.main:estimate_comparison"
 
 
 [tool.poetry.group.dev.dependencies]

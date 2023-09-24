@@ -4,12 +4,13 @@ from quapy.protocol import APP
 from sklearn.linear_model import LogisticRegression
 
 import quacc.evaluation as eval
+import quacc.baseline as baseline
 from quacc.estimator import (
     BinaryQuantifierAccuracyEstimator,
     MulticlassAccuracyEstimator,
 )
 
-from quacc.dataset import get_imdb
+from quacc.dataset import get_imdb, get_spambase
 
 qp.environ["SAMPLE_SIZE"] = 100
 
@@ -20,7 +21,7 @@ dataset_name = "imdb"
 
 def estimate_multiclass():
     print(dataset_name)
-    train, validation, test = get_imdb(dataset_name)
+    train, validation, test = get_imdb()
 
     model = LogisticRegression()
 
@@ -59,7 +60,7 @@ def estimate_multiclass():
 
 def estimate_binary():
     print(dataset_name)
-    train, validation, test = get_imdb(dataset_name)
+    train, validation, test = get_imdb()
 
     model = LogisticRegression()
 
@@ -97,6 +98,39 @@ def estimate_binary():
     # print(df.to_html())
     print()
 
+def estimate_comparison():
+    train, validation, test = get_spambase()
+    model = LogisticRegression()
+    model.fit(*train.Xy)
+
+    n_prevalences = 21
+    repreats = 1000
+    protocol = APP(test, n_prevalences=n_prevalences, repeats=repreats)
+
+    estimator = BinaryQuantifierAccuracyEstimator(model)
+    estimator.fit(validation)
+    df = eval.evaluation_report(estimator, protocol)
+    
+    df_index = [("base", "F"), ("base", "T")]
+
+    atc_mc_df = baseline.atc_mc(model, validation, protocol)
+    atc_ne_df = baseline.atc_ne(model, validation, protocol)
+    doc_feat_df = baseline.doc_feat(model, validation, protocol)
+    rca_df = baseline.rca_score(model, validation, protocol)
+    rca_star_df = baseline.rca_star_score(model, validation, protocol)
+    bbse_df = baseline.bbse_score(model, validation, protocol)
+
+    df = df.join(atc_mc_df.set_index(df_index), on=df_index)
+    df = df.join(atc_ne_df.set_index(df_index), on=df_index)
+    df = df.join(doc_feat_df.set_index(df_index), on=df_index)
+    df = df.join(rca_df.set_index(df_index), on=df_index)
+    df = df.join(rca_star_df.set_index(df_index), on=df_index)
+    df = df.join(bbse_df.set_index(df_index), on=df_index)
+
+    print(df.to_string())
+
+def main():
+    estimate_comparison()
 
 if __name__ == "__main__":
-    estimate_binary()
+    main()
