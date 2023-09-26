@@ -3,5 +3,6 @@ quavenv/*
 *.pdf
 quacc/__pycache__/*
 tests/__pycache__/*
+*/__pycache__/*
 *.coverage
 .coverage
