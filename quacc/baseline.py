@@ -201,13 +201,13 @@ def rca_score(
     ]
     results = []
     for test in protocol():
-        [f_prev, t_prev] = test.prevalence()
-        try:
+        try: 
+            [f_prev, t_prev] = test.prevalence()
             test_pred = c_model_predict(test.X)
             c_model2 = rca.clone_fit(c_model, test.X, test_pred)
             c_model2_predict = getattr(c_model2, predict_method)
             val_pred2 = c_model2_predict(validation.X)
-            rca_score = 1.0 - rca.get_score(val_pred1, val_pred2, validation.y)
+            rca_score = rca.get_score(val_pred1, val_pred2, validation.y)
             results.append({k: v for k, v in zip(cols, [f_prev, t_prev, rca_score])})
         except ValueError:
             results.append({k: v for k, v in zip(cols, [f_prev, t_prev, float("nan")])})
@@ -248,7 +248,7 @@ def rca_star_score(
             c_model2 = rca.clone_fit(c_model, test.X, test_pred)
             c_model2_predict = getattr(c_model2, predict_method)
             val2_pred2 = c_model2_predict(validation2.X)
-            rca_star_score = 1.0 - rca.get_score(val2_pred1, val2_pred2, validation2.y)
+            rca_star_score = rca.get_score(val2_pred1, val2_pred2, validation2.y)
             results.append(
                 {k: v for k, v in zip(cols, [f_prev, t_prev, rca_star_score])}
             )

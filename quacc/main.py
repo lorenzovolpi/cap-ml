@@ -2,6 +2,7 @@ import pandas as pd
 import quapy as qp
 from quapy.protocol import APP
 from sklearn.linear_model import LogisticRegression
+from quacc import utils
 
 import quacc.evaluation as eval
 import quacc.baseline as baseline
@@ -10,7 +11,7 @@ from quacc.estimator import (
     MulticlassAccuracyEstimator,
 )
 
-from quacc.dataset import get_imdb, get_spambase
+from quacc.dataset import get_imdb, get_rcv1, get_spambase
 
 qp.environ["SAMPLE_SIZE"] = 100
 
@@ -109,25 +110,21 @@ def estimate_comparison():
 
     estimator = BinaryQuantifierAccuracyEstimator(model)
     estimator.fit(validation)
-    df = eval.evaluation_report(estimator, protocol)
+    df = eval.evaluation_report(estimator, protocol, prevalence=False)
     
-    df_index = [("base", "F"), ("base", "T")]
+    df = utils.combine_dataframes(
+        baseline.atc_mc(model, validation, protocol),
+        baseline.atc_ne(model, validation, protocol),
+        baseline.doc_feat(model, validation, protocol),
+        baseline.rca_score(model, validation, protocol),
+        baseline.rca_star_score(model, validation, protocol),
+        baseline.bbse_score(model, validation, protocol),
+        df,
+        df_index=[("base", "F"), ("base", "T")]
+    )
 
-    atc_mc_df = baseline.atc_mc(model, validation, protocol)
-    atc_ne_df = baseline.atc_ne(model, validation, protocol)
-    doc_feat_df = baseline.doc_feat(model, validation, protocol)
-    rca_df = baseline.rca_score(model, validation, protocol)
-    rca_star_df = baseline.rca_star_score(model, validation, protocol)
-    bbse_df = baseline.bbse_score(model, validation, protocol)
-
-    df = df.join(atc_mc_df.set_index(df_index), on=df_index)
-    df = df.join(atc_ne_df.set_index(df_index), on=df_index)
-    df = df.join(doc_feat_df.set_index(df_index), on=df_index)
-    df = df.join(rca_df.set_index(df_index), on=df_index)
-    df = df.join(rca_star_df.set_index(df_index), on=df_index)
-    df = df.join(bbse_df.set_index(df_index), on=df_index)
-
-    print(df.to_string())
+    print(df.to_latex(float_format="{:.4f}".format))
+    print(utils.avg_group_report(df).to_latex(float_format="{:.4f}".format))
 
 def main():
     estimate_comparison()

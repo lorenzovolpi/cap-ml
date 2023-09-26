@@ -80,55 +80,63 @@ def evaluation_report(
     protocol: AbstractStochasticSeededProtocol,
     error_metrics: Iterable[Union[str, Callable]] = "all",
     aggregate: bool = True,
+    prevalence: bool = True,
 ):
     def _report_columns(err_names):
         base_cols = list(itertools.product(["base"], ["F", "T"]))
         prev_cols = list(itertools.product(["true", "estim"], ["TN", "FP", "FN", "TP"]))
         err_cols = list(itertools.product(["errors"], err_names))
-        return base_cols + prev_cols, err_cols
+        return base_cols, prev_cols, err_cols
 
     base_prevs, true_prevs, estim_prevs = estimate(estimator, protocol)
 
     if error_metrics == "all":
-        error_metrics = ["ae", "f1"]
+        error_metrics = ["mae", "f1"]
 
     error_funcs = [
         error.from_name(e) if isinstance(e, str) else e for e in error_metrics
     ]
     assert all(hasattr(e, "__call__") for e in error_funcs), "invalid error function"
     error_names = [e.__name__ for e in error_funcs]
-    error_cols = error_names.copy()
-    if "f1" in error_cols:
-        error_cols.remove("f1")
-        error_cols.extend(["f1_true", "f1_estim"])
-    if "f1e" in error_cols:
-        error_cols.remove("f1e")
-        error_cols.extend(["f1e_true", "f1e_estim"])
+    error_cols = []
+    for err in error_names:
+        if err == "mae":
+            error_cols.extend(["mae_estim", "mae_true"])
+        elif err == "f1":
+            error_cols.extend(["f1_estim", "f1_true"])
+        elif err == "f1e":
+            error_cols.extend(["f1e_estim", "f1e_true"])
+        else:
+            error_cols.append(err)
 
     # df_cols = ["base_prev", "true_prev", "estim_prev"] + error_names
-    prev_cols, err_cols = _report_columns(error_cols)
+    base_cols, prev_cols, err_cols = _report_columns(error_cols)
 
     lst = []
     for base_prev, true_prev, estim_prev in zip(base_prevs, true_prevs, estim_prevs):
-        series = {
-            k: v
-            for (k, v) in zip(
-                prev_cols, np.concatenate((base_prev, true_prev, estim_prev), axis=0)
-            )
-        }
-        for error_name, error_metric in zip(error_names, error_funcs):
-            if error_name == "f1e":
-                series[("errors", "f1e_true")] = error_metric(true_prev)
-                series[("errors", "f1e_estim")] = error_metric(estim_prev)
-                continue
-            if error_name == "f1":
-                f1_true, f1_estim = error_metric(true_prev), error_metric(estim_prev)
-                series[("errors", "f1_true")] = f1_true
-                series[("errors", "f1_estim")] = f1_estim
-                continue
+        if prevalence:
+            series = {
+                k: v
+                for (k, v) in zip(
+                    base_cols + prev_cols,
+                    np.concatenate((base_prev, true_prev, estim_prev), axis=0),
+                )
+            }
+            df_cols = base_cols + prev_cols + err_cols
+        else:
+            series = {k: v for (k, v) in zip(base_cols, base_prev)}
+            df_cols = base_cols + err_cols
 
-            score = error_metric(true_prev, estim_prev)
-            series[("errors", error_name)] = score
+        for err in error_cols:
+            error_funcs = {
+                "mae_true": lambda: error.mae(true_prev),
+                "mae_estim": lambda: error.mae(estim_prev),
+                "f1_true": lambda: error.f1(true_prev),
+                "f1_estim": lambda: error.f1(estim_prev),
+                "f1e_true": lambda: error.f1e(true_prev),
+                "f1e_estim": lambda: error.f1e(estim_prev),
+            }
+            series[("errors", err)] = error_funcs[err]()
 
         lst.append(series)
 
@@ -136,6 +144,6 @@ def evaluation_report(
 
     df = pd.DataFrame(
         lst,
-        columns=pd.MultiIndex.from_tuples(prev_cols + err_cols),
+        columns=pd.MultiIndex.from_tuples(df_cols),
     )
     return df
