@@ -1,4 +1,3 @@
-from operator import index
 from typing import Tuple
 import numpy as np
 from quapy.data.base import LabelledCollection
