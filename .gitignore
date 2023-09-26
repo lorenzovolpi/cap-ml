@@ -3,6 +3,10 @@ quavenv/*
 *.pdf
 quacc/__pycache__/*
 tests/__pycache__/*
-*/__pycache__/*
+garg22_ATC/__pycache__/*
+guillory21_doc/__pycache__/*
+jiang18_trustscore/__pycache__/*
+lipton_bbse/__pycache__/*
+elsahar19_rca/__pycache__/*
 *.coverage
 .coverage
