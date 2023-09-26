@@ -72,7 +72,7 @@ def atc_mc(
     cols = [
         ("base", "F"),
         ("base", "T"),
-        ("atc_mc", "accuracy"),
+        ("atc mc", "accuracy"),
     ]
     results = []
     for test in protocol():
@@ -112,7 +112,7 @@ def atc_ne(
     cols = [
         ("base", "F"),
         ("base", "T"),
-        ("atc_ne", "accuracy"),
+        ("atc ne", "accuracy"),
     ]
     results = []
     for test in protocol():
@@ -165,7 +165,7 @@ def doc_feat(
     cols = [
         ("base", "F"),
         ("base", "T"),
-        ("doc_feat", "score"),
+        ("doc feat", "score"),
     ]
     results = []
     for test in protocol():

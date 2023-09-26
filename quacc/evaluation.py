@@ -101,11 +101,11 @@ def evaluation_report(
     error_cols = []
     for err in error_names:
         if err == "mae":
-            error_cols.extend(["mae_estim", "mae_true"])
+            error_cols.extend(["mae estim", "mae true"])
         elif err == "f1":
-            error_cols.extend(["f1_estim", "f1_true"])
+            error_cols.extend(["f1 estim", "f1 true"])
         elif err == "f1e":
-            error_cols.extend(["f1e_estim", "f1e_true"])
+            error_cols.extend(["f1e estim", "f1e true"])
         else:
             error_cols.append(err)
 
@@ -129,12 +129,12 @@ def evaluation_report(
 
         for err in error_cols:
             error_funcs = {
-                "mae_true": lambda: error.mae(true_prev),
-                "mae_estim": lambda: error.mae(estim_prev),
-                "f1_true": lambda: error.f1(true_prev),
-                "f1_estim": lambda: error.f1(estim_prev),
-                "f1e_true": lambda: error.f1e(true_prev),
-                "f1e_estim": lambda: error.f1e(estim_prev),
+                "mae true": lambda: error.mae(true_prev),
+                "mae estim": lambda: error.mae(estim_prev),
+                "f1 true": lambda: error.f1(true_prev),
+                "f1 estim": lambda: error.f1(estim_prev),
+                "f1e true": lambda: error.f1e(true_prev),
+                "f1e estim": lambda: error.f1e(estim_prev),
             }
             series[("errors", err)] = error_funcs[err]()
 
