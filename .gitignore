@@ -7,7 +7,6 @@ garg22_ATC/__pycache__/*
 guillory21_doc/__pycache__/*
 jiang18_trustscore/__pycache__/*
 lipton_bbse/__pycache__/*
-elsahar19_rca/__pycache__/*.pyc
+elsahar19_rca/__pycache__/*
 *.coverage
 .coverage
-elsahar19_rca/__pycache__/rca.cpython-311.pyc
