@@ -1,6 +1,6 @@
 
 from sklearn.linear_model import LogisticRegression
-from quacc.baseline import kfcv, trust_score
+from quacc.evaluation.baseline import kfcv, trust_score
 from quacc.dataset import get_spambase
 
 
