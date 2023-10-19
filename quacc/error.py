@@ -24,12 +24,12 @@ def from_name(err_name):
 def f1(prev):
     den = (2*prev[3]) + prev[1] + prev[2]
     if den == 0:
-        return 1.0
+        return 0.0
     else:
         return (2*prev[3])/den
 
 def f1e(prev):
     return 1 - f1(prev)
 
-def mae(prev):
+def acc(prev):
     return (prev[1] + prev[2]) / sum(prev)

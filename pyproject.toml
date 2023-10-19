@@ -13,9 +13,8 @@ jinja2 = "^3.1.2"
 
 [tool.poetry.scripts]
 main = "quacc.main:main"
-multi = "quacc.main:estimate_multiclass"
-bin = "quacc.main:estimate_binary"
 comp = "quacc.main:estimate_comparison"
+tohost = "scp_sync:scp_sync_to_host"
 
 
 [tool.poetry.group.dev.dependencies]

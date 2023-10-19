@@ -7,18 +7,23 @@ from sklearn.conftest import fetch_rcv1
 TRAIN_VAL_PROP = 0.5
 
 
-def get_imdb() -> Tuple[LabelledCollection]:
+def get_imdb(**kwargs) -> Tuple[LabelledCollection]:
     train, test = qp.datasets.fetch_reviews("imdb", tfidf=True).train_test
-    train, validation = train.split_stratified(train_prop=TRAIN_VAL_PROP)
+    train, validation = train.split_stratified(
+        train_prop=TRAIN_VAL_PROP, random_state=0
+    )
     return train, validation, test
 
 
-def get_spambase() -> Tuple[LabelledCollection]:
+def get_spambase(**kwargs) -> Tuple[LabelledCollection]:
     train, test = qp.datasets.fetch_UCIDataset("spambase", verbose=False).train_test
-    train, validation = train.split_stratified(train_prop=TRAIN_VAL_PROP)
+    train, validation = train.split_stratified(
+        train_prop=TRAIN_VAL_PROP, random_state=0
+    )
     return train, validation, test
 
-# >>> fetch_rcv1().target_names                  
+
+# >>> fetch_rcv1().target_names
 # array(['C11', 'C12', 'C13', 'C14', 'C15', 'C151', 'C1511', 'C152', 'C16',
 #        'C17', 'C171', 'C172', 'C173', 'C174', 'C18', 'C181', 'C182',
 #        'C183', 'C21', 'C22', 'C23', 'C24', 'C31', 'C311', 'C312', 'C313',
@@ -33,10 +38,14 @@ def get_spambase() -> Tuple[LabelledCollection]:
 #        'GWELF', 'M11', 'M12', 'M13', 'M131', 'M132', 'M14', 'M141',
 #        'M142', 'M143', 'MCAT'], dtype=object)
 
-def get_rcv1(target:str):
+
+def get_rcv1(target = "default", **kwargs):
     sample_size = qp.environ["SAMPLE_SIZE"]
     n_train = 23149
     dataset = fetch_rcv1()
+
+    if target == "default":
+        target = "C12"
 
     if target not in dataset.target_names:
         raise ValueError("Invalid target")
@@ -46,7 +55,9 @@ def get_rcv1(target:str):
         all_train_l, test_l = labels[:n_train], labels[n_train:]
         all_train = LabelledCollection(all_train_d, all_train_l, classes=classes)
         test = LabelledCollection(test_d, test_l, classes=classes)
-        train, validation = all_train.split_stratified(train_prop=TRAIN_VAL_PROP)
+        train, validation = all_train.split_stratified(
+            train_prop=TRAIN_VAL_PROP, random_state=0
+        )
         return train, validation, test
 
     target_index = np.where(dataset.target_names == target)[0]
@@ -58,4 +69,3 @@ def get_rcv1(target:str):
     d = dataset_split(dataset.data, target_labels, classes=[0, 1])
 
     return d
-

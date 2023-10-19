@@ -2,7 +2,7 @@
 import functools
 import pandas as pd
 
-def combine_dataframes(*dfs, df_index=[]) -> pd.DataFrame:
+def combine_dataframes(dfs, df_index=[]) -> pd.DataFrame:
     if len(dfs) < 1:
         raise ValueError
     if len(dfs) == 1:
