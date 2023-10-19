@@ -3,27 +3,10 @@ import statistics as stats
 import numpy as np
 import pandas as pd
 
-def _in_div(s):
-    return "<div>" + s + "</div>\n"
 
-def _header_footer(s):
-    return (
-        """
-<html> 
-<head>
-    <style>
-        .dataframe {
-            tr:hover {
-                background-color: aquamarine;
-            }
-        }
-    </style>
-</head>
-<body>
-        """ + 
-        s + 
-        "</body></html>"
-    )
+def _fmt_line(s):
+    return f"> {s}  \n"
+
 
 class EvaluationReport:
     def __init__(self, prefix=None):
@@ -126,7 +109,7 @@ class EvaluationReport:
     @property
     def prevs(self):
         return self._prevs
-    
+
     @prevs.setter
     def prevs(self, val):
         self._prevs = val
@@ -134,23 +117,22 @@ class EvaluationReport:
     @property
     def target(self):
         return self._target
-    
+
     @target.setter
     def target(self, val):
         self._target = val
 
-    def to_html(self, *metrics):
-        res = _in_div("target: " + self.target)
-        for k,v in self.prevs.items():
-            res += _in_div(f"{k}: {str(v)}")
-        for k,v in self.times.items():
-            res += _in_div(f"{k}: {v:.3f}s")
+    def to_md(self, *metrics):
+        res = _fmt_line("target: " + self.target)
+        for k, v in self.prevs.items():
+            res += _fmt_line(f"{k}: {str(v)}")
+        for k, v in self.times.items():
+            res += _fmt_line(f"{k}: {v:.3f}s")
         res += "\n"
         for m in metrics:
             res += self.get_dataframe(metrics=m).to_html() + "\n\n"
-        
-        return _header_footer(res)
 
+        return res
 
     @staticmethod
     def combine_reports(*args):

@@ -25,7 +25,7 @@ def estimate_comparison():
             er = method.evaluate_comparison(DATASET, target=target)
             er.target = target
             with open(OUTPUT_FILE, "a") as f:
-                f.write(er.to_html(["acc"], ["f1"]))
+                f.write(er.to_md(["acc"], ["f1"]))
         except Exception:
             traceback.print_exc()
 
