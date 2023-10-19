@@ -2,7 +2,7 @@ import traceback
 import quacc.evaluation.method as method
 
 DATASET = "imdb"
-OUTPUT_FILE = "out_" + DATASET + ".html"
+OUTPUT_FILE = "out_" + DATASET + ".md"
 TARGETS = {
     "rcv1" : [ 
         'C12', 
