@@ -1,16 +1,16 @@
 
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: default</div>
+<html> 
+<head>
+    <style>
+        .dataframe {
+            tr:hover {
+                background-color: aquamarine;
+            }
+        }
+    </style>
+</head>
+<body>
+<div>target: default</div>
 <div>train: [0.5 0.5]</div>
 <div>validation: [0.5 0.5]</div>
 <div>evaluate_binary: 277.300s</div>
