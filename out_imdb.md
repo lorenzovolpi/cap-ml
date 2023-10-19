@@ -1,15 +1,4 @@
 
-<html> 
-<head>
-    <style>
-        .dataframe {
-            tr:hover {
-                background-color: aquamarine;
-            }
-        }
-    </style>
-</head>
-<body>
 <div>target: default</div>
 <div>train: [0.5 0.5]</div>
 <div>validation: [0.5 0.5]</div>
@@ -454,5 +443,3 @@
     </tr>
   </tbody>
 </table>
-
-</body></html>

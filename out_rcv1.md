@@ -1,15 +1,4 @@
 
-<html> 
-<head>
-    <style>
-        .dataframe {
-            tr:hover {
-                background-color: aquamarine;
-            }
-        }
-    </style>
-</head>
-<body>
 <div>target: C12</div>
 <div>train: [0.98358389 0.01641611]</div>
 <div>validation: [0.98349892 0.01650108]</div>
@@ -455,19 +444,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C13</div>
+<div>target: C13</div>
 <div>train: [0.95913254 0.04086746]</div>
 <div>validation: [0.95904968 0.04095032]</div>
 <div>evaluate_binary: 293.415s</div>
@@ -912,19 +889,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C15</div>
+<div>target: C15</div>
 <div>train: [0.81950924 0.18049076]</div>
 <div>validation: [0.81943844 0.18056156]</div>
 <div>evaluate_binary: 329.208s</div>
@@ -1369,19 +1334,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C151</div>
+<div>target: C151</div>
 <div>train: [0.89778815 0.10221185]</div>
 <div>validation: [0.89779698 0.10220302]</div>
 <div>evaluate_binary: 355.746s</div>
@@ -1826,19 +1779,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C1511</div>
+<div>target: C1511</div>
 <div>train: [0.98280629 0.01719371]</div>
 <div>validation: [0.98272138 0.01727862]</div>
 <div>evaluate_binary: 301.572s</div>
@@ -2283,19 +2224,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C152</div>
+<div>target: C152</div>
 <div>train: [0.91662347 0.08337653]</div>
 <div>validation: [0.91663067 0.08336933]</div>
 <div>evaluate_binary: 225.296s</div>
@@ -2740,19 +2669,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C17</div>
+<div>target: C17</div>
 <div>train: [0.94936928 0.05063072]</div>
 <div>validation: [0.94937365 0.05062635]</div>
 <div>evaluate_binary: 398.040s</div>
@@ -3197,19 +3114,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C172</div>
+<div>target: C172</div>
 <div>train: [0.98773112 0.01226888]</div>
 <div>validation: [0.98764579 0.01235421]</div>
 <div>evaluate_binary: 369.199s</div>
@@ -3654,19 +3559,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C18</div>
+<div>target: C18</div>
 <div>train: [0.9368412 0.0631588]</div>
 <div>validation: [0.93684665 0.06315335]</div>
 <div>evaluate_binary: 335.349s</div>
@@ -4111,19 +4004,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C181</div>
+<div>target: C181</div>
 <div>train: [0.94798687 0.05201313]</div>
 <div>validation: [0.94790497 0.05209503]</div>
 <div>evaluate_binary: 381.404s</div>
@@ -4568,19 +4449,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C21</div>
+<div>target: C21</div>
 <div>train: [0.96578538 0.03421462]</div>
 <div>validation: [0.96570194 0.03429806]</div>
 <div>evaluate_binary: 311.430s</div>
@@ -5025,19 +4894,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C24</div>
+<div>target: C24</div>
 <div>train: [0.96016935 0.03983065]</div>
 <div>validation: [0.96017279 0.03982721]</div>
 <div>evaluate_binary: 341.390s</div>
@@ -5482,19 +5339,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C31</div>
+<div>target: C31</div>
 <div>train: [0.95429411 0.04570589]</div>
 <div>validation: [0.95429806 0.04570194]</div>
 <div>evaluate_binary: 242.965s</div>
@@ -5939,19 +5784,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: C42</div>
+<div>target: C42</div>
 <div>train: [0.98522551 0.01477449]</div>
 <div>validation: [0.98514039 0.01485961]</div>
 <div>evaluate_binary: 216.862s</div>
@@ -6396,19 +6229,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: E12</div>
+<div>target: E12</div>
 <div>train: [0.97071021 0.02928979]</div>
 <div>validation: [0.97062635 0.02937365]</div>
 <div>evaluate_binary: 270.181s</div>
@@ -6853,19 +6674,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: E21</div>
+<div>target: E21</div>
 <div>train: [0.94582685 0.05417315]</div>
 <div>validation: [0.94574514 0.05425486]</div>
 <div>evaluate_binary: 339.478s</div>
@@ -7310,19 +7119,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: E211</div>
+<div>target: E211</div>
 <div>train: [0.98246069 0.01753931]</div>
 <div>validation: [0.98237581 0.01762419]</div>
 <div>evaluate_binary: 320.478s</div>
@@ -7767,19 +7564,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: E212</div>
+<div>target: E212</div>
 <div>train: [0.96319336 0.03680664]</div>
 <div>validation: [0.96311015 0.03688985]</div>
 <div>evaluate_binary: 233.509s</div>
@@ -8224,19 +8009,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: E41</div>
+<div>target: E41</div>
 <div>train: [0.98064628 0.01935372]</div>
 <div>validation: [0.98056156 0.01943844]</div>
 <div>evaluate_binary: 279.480s</div>
@@ -8681,19 +8454,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: E51</div>
+<div>target: E51</div>
 <div>train: [0.97235182 0.02764818]</div>
 <div>validation: [0.97226782 0.02773218]</div>
 <div>evaluate_binary: 347.216s</div>
@@ -9138,19 +8899,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: ECAT</div>
+<div>target: ECAT</div>
 <div>train: [0.85104545 0.14895455]</div>
 <div>validation: [0.85097192 0.14902808]</div>
 <div>evaluate_binary: 264.961s</div>
@@ -9595,19 +9344,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: G15</div>
+<div>target: G15</div>
 <div>train: [0.9843615 0.0156385]</div>
 <div>validation: [0.98427646 0.01572354]</div>
 <div>evaluate_binary: 353.823s</div>
@@ -10052,19 +9789,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: GCAT</div>
+<div>target: GCAT</div>
 <div>train: [0.69889407 0.30110593]</div>
 <div>validation: [0.69892009 0.30107991]</div>
 <div>evaluate_binary: 267.282s</div>
@@ -10509,19 +10234,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: GCRIM</div>
+<div>target: GCRIM</div>
 <div>train: [0.95109729 0.04890271]</div>
 <div>validation: [0.95101512 0.04898488]</div>
 <div>evaluate_binary: 351.759s</div>
@@ -10966,19 +10679,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: GDIP</div>
+<div>target: GDIP</div>
 <div>train: [0.95662692 0.04337308]</div>
 <div>validation: [0.95663067 0.04336933]</div>
 <div>evaluate_binary: 413.043s</div>
@@ -11423,19 +11124,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: GPOL</div>
+<div>target: GPOL</div>
 <div>train: [0.92889234 0.07110766]</div>
 <div>validation: [0.9288121 0.0711879]</div>
 <div>evaluate_binary: 269.509s</div>
@@ -11880,19 +11569,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: GVIO</div>
+<div>target: GVIO</div>
 <div>train: [0.95187489 0.04812511]</div>
 <div>validation: [0.95179266 0.04820734]</div>
 <div>evaluate_binary: 348.091s</div>
@@ -12337,19 +12014,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: GVOTE</div>
+<div>target: GVOTE</div>
 <div>train: [0.9850527 0.0149473]</div>
 <div>validation: [0.985054 0.014946]</div>
 <div>evaluate_binary: 411.703s</div>
@@ -12794,19 +12459,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: GWEA</div>
+<div>target: GWEA</div>
 <div>train: [0.99421116 0.00578884]</div>
 <div>validation: [0.99412527 0.00587473]</div>
 <div>evaluate_binary: 262.208s</div>
@@ -13251,19 +12904,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M11</div>
+<div>target: M11</div>
 <div>train: [0.94409884 0.05590116]</div>
 <div>validation: [0.94410367 0.05589633]</div>
 <div>evaluate_binary: 350.246s</div>
@@ -13708,19 +13349,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M12</div>
+<div>target: M12</div>
 <div>train: [0.9683774 0.0316226]</div>
 <div>validation: [0.96838013 0.03161987]</div>
 <div>evaluate_binary: 388.733s</div>
@@ -14165,19 +13794,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M13</div>
+<div>target: M13</div>
 <div>train: [0.93105236 0.06894764]</div>
 <div>validation: [0.93105832 0.06894168]</div>
 <div>evaluate_binary: 325.372s</div>
@@ -14622,19 +14239,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M131</div>
+<div>target: M131</div>
 <div>train: [0.95930534 0.04069466]</div>
 <div>validation: [0.95922246 0.04077754]</div>
 <div>evaluate_binary: 301.469s</div>
@@ -15079,19 +14684,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M132</div>
+<div>target: M132</div>
 <div>train: [0.96984621 0.03015379]</div>
 <div>validation: [0.96976242 0.03023758]</div>
 <div>evaluate_binary: 321.525s</div>
@@ -15536,19 +15129,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M14</div>
+<div>target: M14</div>
 <div>train: [0.8902713 0.1097287]</div>
 <div>validation: [0.89019438 0.10980562]</div>
 <div>evaluate_binary: 221.946s</div>
@@ -15993,19 +15574,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M141</div>
+<div>target: M141</div>
 <div>train: [0.93485398 0.06514602]</div>
 <div>validation: [0.93485961 0.06514039]</div>
 <div>evaluate_binary: 300.410s</div>
@@ -16450,19 +16019,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M142</div>
+<div>target: M142</div>
 <div>train: [0.98660791 0.01339209]</div>
 <div>validation: [0.98652268 0.01347732]</div>
 <div>evaluate_binary: 360.311s</div>
@@ -16907,19 +16464,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: M143</div>
+<div>target: M143</div>
 <div>train: [0.97382063 0.02617937]</div>
 <div>validation: [0.97382289 0.02617711]</div>
 <div>evaluate_binary: 473.804s</div>
@@ -17364,19 +16909,7 @@
   </tbody>
 </table>
 
-</body></html>
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-        <div>target: MCAT</div>
+<div>target: MCAT</div>
 <div>train: [0.74589597 0.25410403]</div>
 <div>validation: [0.74591793 0.25408207]</div>
 <div>evaluate_binary: 239.003s</div>
@@ -17820,5 +17353,3 @@
     </tr>
   </tbody>
 </table>
-
-</body></html>
