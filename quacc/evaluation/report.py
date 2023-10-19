@@ -1,4 +1,3 @@
-from email import header
 from typing import Tuple
 import statistics as stats
 import numpy as np
@@ -10,17 +9,17 @@ def _in_div(s):
 def _header_footer(s):
     return (
         """
-        <html> 
-        <head>
-            <style>
-                .dataframe {
-                    tr:hover {
-                        background-color: aquamarine;
-                    }
-                }
-            </style>
-        </head>
-        <body>
+<html> 
+<head>
+    <style>
+        .dataframe {
+            tr:hover {
+                background-color: aquamarine;
+            }
+        }
+    </style>
+</head>
+<body>
         """ + 
         s + 
         "</body></html>"
