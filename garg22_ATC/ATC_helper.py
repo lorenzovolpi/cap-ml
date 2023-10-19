@@ -1,4 +1,5 @@
 import numpy as np 
+from sklearn.metrics import f1_score
 
 def get_entropy(probs): 
 	return np.sum( np.multiply(probs, np.log(probs + 1e-20))  , axis=1)
@@ -31,4 +32,10 @@ def find_ATC_threshold(scores, labels):
 
 
 def get_ATC_acc(thres, scores): 
-    return np.mean(scores>=thres)*100.0
+    return np.mean(scores>=thres)
+
+def get_ATC_f1(thres, scores, probs):
+    preds = np.argmax(probs, axis=-1)
+    estim_y = abs(1 - (scores>=thres)^preds)
+    return f1_score(estim_y, preds)
+    

@@ -2,6 +2,7 @@
 quavenv/*
 *.pdf
 quacc/__pycache__/*
+quacc/evaluation/__pycache__/*
 tests/__pycache__/*
 garg22_ATC/__pycache__/*
 guillory21_doc/__pycache__/*
