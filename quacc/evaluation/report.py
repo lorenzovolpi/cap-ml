@@ -69,6 +69,12 @@ class EvaluationReport:
             columns=g_dict.keys(),
         )
 
+    def get_plot(self, mode="delta", metric="acc"):
+        g_prevs, g_dict = self.groupby_prevs(metric=metric)
+        t_prev = int(round(self.train_prevs["train"][0] * 100))
+        title = f"{self.name}_{t_prev}_{metric}"
+        plot.plot_delta(g_prevs, g_dict, metric, title)
+
     def to_md(self, *metrics):
         res = ""
         for k, v in self.train_prevs.items():
@@ -78,6 +84,7 @@ class EvaluationReport:
         res += "\n"
         for m in metrics:
             res += self.get_dataframe(metric=m).to_html() + "\n\n"
+            self.get_plot(metric=m)
 
         return res
 
