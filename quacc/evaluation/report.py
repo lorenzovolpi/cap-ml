@@ -1,4 +1,3 @@
-import math
 import statistics as stats
 from typing import List, Tuple
 
