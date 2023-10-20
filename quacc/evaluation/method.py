@@ -1,20 +1,11 @@
-import multiprocessing
-import time
-
-import pandas as pd
-import quapy as qp
 from quapy.data import LabelledCollection
 from quapy.protocol import (
-    APP,
     AbstractStochasticSeededProtocol,
     OnLabelledCollectionProtocol,
 )
 from sklearn.base import BaseEstimator
-from sklearn.linear_model import LogisticRegression
 
 import quacc.error as error
-import quacc.evaluation.baseline as baseline
-from quacc.dataset import get_imdb, get_rcv1, get_spambase
 from quacc.evaluation.report import EvaluationReport
 
 from ..estimator import (
@@ -22,13 +13,6 @@ from ..estimator import (
     BinaryQuantifierAccuracyEstimator,
     MulticlassAccuracyEstimator,
 )
-
-qp.environ["SAMPLE_SIZE"] = 100
-
-pd.set_option("display.float_format", "{:.4f}".format)
-
-n_prevalences = 21
-repreats = 100
 
 
 def estimate(
@@ -61,11 +45,11 @@ def evaluation_report(
         acc_score = error.acc(estim_prev)
         f1_score = error.f1(estim_prev)
         report.append_row(
-            base_prev, 
-            acc_score=1. - acc_score,
-            acc = abs(error.acc(true_prev) - acc_score),
+            base_prev,
+            acc_score=1.0 - acc_score,
+            acc=abs(error.acc(true_prev) - acc_score),
             f1_score=f1_score,
-            f1=abs(error.f1(true_prev) - f1_score)
+            f1=abs(error.f1(true_prev) - f1_score),
         )
 
     return report
@@ -77,7 +61,7 @@ def evaluate(
     protocol: AbstractStochasticSeededProtocol,
     method: str,
 ):
-    estimator : AccuracyEstimator = {
+    estimator: AccuracyEstimator = {
         "bin": BinaryQuantifierAccuracyEstimator,
         "mul": MulticlassAccuracyEstimator,
     }[method](c_model)
@@ -85,65 +69,17 @@ def evaluate(
     return evaluation_report(estimator, protocol, method)
 
 
-def evaluate_binary(model, validation, protocol):
-    return evaluate(model, validation, protocol, "bin")
+def evaluate_bin_sld(
+    c_model: BaseEstimator,
+    validation: LabelledCollection,
+    protocol: AbstractStochasticSeededProtocol,
+) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "bin")
 
 
-def evaluate_multiclass(model, validation, protocol):
-    return evaluate(model, validation, protocol, "mul")
-
-
-def fit_and_estimate(_estimate, train, validation, test):
-    model = LogisticRegression()
-
-    model.fit(*train.Xy)
-    protocol = APP(test, n_prevalences=n_prevalences, repeats=repreats)
-    start = time.time()
-    result = _estimate(model, validation, protocol)
-    end = time.time()
-
-    return {
-        "name": _estimate.__name__,
-        "result": result,
-        "time": end - start,
-    }
-
-
-def evaluate_comparison(dataset: str, **kwargs) -> EvaluationReport:
-    train, validation, test = {
-        "spambase": get_spambase,
-        "imdb": get_imdb,
-        "rcv1": get_rcv1,
-    }[dataset](**kwargs)
-
-    for k,v in kwargs.items():
-        print(k, ":", v)
-
-    prevs = {
-        "train": train.prevalence(),
-        "validation": validation.prevalence(),
-    }
-
-    start = time.time()
-    with multiprocessing.Pool(8) as pool:
-        estimators = [
-            evaluate_binary,
-            evaluate_multiclass,
-            baseline.kfcv,
-            baseline.atc_mc,
-            baseline.atc_ne,
-            baseline.doc_feat,
-            baseline.rca_score,
-            baseline.rca_star_score,
-        ]
-        tasks = [(estim, train, validation, test) for estim in estimators]
-        results = [pool.apply_async(fit_and_estimate, t) for t in tasks]
-        results = list(map(lambda r: r.get(), results))
-        er = EvaluationReport.combine_reports(*list(map(lambda r: r["result"], results)))
-        times = {r["name"]:r["time"] for r in results}
-    end = time.time()
-    times["tot"] = end - start
-    er.times = times
-    er.prevs = prevs
-
-    return er
+def evaluate_mul_sld(
+    c_model: BaseEstimator,
+    validation: LabelledCollection,
+    protocol: AbstractStochasticSeededProtocol,
+) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "mul")

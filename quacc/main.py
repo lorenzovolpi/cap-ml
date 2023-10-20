@@ -1,33 +1,16 @@
-import traceback
-import quacc.evaluation.method as method
+import quacc.evaluation.comp as comp
+from quacc.dataset import Dataset
+from quacc.environ import env
 
-DATASET = "imdb"
-OUTPUT_FILE = "out_" + DATASET + ".md"
-TARGETS = {
-    "rcv1" : [ 
-        'C12', 
-        'C13', 'C15', 'C151', 'C1511', 'C152', 'C17', 'C172', 
-        'C18', 'C181', 'C21', 'C24', 'C31', 'C42', 'CCAT'
-        'E11', 'E12', 'E21', 'E211', 'E212', 'E41', 'E51',  'ECAT',
-        'G15', 'GCAT', 'GCRIM', 'GDIP', 'GPOL', 'GVIO', 'GVOTE', 'GWEA',
-        'GWELF', 'M11', 'M12', 'M13', 'M131', 'M132', 'M14', 'M141',
-        'M142', 'M143', 'MCAT'
-    ],
-    "spambase": ["default"],
-    "imdb": ["default"],
-}
 
 def estimate_comparison():
-    open(OUTPUT_FILE, "w").close()
-    targets = TARGETS[DATASET]
-    for target in targets:
-        try:
-            er = method.evaluate_comparison(DATASET, target=target)
-            er.target = target
-            with open(OUTPUT_FILE, "a") as f:
-                f.write(er.to_md(["acc"], ["f1"]))
-        except Exception:
-            traceback.print_exc()
+    dataset = Dataset(
+        env.DATASET_NAME, target=env.DATASET_TARGET, n_prevalences=env.DATASET_N_PREVS
+    )
+    output_path = env.OUT_DIR / f"{dataset.name}.md"
+    with open(output_path, "w") as f:
+        dr = comp.evaluate_comparison(dataset, estimators=env.COMP_ESTIMATORS)
+        f.write(dr.to_md("acc"))
 
     # print(df.to_latex(float_format="{:.4f}".format))
     # print(utils.avg_group_report(df).to_latex(float_format="{:.4f}".format))

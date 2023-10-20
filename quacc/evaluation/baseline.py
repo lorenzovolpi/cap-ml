@@ -1,29 +1,28 @@
 from statistics import mean
-from typing import Dict
 
 import numpy as np
-from quapy.data import LabelledCollection
-from sklearn.base import BaseEstimator
-from sklearn.model_selection import cross_validate
 import sklearn.metrics as metrics
+from quapy.data import LabelledCollection
 from quapy.protocol import (
     AbstractStochasticSeededProtocol,
     OnLabelledCollectionProtocol,
 )
-
-from .report import EvaluationReport
+from sklearn.base import BaseEstimator
+from sklearn.model_selection import cross_validate
 
 import elsahar19_rca.rca as rca
 import garg22_ATC.ATC_helper as atc
 import guillory21_doc.doc as doc
 import jiang18_trustscore.trustscore as trustscore
 
+from .report import EvaluationReport
+
 
 def kfcv(
-    c_model: BaseEstimator, 
+    c_model: BaseEstimator,
     validation: LabelledCollection,
     protocol: AbstractStochasticSeededProtocol,
-    predict_method="predict"
+    predict_method="predict",
 ):
     c_model_predict = getattr(c_model, predict_method)
 
@@ -42,12 +41,12 @@ def kfcv(
         meta_f1 = abs(f1_score - metrics.f1_score(test.y, test_preds))
         report.append_row(
             test.prevalence(),
-            acc_score=(1. - acc_score),
+            acc_score=(1.0 - acc_score),
             f1_score=f1_score,
             acc=meta_acc,
             f1=meta_f1,
         )
-    
+
     return report
 
 
@@ -63,7 +62,7 @@ def reference(
         test_probs = c_model_predict(test.X)
         test_preds = np.argmax(test_probs, axis=-1)
         report.append_row(
-            test.prevalence(), 
+            test.prevalence(),
             acc_score=(1 - metrics.accuracy_score(test.y, test_preds)),
             f1_score=metrics.f1_score(test.y, test_preds),
         )
