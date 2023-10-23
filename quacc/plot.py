@@ -7,7 +7,7 @@ from quacc.environ import env
 
 
 def _get_markers(n: int):
-    return [
+    ls = [
         "o",
         "v",
         "x",
@@ -18,7 +18,20 @@ def _get_markers(n: int):
         "h",
         "*",
         "^",
-    ][:n]
+        "1",
+        "2",
+        "3",
+        "4",
+        "X",
+        ">",
+        "<",
+        ".",
+        "P",
+        "d",
+    ]
+    if n > len(ls):
+        ls = ls * (n / len(ls) + 1)
+    return ls[:n]
 
 
 def plot_delta(
