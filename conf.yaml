@@ -1,0 +1,71 @@
+
+exec: []
+
+commons:
+  - DATASET_NAME: rcv1
+    DATASET_TARGET: CCAT
+    METRICS: 
+    - acc
+    - f1
+    DATASET_N_PREVS: 9
+  - DATASET_NAME: imdb
+    METRICS: 
+    - acc
+    - f1
+    DATASET_N_PREVS: 9
+
+confs:
+
+  all_mul_vs_atc:
+    COMP_ESTIMATORS:
+    - our_mul_SLD
+    - our_mul_SLD_nbvs
+    - our_mul_SLD_bcts
+    - our_mul_SLD_ts
+    - our_mul_SLD_vs
+    - our_mul_CC
+    - ref
+    - atc_mc
+    - atc_ne
+
+  all_bin_vs_atc:
+    COMP_ESTIMATORS:
+    - our_bin_SLD
+    - our_bin_SLD_nbvs
+    - our_bin_SLD_bcts
+    - our_bin_SLD_ts
+    - our_bin_SLD_vs
+    - our_bin_CC
+    - ref
+    - atc_mc
+    - atc_ne
+
+  best_our_vs_atc:
+    COMP_ESTIMATORS:
+    - our_bin_SLD
+    - our_bin_SLD_bcts
+    - our_bin_SLD_vs
+    - our_bin_CC
+    - our_mul_SLD
+    - our_mul_SLD_bcts
+    - our_mul_SLD_vs
+    - our_mul_CC
+    - ref
+    - atc_mc
+    - atc_ne
+
+  best_our_vs_all:
+    COMP_ESTIMATORS:
+    - our_bin_SLD
+    - our_bin_SLD_bcts
+    - our_bin_SLD_vs
+    - our_bin_CC
+    - our_mul_SLD
+    - our_mul_SLD_bcts
+    - our_mul_SLD_vs
+    - our_mul_CC
+    - ref
+    - kfcv
+    - atc_mc
+    - atc_ne
+    - doc_feat

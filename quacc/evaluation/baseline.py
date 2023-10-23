@@ -34,14 +34,14 @@ def kfcv(
     # ensure that the protocol returns a LabelledCollection for each iteration
     protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
 
-    report = EvaluationReport(prefix="kfcv")
+    report = EvaluationReport(name="kfcv")
     for test in protocol():
         test_preds = c_model_predict(test.X)
         meta_acc = abs(acc_score - metrics.accuracy_score(test.y, test_preds))
         meta_f1 = abs(f1_score - metrics.f1_score(test.y, test_preds))
         report.append_row(
             test.prevalence(),
-            acc_score=(1.0 - acc_score),
+            acc_score=acc_score,
             f1_score=f1_score,
             acc=meta_acc,
             f1=meta_f1,
@@ -57,13 +57,13 @@ def reference(
 ):
     protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
     c_model_predict = getattr(c_model, "predict_proba")
-    report = EvaluationReport(prefix="ref")
+    report = EvaluationReport(name="ref")
     for test in protocol():
         test_probs = c_model_predict(test.X)
         test_preds = np.argmax(test_probs, axis=-1)
         report.append_row(
             test.prevalence(),
-            acc_score=(1 - metrics.accuracy_score(test.y, test_preds)),
+            acc_score=metrics.accuracy_score(test.y, test_preds),
             f1_score=metrics.f1_score(test.y, test_preds),
         )
 
@@ -89,7 +89,7 @@ def atc_mc(
     # ensure that the protocol returns a LabelledCollection for each iteration
     protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
 
-    report = EvaluationReport(prefix="atc_mc")
+    report = EvaluationReport(name="atc_mc")
     for test in protocol():
         ## Load OOD test data probs
         test_probs = c_model_predict(test.X)
@@ -102,7 +102,7 @@ def atc_mc(
         report.append_row(
             test.prevalence(),
             acc=meta_acc,
-            acc_score=1.0 - atc_accuracy,
+            acc_score=atc_accuracy,
             f1_score=f1_score,
             f1=meta_f1,
         )
@@ -129,7 +129,7 @@ def atc_ne(
     # ensure that the protocol returns a LabelledCollection for each iteration
     protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
 
-    report = EvaluationReport(prefix="atc_ne")
+    report = EvaluationReport(name="atc_ne")
     for test in protocol():
         ## Load OOD test data probs
         test_probs = c_model_predict(test.X)
@@ -142,7 +142,7 @@ def atc_ne(
         report.append_row(
             test.prevalence(),
             acc=meta_acc,
-            acc_score=(1.0 - atc_accuracy),
+            acc_score=atc_accuracy,
             f1_score=f1_score,
             f1=meta_f1,
         )
@@ -182,14 +182,14 @@ def doc_feat(
     # ensure that the protocol returns a LabelledCollection for each iteration
     protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
 
-    report = EvaluationReport(prefix="doc_feat")
+    report = EvaluationReport(name="doc_feat")
     for test in protocol():
         test_probs = c_model_predict(test.X)
         test_preds = np.argmax(test_probs, axis=-1)
         test_scores = np.max(test_probs, axis=-1)
         score = (v1acc + doc.get_doc(val_scores, test_scores)) / 100.0
         meta_acc = abs(score - metrics.accuracy_score(test.y, test_preds))
-        report.append_row(test.prevalence(), acc=meta_acc, acc_score=(1.0 - score))
+        report.append_row(test.prevalence(), acc=meta_acc, acc_score=score)
 
     return report
 
@@ -206,17 +206,15 @@ def rca_score(
     # ensure that the protocol returns a LabelledCollection for each iteration
     protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
 
-    report = EvaluationReport(prefix="rca")
+    report = EvaluationReport(name="rca")
     for test in protocol():
         try:
             test_pred = c_model_predict(test.X)
             c_model2 = rca.clone_fit(c_model, test.X, test_pred)
             c_model2_predict = getattr(c_model2, predict_method)
             val_pred2 = c_model2_predict(validation.X)
-            rca_score = rca.get_score(val_pred1, val_pred2, validation.y)
-            meta_score = abs(
-                rca_score - (1 - metrics.accuracy_score(test.y, test_pred))
-            )
+            rca_score = 1.0 - rca.get_score(val_pred1, val_pred2, validation.y)
+            meta_score = abs(rca_score - metrics.accuracy_score(test.y, test_pred))
             report.append_row(test.prevalence(), acc=meta_score, acc_score=rca_score)
         except ValueError:
             report.append_row(
@@ -244,17 +242,15 @@ def rca_star_score(
     # ensure that the protocol returns a LabelledCollection for each iteration
     protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
 
-    report = EvaluationReport(prefix="rca_star")
+    report = EvaluationReport(name="rca_star")
     for test in protocol():
         try:
             test_pred = c_model_predict(test.X)
             c_model2 = rca.clone_fit(c_model, test.X, test_pred)
             c_model2_predict = getattr(c_model2, predict_method)
             val2_pred2 = c_model2_predict(validation2.X)
-            rca_star_score = rca.get_score(val2_pred1, val2_pred2, validation2.y)
-            meta_score = abs(
-                rca_star_score - (1 - metrics.accuracy_score(test.y, test_pred))
-            )
+            rca_star_score = 1.0 - rca.get_score(val2_pred1, val2_pred2, validation2.y)
+            meta_score = abs(rca_star_score - metrics.accuracy_score(test.y, test_pred))
             report.append_row(
                 test.prevalence(), acc=meta_score, acc_score=rca_star_score
             )

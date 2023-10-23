@@ -1,9 +1,9 @@
-from abc import abstractmethod
 import math
+from abc import abstractmethod
 
 import numpy as np
 from quapy.data import LabelledCollection
-from quapy.method.aggregative import SLD
+from quapy.method.aggregative import CC, SLD
 from sklearn.base import BaseEstimator
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
@@ -15,7 +15,7 @@ class AccuracyEstimator:
     def extend(self, base: LabelledCollection, pred_proba=None) -> ExtendedCollection:
         if not pred_proba:
             pred_proba = self.c_model.predict_proba(base.X)
-        return ExtendedCollection.extend_collection(base, pred_proba)
+        return ExtendedCollection.extend_collection(base, pred_proba), pred_proba
 
     @abstractmethod
     def fit(self, train: LabelledCollection | ExtendedCollection):
@@ -27,9 +27,15 @@ class AccuracyEstimator:
 
 
 class MulticlassAccuracyEstimator(AccuracyEstimator):
-    def __init__(self, c_model: BaseEstimator):
+    def __init__(self, c_model: BaseEstimator, q_model="SLD", **kwargs):
         self.c_model = c_model
-        self.q_model = SLD(LogisticRegression())
+        if q_model == "SLD":
+            available_args = ["recalib"]
+            sld_args = {k: v for k, v in kwargs.items() if k in available_args}
+            self.q_model = SLD(LogisticRegression(), **sld_args)
+        elif q_model == "CC":
+            self.q_model = CC(LogisticRegression())
+
         self.e_train = None
 
     def fit(self, train: LabelledCollection | ExtendedCollection):
@@ -67,10 +73,17 @@ class MulticlassAccuracyEstimator(AccuracyEstimator):
 
 
 class BinaryQuantifierAccuracyEstimator(AccuracyEstimator):
-    def __init__(self, c_model: BaseEstimator):
+    def __init__(self, c_model: BaseEstimator, q_model="SLD", **kwargs):
         self.c_model = c_model
-        self.q_model_0 = SLD(LogisticRegression())
-        self.q_model_1 = SLD(LogisticRegression())
+        if q_model == "SLD":
+            available_args = ["recalib"]
+            sld_args = {k: v for k, v in kwargs.items() if k in available_args}
+            self.q_model_0 = SLD(LogisticRegression(), **sld_args)
+            self.q_model_1 = SLD(LogisticRegression(), **sld_args)
+        elif q_model == "CC":
+            self.q_model_0 = CC(LogisticRegression())
+            self.q_model_1 = CC(LogisticRegression())
+
         self.e_train = None
 
     def fit(self, train: LabelledCollection | ExtendedCollection):
@@ -83,7 +96,7 @@ class BinaryQuantifierAccuracyEstimator(AccuracyEstimator):
 
             self.e_train = ExtendedCollection.extend_collection(train, pred_prob_train)
         elif isinstance(train, ExtendedCollection):
-            self.e_train = train 
+            self.e_train = train
 
         self.n_classes = self.e_train.n_classes
         [e_train_0, e_train_1] = self.e_train.split_by_pred()
