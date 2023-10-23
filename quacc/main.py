@@ -8,7 +8,10 @@ from quacc.environ import env
 
 
 def create_out_dir(dir_name):
-    dir_path = Path(env.OUT_DIR_NAME) / dir_name
+    base_out_dir = Path(env.OUT_DIR_NAME)
+    if not base_out_dir.exists():
+        os.mkdir(base_out_dir)
+    dir_path = base_out_dir / dir_name
     env.OUT_DIR = dir_path
     shutil.rmtree(dir_path, ignore_errors=True)
     os.mkdir(dir_path)
