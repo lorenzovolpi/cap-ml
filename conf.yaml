@@ -2,6 +2,12 @@
 exec: []
 
 commons:
+  - DATASET_NAME: rcv1
+    DATASET_TARGET: CCAT
+    METRICS: 
+    - acc
+    - f1
+    DATASET_N_PREVS: 9
   - DATASET_NAME: imdb
     METRICS: 
     - acc
