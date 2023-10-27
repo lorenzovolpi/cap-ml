@@ -42,8 +42,9 @@ class Dataset:
     def __spambase(self):
         return qp.datasets.fetch_UCIDataset("spambase", verbose=False).train_test
 
+    # provare min_df=5
     def __imdb(self):
-        return qp.datasets.fetch_reviews("imdb", tfidf=True).train_test
+        return qp.datasets.fetch_reviews("imdb", tfidf=True, min_df=3).train_test
 
     def __rcv1(self):
         n_train = 23149

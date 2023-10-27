@@ -29,3 +29,8 @@
 - [x] salvare il best score ottenuto da ogni applicazione di GridSearchQ
     - nel caso di bin fare media dei due best score
 - [x] import baselines
+
+- [ ] testare anche su imbd
+- [ ] plot avg con train prevalence sull'asse x e media su test prevalecne
+- [ ] realizzare grid search per task specifico partendo da GridSearchhQ
+- [ ] provare PACC come quantificatore
