@@ -12,3 +12,4 @@ elsahar19_rca/__pycache__/*
 *.coverage
 .coverage
 scp_sync.py
+out/*

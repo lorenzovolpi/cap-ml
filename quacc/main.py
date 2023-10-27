@@ -1,49 +1,59 @@
-import os
-import shutil
-from pathlib import Path
+import logging as log
+import traceback
+from sys import platform
 
 import quacc.evaluation.comp as comp
 from quacc.dataset import Dataset
-from quacc.environ import env
+from quacc.environment import env
+from quacc.utils import create_dataser_dir
 
 
-def create_out_dir(dir_name):
-    base_out_dir = Path(env.OUT_DIR_NAME)
-    if not base_out_dir.exists():
-        os.mkdir(base_out_dir)
-    dir_path = base_out_dir / dir_name
-    env.OUT_DIR = dir_path
-    shutil.rmtree(dir_path, ignore_errors=True)
-    os.mkdir(dir_path)
-    plot_dir_path = dir_path / "plot"
-    env.PLOT_OUT_DIR = plot_dir_path
-    os.mkdir(plot_dir_path)
+def toast():
+    if platform == "win32":
+        import win11toast
+
+        win11toast.notify("Comp", "Completed Execution")
 
 
 def estimate_comparison():
-    for conf in env:
-        create_out_dir(conf)
+    for conf in env.get_confs():
+        create_dataser_dir(conf, update=env.DATASET_DIR_UPDATE)
         dataset = Dataset(
             env.DATASET_NAME,
             target=env.DATASET_TARGET,
             n_prevalences=env.DATASET_N_PREVS,
         )
-        output_path = env.OUT_DIR / f"{dataset.name}.md"
         try:
             dr = comp.evaluate_comparison(dataset, estimators=env.COMP_ESTIMATORS)
-            for m in env.METRICS:
-                output_path = env.OUT_DIR / f"{conf}_{m}.md"
-                with open(output_path, "w") as f:
-                    f.write(dr.to_md(m))
+            for plot_conf in env.get_plot_confs():
+                for m in env.METRICS:
+                    output_path = env.OUT_DIR / f"{plot_conf}_{m}.md"
+                    with open(output_path, "w") as f:
+                        f.write(
+                            dr.to_md(
+                                conf=plot_conf,
+                                metric=m,
+                                estimators=env.PLOT_ESTIMATORS,
+                                stdev=env.PLOT_STDEV,
+                            )
+                        )
         except Exception as e:
-            print(f"Configuration {conf} failed. {e}")
+            log.error(f"Configuration {conf} failed. Exception: {e}")
+            traceback(e)
 
     # print(df.to_latex(float_format="{:.4f}".format))
     # print(utils.avg_group_report(df).to_latex(float_format="{:.4f}".format))
 
 
 def main():
+    log.basicConfig(
+        filename="quacc.log",
+        filemode="a",
+        format="%(asctime)s| %(levelname)s: %(message)s",
+        datefmt="%d/%m/%y %H:%M:%S",
+    )
     estimate_comparison()
+    toast()
 
 
 if __name__ == "__main__":

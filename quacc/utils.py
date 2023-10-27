@@ -1,6 +1,11 @@
 import functools
+import os
+import shutil
+from pathlib import Path
 
 import pandas as pd
+
+from quacc.environment import env
 
 
 def combine_dataframes(dfs, df_index=[]) -> pd.DataFrame:
@@ -32,3 +37,23 @@ def avg_group_report(df: pd.DataFrame) -> pd.DataFrame:
 
 def fmt_line_md(s):
     return f"> {s}  \n"
+
+
+def create_dataser_dir(dir_name, update=False):
+    base_out_dir = Path(env.OUT_DIR_NAME)
+    if not base_out_dir.exists():
+        os.mkdir(base_out_dir)
+
+    dataset_dir = base_out_dir / dir_name
+    env.OUT_DIR = dataset_dir
+    if update:
+        if not dataset_dir.exists():
+            os.mkdir(dataset_dir)
+    else:
+        shutil.rmtree(dataset_dir, ignore_errors=True)
+        os.mkdir(dataset_dir)
+
+    plot_dir_path = dataset_dir / "plot"
+    env.PLOT_OUT_DIR = plot_dir_path
+    if not plot_dir_path.exists():
+        os.mkdir(plot_dir_path)

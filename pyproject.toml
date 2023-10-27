@@ -23,6 +23,7 @@ pytest = "^7.4.0"
 pylance = "^0.5.9"
 pytest-mock = "^3.11.1"
 pytest-cov = "^4.1.0"
+win11toast = "^0.32"
 
 [tool.pytest.ini_options]
 addopts = "--cov=quacc --capture=tee-sys"

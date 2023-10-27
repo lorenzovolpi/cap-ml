@@ -40,27 +40,43 @@ class Dataset:
         self.n_prevs = n_prevalences
 
     def __spambase(self):
-        return qp.datasets.fetch_reviews("imdb", tfidf=True).train_test
+        return qp.datasets.fetch_UCIDataset("spambase", verbose=False).train_test
 
     def __imdb(self):
-        return qp.datasets.fetch_UCIDataset("spambase", verbose=False).train_test
+        return qp.datasets.fetch_reviews("imdb", tfidf=True).train_test
 
     def __rcv1(self):
         n_train = 23149
         available_targets = ["CCAT", "GCAT", "MCAT"]
 
         if self._target is None or self._target not in available_targets:
-            raise ValueError("Invalid target")
+            raise ValueError(f"Invalid target {self._target}")
 
         dataset = fetch_rcv1()
         target_index = np.where(dataset.target_names == self._target)[0]
-        all_train_d, test_d = dataset.data[:n_train, :], dataset.data[n_train:, :]
+        all_train_d = dataset.data[:n_train, :]
+        test_d = dataset.data[n_train:, :]
         labels = dataset.target[:, target_index].toarray().flatten()
         all_train_l, test_l = labels[:n_train], labels[n_train:]
         all_train = LabelledCollection(all_train_d, all_train_l, classes=[0, 1])
         test = LabelledCollection(test_d, test_l, classes=[0, 1])
 
         return all_train, test
+
+    def get_raw(self, validation=True) -> DatasetSample:
+        all_train, test = {
+            "spambase": self.__spambase,
+            "imdb": self.__imdb,
+            "rcv1": self.__rcv1,
+        }[self._name]()
+
+        train, val = all_train, None
+        if validation:
+            train, val = all_train.split_stratified(
+                train_prop=TRAIN_VAL_PROP, random_state=0
+            )
+
+        return DatasetSample(train, val, test)
 
     def get(self) -> List[DatasetSample]:
         all_train, test = {

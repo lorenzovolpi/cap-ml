@@ -1,10 +1,9 @@
+from functools import wraps
+
 import numpy as np
 import sklearn.metrics as metrics
 from quapy.data import LabelledCollection
-from quapy.protocol import (
-    AbstractStochasticSeededProtocol,
-    OnLabelledCollectionProtocol,
-)
+from quapy.protocol import AbstractStochasticSeededProtocol
 from sklearn.base import BaseEstimator
 
 import quacc.error as error
@@ -16,14 +15,23 @@ from ..estimator import (
     MulticlassAccuracyEstimator,
 )
 
+_methods = {}
+
+
+def method(func):
+    @wraps(func)
+    def wrapper(c_model, validation, protocol):
+        return func(c_model, validation, protocol)
+
+    _methods[func.__name__] = wrapper
+
+    return wrapper
+
 
 def estimate(
     estimator: AccuracyEstimator,
     protocol: AbstractStochasticSeededProtocol,
 ):
-    # ensure that the protocol returns a LabelledCollection for each iteration
-    protocol.collator = OnLabelledCollectionProtocol.get_collator("labelled_collection")
-
     base_prevs, true_prevs, estim_prevs, pred_probas, labels = [], [], [], [], []
     for sample in protocol():
         e_sample, pred_proba = estimator.extend(sample)
@@ -61,6 +69,8 @@ def evaluation_report(
             f1=abs(error.f1(true_prev) - f1_score),
         )
 
+    report.fit_score = estimator.fit_score
+
     return report
 
 
@@ -75,105 +85,51 @@ def evaluate(
     estimator: AccuracyEstimator = {
         "bin": BinaryQuantifierAccuracyEstimator,
         "mul": MulticlassAccuracyEstimator,
-    }[method](c_model, q_model=q_model, **kwargs)
+    }[method](c_model, q_model=q_model.upper(), **kwargs)
     estimator.fit(validation)
     _method = f"{method}_{q_model}"
-    for k, v in kwargs.items():
-        _method += f"_{v}"
+    if "recalib" in kwargs:
+        _method += f"_{kwargs['recalib']}"
+    if ("gs", True) in kwargs.items():
+        _method += "_gs"
     return evaluation_report(estimator, protocol, _method)
 
 
-def evaluate_bin_sld(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "SLD")
+@method
+def bin_sld(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "bin", "sld")
 
 
-def evaluate_mul_sld(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "SLD")
+@method
+def mul_sld(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "mul", "sld")
 
 
-def evaluate_bin_sld_nbvs(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "SLD", recalib="nbvs")
+@method
+def bin_sld_bcts(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "bin", "sld", recalib="bcts")
 
 
-def evaluate_mul_sld_nbvs(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "SLD", recalib="nbvs")
+@method
+def mul_sld_bcts(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "mul", "sld", recalib="bcts")
 
 
-def evaluate_bin_sld_bcts(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "SLD", recalib="bcts")
+@method
+def bin_sld_gs(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "bin", "sld", gs=True)
 
 
-def evaluate_mul_sld_bcts(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "SLD", recalib="bcts")
+@method
+def mul_sld_gs(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "mul", "sld", gs=True)
 
 
-def evaluate_bin_sld_ts(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "SLD", recalib="ts")
+@method
+def bin_cc(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "bin", "cc")
 
 
-def evaluate_mul_sld_ts(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "SLD", recalib="ts")
-
-
-def evaluate_bin_sld_vs(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "SLD", recalib="vs")
-
-
-def evaluate_mul_sld_vs(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "SLD", recalib="vs")
-
-
-def evaluate_bin_cc(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "CC")
-
-
-def evaluate_mul_cc(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "CC")
+@method
+def mul_cc(c_model, validation, protocol) -> EvaluationReport:
+    return evaluate(c_model, validation, protocol, "mul", "cc")
