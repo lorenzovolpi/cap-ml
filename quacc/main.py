@@ -1,11 +1,13 @@
-import logging as log
 import traceback
 from sys import platform
 
 import quacc.evaluation.comp as comp
 from quacc.dataset import Dataset
 from quacc.environment import env
+from quacc.logger import Logger
 from quacc.utils import create_dataser_dir
+
+log = Logger.logger()
 
 
 def toast():
@@ -46,14 +48,9 @@ def estimate_comparison():
 
 
 def main():
-    log.basicConfig(
-        filename="quacc.log",
-        filemode="a",
-        format="%(asctime)s| %(levelname)s: %(message)s",
-        datefmt="%d/%m/%y %H:%M:%S",
-    )
     estimate_comparison()
     toast()
+    Logger.join_listener()
 
 
 if __name__ == "__main__":

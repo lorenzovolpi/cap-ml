@@ -1,9 +1,7 @@
-import logging as log
 import multiprocessing
 import time
 from typing import List
 
-import numpy as np
 import pandas as pd
 import quapy as qp
 from quapy.protocol import APP
@@ -13,6 +11,7 @@ from quacc.dataset import Dataset
 from quacc.environment import env
 from quacc.evaluation import baseline, method
 from quacc.evaluation.report import CompReport, DatasetReport, EvaluationReport
+from quacc.logger import Logger, SubLogger
 
 qp.environ["SAMPLE_SIZE"] = env.SAMPLE_SIZE
 
@@ -41,8 +40,11 @@ class CompEstimator:
 CE = CompEstimator
 
 
-def fit_and_estimate(_estimate, train, validation, test, _env=None):
+def fit_and_estimate(_estimate, train, validation, test, _env=None, q=None):
     _env = env if _env is None else _env
+    SubLogger.setup(q)
+    log = SubLogger.logger()
+
     model = LogisticRegression()
 
     model.fit(*train.Xy)
@@ -76,16 +78,22 @@ def fit_and_estimate(_estimate, train, validation, test, _env=None):
 def evaluate_comparison(
     dataset: Dataset, estimators=["OUR_BIN_SLD", "OUR_MUL_SLD"]
 ) -> EvaluationReport:
+    log = Logger.logger()
     # with multiprocessing.Pool(1) as pool:
     with multiprocessing.Pool(len(estimators)) as pool:
         dr = DatasetReport(dataset.name)
         log.info(f"dataset {dataset.name}")
         for d in dataset():
-            log.info(f"train prev.: {np.around(d.train_prev, decimals=2)}")
+            log.info(
+                f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} started"
+            )
             tstart = time.time()
             tasks = [(estim, d.train, d.validation, d.test) for estim in CE[estimators]]
             results = [
-                pool.apply_async(fit_and_estimate, t, {"_env": env}) for t in tasks
+                pool.apply_async(
+                    fit_and_estimate, t, {"_env": env, "q": Logger.queue()}
+                )
+                for t in tasks
             ]
 
             results_got = []
@@ -96,14 +104,14 @@ def evaluate_comparison(
                         results_got.append(r)
                 except Exception as e:
                     log.error(
-                        f"Dataset sample {d.train[1]:.2f} of dataset {dataset.name} failed. Exception: {e}"
+                        f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} failed. Exception: {e}"
                     )
 
             tend = time.time()
             times = {r["name"]: r["time"] for r in results_got}
             times["tot"] = tend - tstart
             log.info(
-                f"Dataset sample {d.train[1]:.2f} of dataset {dataset.name} finished [took {times['tot']:.4f}s"
+                f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} finished [took {times['tot']:.4f}s"
             )
             dr += CompReport(
                 [r["result"] for r in results_got],
