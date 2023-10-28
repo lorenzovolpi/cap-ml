@@ -4,7 +4,7 @@ from sys import platform
 import quacc.evaluation.comp as comp
 from quacc.dataset import Dataset
 from quacc.environment import env
-from quacc.logger import Logger
+from quacc.logging import Logger
 from quacc.utils import create_dataser_dir
 
 log = Logger.logger()
@@ -24,6 +24,7 @@ def estimate_comparison():
             env.DATASET_NAME,
             target=env.DATASET_TARGET,
             n_prevalences=env.DATASET_N_PREVS,
+            prevs=env.DATASET_PREVS,
         )
         try:
             dr = comp.evaluate_comparison(dataset, estimators=env.COMP_ESTIMATORS)
@@ -48,9 +49,14 @@ def estimate_comparison():
 
 
 def main():
-    estimate_comparison()
+    try:
+        estimate_comparison()
+    except Exception as e:
+        log.error(f"estimate comparison failed. Exceprion: {e}")
+        traceback(e)
+
     toast()
-    Logger.join_listener()
+    Logger.close()
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ import threading
 class Logger:
     __logger_file = "quacc.log"
     __logger_name = "queue_logger"
+    __manager = None
     __queue = None
     __thread = None
     __setup = False
@@ -17,7 +18,7 @@ class Logger:
             record = q.get()
             if record is None:
                 break
-            root = logging.getLogger()
+            root = logging.getLogger("listener")
             root.handle(record)
 
     @classmethod
@@ -26,13 +27,19 @@ class Logger:
             return
 
         # setup root
-        root = logging.getLogger()
+        root = logging.getLogger("listener")
+        root.setLevel(logging.DEBUG)
         rh = logging.FileHandler(cls.__logger_file, mode="a")
+        rh.setLevel(logging.DEBUG)
         root.addHandler(rh)
+        root.info("-" * 100)
 
         # setup logger
+        if cls.__manager is None:
+            cls.__manager = multiprocessing.Manager()
+
         if cls.__queue is None:
-            cls.__queue = multiprocessing.Queue()
+            cls.__queue = cls.__manager.Queue()
 
         logger = logging.getLogger(cls.__logger_name)
         logger.setLevel(logging.DEBUG)
@@ -70,9 +77,11 @@ class Logger:
         return logging.getLogger(cls.__logger_name)
 
     @classmethod
-    def join_listener(cls):
+    def close(cls):
         if cls.__setup and cls.__thread is not None:
+            cls.__queue.put(None)
             cls.__thread.join()
+            # cls.__manager.close()
 
 
 class SubLogger:
@@ -88,7 +97,9 @@ class SubLogger:
 
         # setup root
         root = logging.getLogger()
+        root.setLevel(logging.DEBUG)
         rh = logging.handlers.QueueHandler(q)
+        rh.setLevel(logging.DEBUG)
         rh.setFormatter(
             logging.Formatter(
                 fmt="%(asctime)s| %(levelname)s: %(message)s",

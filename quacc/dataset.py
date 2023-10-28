@@ -34,9 +34,17 @@ class DatasetSample:
 
 
 class Dataset:
-    def __init__(self, name, n_prevalences=9, target=None):
+    def __init__(self, name, n_prevalences=9, prevs=None, target=None):
         self._name = name
         self._target = target
+
+        self.prevs = None
+        if prevs is not None:
+            prevs = np.unique([p for p in prevs if p > 0.0 and p < 1.0])
+            if prevs.shape[0] > 0:
+                self.prevs = np.sort(prevs)
+                self.n_prevs = self.prevs.shape[0]
+
         self.n_prevs = n_prevalences
 
     def __spambase(self):
@@ -92,10 +100,14 @@ class Dataset:
         )
 
         # sample prevalences
-        prevalences = np.linspace(0.0, 1.0, num=self.n_prevs + 1, endpoint=False)[1:]
-        at_size = min(math.floor(len(all_train) * 0.5 / p) for p in prevalences)
+        if self.prevs is not None:
+            prevs = self.prevs
+        else:
+            prevs = np.linspace(0.0, 1.0, num=self.n_prevs + 1, endpoint=False)[1:]
+
+        at_size = min(math.floor(len(all_train) * 0.5 / p) for p in prevs)
         datasets = []
-        for p in prevalences:
+        for p in prevs:
             all_train_sampled = all_train.sampling(at_size, p, random_state=0)
             train, validation = all_train_sampled.split_stratified(
                 train_prop=TRAIN_VAL_PROP, random_state=0

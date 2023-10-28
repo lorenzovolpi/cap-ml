@@ -13,3 +13,5 @@ elsahar19_rca/__pycache__/*
 .coverage
 scp_sync.py
 out/*
+output/*
+*.log

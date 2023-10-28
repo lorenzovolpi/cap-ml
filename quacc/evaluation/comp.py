@@ -1,21 +1,21 @@
 import multiprocessing
 import time
+import traceback
 from typing import List
 
 import pandas as pd
 import quapy as qp
-from quapy.protocol import APP
-from sklearn.linear_model import LogisticRegression
 
 from quacc.dataset import Dataset
 from quacc.environment import env
 from quacc.evaluation import baseline, method
 from quacc.evaluation.report import CompReport, DatasetReport, EvaluationReport
-from quacc.logger import Logger, SubLogger
-
-qp.environ["SAMPLE_SIZE"] = env.SAMPLE_SIZE
+from quacc.evaluation.worker import estimate_worker
+from quacc.logging import Logger
 
 pd.set_option("display.float_format", "{:.4f}".format)
+qp.environ["SAMPLE_SIZE"] = env.SAMPLE_SIZE
+log = Logger.logger()
 
 
 class CompEstimator:
@@ -40,45 +40,9 @@ class CompEstimator:
 CE = CompEstimator
 
 
-def fit_and_estimate(_estimate, train, validation, test, _env=None, q=None):
-    _env = env if _env is None else _env
-    SubLogger.setup(q)
-    log = SubLogger.logger()
-
-    model = LogisticRegression()
-
-    model.fit(*train.Xy)
-    protocol = APP(
-        test,
-        n_prevalences=_env.PROTOCOL_N_PREVS,
-        repeats=_env.PROTOCOL_REPEATS,
-        return_type="labelled_collection",
-    )
-    start = time.time()
-    try:
-        result = _estimate(model, validation, protocol)
-    except Exception as e:
-        log.error(f"Method {_estimate.__name__} failed. Exception: {e}")
-        return {
-            "name": _estimate.__name__,
-            "result": None,
-            "time": 0,
-        }
-
-    end = time.time()
-    log.info(f"{_estimate.__name__} finished [took {end-start:.4f}s]")
-
-    return {
-        "name": _estimate.__name__,
-        "result": result,
-        "time": end - start,
-    }
-
-
 def evaluate_comparison(
     dataset: Dataset, estimators=["OUR_BIN_SLD", "OUR_MUL_SLD"]
 ) -> EvaluationReport:
-    log = Logger.logger()
     # with multiprocessing.Pool(1) as pool:
     with multiprocessing.Pool(len(estimators)) as pool:
         dr = DatasetReport(dataset.name)
@@ -90,9 +54,7 @@ def evaluate_comparison(
             tstart = time.time()
             tasks = [(estim, d.train, d.validation, d.test) for estim in CE[estimators]]
             results = [
-                pool.apply_async(
-                    fit_and_estimate, t, {"_env": env, "q": Logger.queue()}
-                )
+                pool.apply_async(estimate_worker, t, {"_env": env, "q": Logger.queue()})
                 for t in tasks
             ]
 
@@ -103,7 +65,7 @@ def evaluate_comparison(
                     if r["result"] is not None:
                         results_got.append(r)
                 except Exception as e:
-                    log.error(
+                    log.warning(
                         f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} failed. Exception: {e}"
                     )
 
@@ -111,14 +73,21 @@ def evaluate_comparison(
             times = {r["name"]: r["time"] for r in results_got}
             times["tot"] = tend - tstart
             log.info(
-                f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} finished [took {times['tot']:.4f}s"
+                f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} finished [took {times['tot']:.4f}s]"
             )
-            dr += CompReport(
-                [r["result"] for r in results_got],
-                name=dataset.name,
-                train_prev=d.train_prev,
-                valid_prev=d.validation_prev,
-                times=times,
-            )
-
+            try:
+                cr = CompReport(
+                    [r["result"] for r in results_got],
+                    name=dataset.name,
+                    train_prev=d.train_prev,
+                    valid_prev=d.validation_prev,
+                    times=times,
+                )
+            except Exception as e:
+                log.warning(
+                    f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} failed. Exception: {e}"
+                )
+                traceback(e)
+                cr = None
+            dr += cr
     return dr
