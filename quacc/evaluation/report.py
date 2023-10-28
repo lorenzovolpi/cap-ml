@@ -280,6 +280,9 @@ class DatasetReport:
         return np.around([(1.0 - p, p) for p in self.prevs], decimals=2)
 
     def add(self, cr: CompReport):
+        if cr is None:
+            return
+
         self.crs.append(cr)
 
         if self._dict is None:
@@ -319,6 +322,11 @@ class DatasetReport:
                 self.s_dict[col][sp] = np.concatenate(
                     [self.s_dict[col][sp], cr_s_dict[col][sp]]
                 )
+
+        for sp in self.s_prevs:
+            for col, vals in self.s_dict.items():
+                if sp not in vals:
+                    vals[sp] = []
 
         for k, score in cr.fit_scores.items():
             if k not in self.fit_scores:

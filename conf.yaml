@@ -7,6 +7,7 @@ debug_conf: &debug_conf
   datasets:
     - DATASET_NAME: rcv1
       DATASET_TARGET: CCAT
+    - DATASET_NAME: imdb
 
   plot_confs:
     debug:
@@ -49,14 +50,14 @@ main_conf: &main_conf
     DATASET_N_PREVS: 9
 
   datasets:
-    - DATASET_NAME: rcv1
-      DATASET_TARGET: CCAT
+    - DATASET_NAME: imdb
   datasets_bck:
     - DATASET_NAME: rcv1
       DATASET_TARGET: GCAT
     - DATASET_NAME: rcv1
       DATASET_TARGET: MCAT
-    - DATASET_NAME: imdb
+    - DATASET_NAME: rcv1
+      DATASET_TARGET: CCAT
 
   plot_confs:
     gs_vs_atc:

@@ -1,11 +1,13 @@
-import logging as log
 import traceback
 from sys import platform
 
 import quacc.evaluation.comp as comp
 from quacc.dataset import Dataset
 from quacc.environment import env
+from quacc.logging import Logger
 from quacc.utils import create_dataser_dir
+
+log = Logger.logger()
 
 
 def toast():
@@ -22,6 +24,7 @@ def estimate_comparison():
             env.DATASET_NAME,
             target=env.DATASET_TARGET,
             n_prevalences=env.DATASET_N_PREVS,
+            prevs=env.DATASET_PREVS,
         )
         try:
             dr = comp.evaluate_comparison(dataset, estimators=env.COMP_ESTIMATORS)
@@ -46,14 +49,14 @@ def estimate_comparison():
 
 
 def main():
-    log.basicConfig(
-        filename="quacc.log",
-        filemode="a",
-        format="%(asctime)s| %(levelname)s: %(message)s",
-        datefmt="%d/%m/%y %H:%M:%S",
-    )
-    estimate_comparison()
+    try:
+        estimate_comparison()
+    except Exception as e:
+        log.error(f"estimate comparison failed. Exceprion: {e}")
+        traceback(e)
+
     toast()
+    Logger.close()
 
 
 if __name__ == "__main__":

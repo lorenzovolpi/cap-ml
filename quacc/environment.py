@@ -8,6 +8,7 @@ defalut_env = {
     "PLOT_ESTIMATORS": [],
     "PLOT_STDEV": False,
     "DATASET_N_PREVS": 9,
+    "DATASET_PREVS": None,
     "OUT_DIR_NAME": "output",
     "OUT_DIR": None,
     "PLOT_DIR_NAME": "plot",
