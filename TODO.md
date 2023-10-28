@@ -32,5 +32,5 @@
 
 - [ ] testare anche su imbd
 - [ ] plot avg con train prevalence sull'asse x e media su test prevalecne
-- [ ] realizzare grid search per task specifico partendo da GridSearchhQ
+- [ ] realizzare grid search per task specifico partendo da GridSearchQ
 - [ ] provare PACC come quantificatore
