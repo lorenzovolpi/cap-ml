@@ -2,17 +2,24 @@ debug_conf: &debug_conf
   global:
     METRICS: 
     - acc
-    DATASET_N_PREVS: 1
+    DATASET_N_PREVS: 5
+    DATASET_PREVS:
+    - 0.5
+    - 0.1
 
-  datasets:
-    - DATASET_NAME: rcv1
-      DATASET_TARGET: CCAT
+  confs:
     - DATASET_NAME: imdb
 
   plot_confs:
     debug:
       PLOT_ESTIMATORS:
-        # - mul_sld_bcts
+        - ref
+        - atc_mc
+        - atc_ne
+      PLOT_STDEV: true
+    debug_plus:
+      PLOT_ESTIMATORS:
+        - mul_sld_bcts
         - mul_sld
         - ref
         - atc_mc
@@ -23,11 +30,15 @@ test_conf: &test_conf
     METRICS: 
     - acc
     - f1
-    DATASET_N_PREVS: 3
+    DATASET_N_PREVS: 2
+    DATASET_PREVS:
+    - 0.5
+    - 0.1
 
-  datasets:
-    - DATASET_NAME: rcv1
-      DATASET_TARGET: CCAT
+  confs:
+    # - DATASET_NAME: rcv1
+    #   DATASET_TARGET: CCAT
+    - DATASET_NAME: imdb
 
   plot_confs:
     best_vs_atc:
@@ -49,15 +60,15 @@ main_conf: &main_conf
     - f1
     DATASET_N_PREVS: 9
 
-  datasets:
+  confs:
+    - DATASET_NAME: rcv1
+      DATASET_TARGET: CCAT
+  confs_bck:
     - DATASET_NAME: imdb
-  datasets_bck:
     - DATASET_NAME: rcv1
       DATASET_TARGET: GCAT
     - DATASET_NAME: rcv1
       DATASET_TARGET: MCAT
-    - DATASET_NAME: rcv1
-      DATASET_TARGET: CCAT
 
   plot_confs:
     gs_vs_atc:
@@ -100,4 +111,4 @@ main_conf: &main_conf
       - atc_ne
       - doc_feat
 
-exec: *main_conf
+exec: *debug_conf

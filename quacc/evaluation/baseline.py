@@ -86,6 +86,7 @@ def atc_mc(
     protocol: AbstractStochasticSeededProtocol,
     predict_method="predict_proba",
 ):
+    """garg"""
     c_model_predict = getattr(c_model, predict_method)
 
     ## Load ID validation data probs and labels
@@ -124,6 +125,7 @@ def atc_ne(
     protocol: AbstractStochasticSeededProtocol,
     predict_method="predict_proba",
 ):
+    """garg"""
     c_model_predict = getattr(c_model, predict_method)
 
     ## Load ID validation data probs and labels

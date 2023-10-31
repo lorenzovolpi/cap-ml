@@ -19,7 +19,8 @@ def _get_markers(n: int):
 
 def plot_delta(
     base_prevs,
-    dict_vals,
+    columns,
+    data,
     *,
     stdevs=None,
     pos_class=1,
@@ -40,14 +41,14 @@ def plot_delta(
     ax.set_aspect("auto")
     ax.grid()
 
-    NUM_COLORS = len(dict_vals)
+    NUM_COLORS = len(data)
     cm = plt.get_cmap("tab10")
     if NUM_COLORS > 10:
         cm = plt.get_cmap("tab20")
     cy = cycler(color=[cm(i) for i in range(NUM_COLORS)])
 
     base_prevs = base_prevs[:, pos_class]
-    for (method, deltas), _cy in zip(dict_vals.items(), cy):
+    for method, deltas, _cy in zip(columns, data, cy):
         ax.plot(
             base_prevs,
             deltas,
@@ -59,11 +60,17 @@ def plot_delta(
             zorder=2,
         )
         if stdevs is not None:
-            stdev = stdevs[method]
+            _col_idx = np.where(columns == method)[0]
+            stdev = stdevs[_col_idx].flatten()
+            nn_idx = np.intersect1d(
+                np.where(deltas != np.nan)[0],
+                np.where(stdev != np.nan)[0],
+            )
+            _bps, _ds, _st = base_prevs[nn_idx], deltas[nn_idx], stdev[nn_idx]
             ax.fill_between(
-                base_prevs,
-                deltas - stdev,
-                deltas + stdev,
+                _bps,
+                _ds - _st,
+                _ds + _st,
                 color=_cy["color"],
                 alpha=0.25,
             )
@@ -88,7 +95,8 @@ def plot_delta(
 
 def plot_diagonal(
     reference,
-    dict_vals,
+    columns,
+    data,
     *,
     pos_class=1,
     metric="acc",
@@ -107,7 +115,7 @@ def plot_diagonal(
     ax.grid()
     ax.set_aspect("equal")
 
-    NUM_COLORS = len(dict_vals)
+    NUM_COLORS = len(data)
     cm = plt.get_cmap("tab10")
     if NUM_COLORS > 10:
         cm = plt.get_cmap("tab20")
@@ -120,7 +128,7 @@ def plot_diagonal(
     x_ticks = np.unique(reference)
     x_ticks.sort()
 
-    for (_, deltas), _cy in zip(dict_vals.items(), cy):
+    for deltas, _cy in zip(data, cy):
         ax.plot(
             reference,
             deltas,
@@ -137,7 +145,7 @@ def plot_diagonal(
     _lims = np.array([f(ls) for f, ls in zip([np.min, np.max], _alims)])
     ax.set(xlim=tuple(_lims), ylim=tuple(_lims))
 
-    for (method, deltas), _cy in zip(dict_vals.items(), cy):
+    for method, deltas, _cy in zip(columns, data, cy):
         slope, interc = np.polyfit(reference, deltas, 1)
         y_lr = np.array([slope * x + interc for x in _lims])
         ax.plot(
@@ -171,7 +179,8 @@ def plot_diagonal(
 
 def plot_shift(
     shift_prevs,
-    shift_dict,
+    columns,
+    data,
     *,
     pos_class=1,
     metric="acc",
@@ -190,14 +199,14 @@ def plot_shift(
     ax.set_aspect("auto")
     ax.grid()
 
-    NUM_COLORS = len(shift_dict)
+    NUM_COLORS = len(data)
     cm = plt.get_cmap("tab10")
     if NUM_COLORS > 10:
         cm = plt.get_cmap("tab20")
     cy = cycler(color=[cm(i) for i in range(NUM_COLORS)])
 
     shift_prevs = shift_prevs[:, pos_class]
-    for (method, shifts), _cy in zip(shift_dict.items(), cy):
+    for method, shifts, _cy in zip(columns, data, cy):
         ax.plot(
             shift_prevs,
             shifts,

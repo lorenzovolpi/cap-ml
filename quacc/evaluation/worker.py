@@ -1,10 +1,11 @@
 import time
+from traceback import print_exception as traceback
 
 import quapy as qp
 from quapy.protocol import APP
 from sklearn.linear_model import LogisticRegression
 
-from quacc.logging import SubLogger
+from quacc.logger import SubLogger
 
 
 def estimate_worker(_estimate, train, validation, test, _env=None, q=None):
@@ -26,6 +27,7 @@ def estimate_worker(_estimate, train, validation, test, _env=None, q=None):
         result = _estimate(model, validation, protocol)
     except Exception as e:
         log.warning(f"Method {_estimate.__name__} failed. Exception: {e}")
+        # traceback(e)
         return {
             "name": _estimate.__name__,
             "result": None,

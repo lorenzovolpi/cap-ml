@@ -47,7 +47,7 @@ class Logger:
         qh.setLevel(logging.DEBUG)
         qh.setFormatter(
             logging.Formatter(
-                fmt="%(asctime)s| %(levelname)s: %(message)s",
+                fmt="%(asctime)s| %(levelname)-8s %(message)s",
                 datefmt="%d/%m/%y %H:%M:%S",
             )
         )
@@ -102,7 +102,7 @@ class SubLogger:
         rh.setLevel(logging.DEBUG)
         rh.setFormatter(
             logging.Formatter(
-                fmt="%(asctime)s| %(levelname)s: %(message)s",
+                fmt="%(asctime)s| %(levelname)-12s\t%(message)s",
                 datefmt="%d/%m/%y %H:%M:%S",
             )
         )

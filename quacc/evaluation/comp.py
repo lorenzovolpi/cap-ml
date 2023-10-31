@@ -1,6 +1,6 @@
 import multiprocessing
 import time
-import traceback
+from traceback import print_exception as traceback
 from typing import List
 
 import pandas as pd
@@ -11,11 +11,10 @@ from quacc.environment import env
 from quacc.evaluation import baseline, method
 from quacc.evaluation.report import CompReport, DatasetReport, EvaluationReport
 from quacc.evaluation.worker import estimate_worker
-from quacc.logging import Logger
+from quacc.logger import Logger
 
 pd.set_option("display.float_format", "{:.4f}".format)
 qp.environ["SAMPLE_SIZE"] = env.SAMPLE_SIZE
-log = Logger.logger()
 
 
 class CompEstimator:
@@ -43,6 +42,7 @@ CE = CompEstimator
 def evaluate_comparison(
     dataset: Dataset, estimators=["OUR_BIN_SLD", "OUR_MUL_SLD"]
 ) -> EvaluationReport:
+    log = Logger.logger()
     # with multiprocessing.Pool(1) as pool:
     with multiprocessing.Pool(len(estimators)) as pool:
         dr = DatasetReport(dataset.name)
