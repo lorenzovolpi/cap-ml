@@ -1,0 +1,1443 @@
+----------------------------------------------------------------------------------------------------
+30/10/23 14:14:05| INFO: dataset imdb
+----------------------------------------------------------------------------------------------------
+30/10/23 14:14:24| INFO: dataset imdb
+30/10/23 14:14:31| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 14:14:35| WARNING: Method ref failed. Exception: 'dict' object has no attribute 'Keys'
+30/10/23 14:14:35| WARNING: Method atc_mc failed. Exception: 'dict' object has no attribute 'Keys'
+30/10/23 14:14:35| WARNING: Method atc_ne failed. Exception: 'dict' object has no attribute 'Keys'
+30/10/23 14:14:42| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:14:52| WARNING: Method mul_sld failed. Exception: 'dict' object has no attribute 'Keys'
+30/10/23 14:14:52| INFO: Dataset sample 0.90 of dataset imdb finished [took 21.1198s]
+30/10/23 14:14:52| WARNING: Dataset sample 0.90 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 14:14:52| ERROR: Configuration imdb_1prevs failed. Exception: 'module' object is not callable
+30/10/23 14:14:52| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 14:16:15| INFO: dataset imdb
+30/10/23 14:16:22| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 14:16:34| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:16:36| INFO: ref finished [took 11.6636s]
+30/10/23 14:16:39| INFO: atc_mc finished [took 14.8672s]
+30/10/23 14:16:39| INFO: atc_ne finished [took 14.8614s]
+30/10/23 14:16:49| INFO: mul_sld finished [took 24.6212s]
+30/10/23 14:16:49| INFO: Dataset sample 0.90 of dataset imdb finished [took 26.7805s]
+30/10/23 14:16:49| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 14:17:02| INFO: ref finished [took 13.0129s]
+30/10/23 14:17:06| INFO: atc_mc finished [took 16.0277s]
+30/10/23 14:17:06| INFO: atc_ne finished [took 16.1381s]
+30/10/23 14:17:17| INFO: mul_sld finished [took 28.1917s]
+30/10/23 14:17:23| INFO: mul_sld_bcts finished [took 33.5628s]
+30/10/23 14:17:23| INFO: Dataset sample 0.80 of dataset imdb finished [took 34.3680s]
+30/10/23 14:17:23| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 14:17:36| INFO: ref finished [took 12.5930s]
+30/10/23 14:17:40| INFO: atc_mc finished [took 16.1461s]
+30/10/23 14:17:40| INFO: atc_ne finished [took 16.1788s]
+30/10/23 14:17:52| INFO: mul_sld finished [took 28.5367s]
+30/10/23 14:18:00| INFO: mul_sld_bcts finished [took 36.0452s]
+30/10/23 14:18:00| INFO: Dataset sample 0.50 of dataset imdb finished [took 36.7488s]
+30/10/23 14:18:00| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 14:18:13| INFO: ref finished [took 12.3910s]
+30/10/23 14:18:17| INFO: atc_mc finished [took 15.8804s]
+30/10/23 14:18:17| INFO: atc_ne finished [took 15.7115s]
+30/10/23 14:18:32| INFO: mul_sld_bcts finished [took 31.9997s]
+30/10/23 14:18:34| INFO: mul_sld finished [took 33.3735s]
+30/10/23 14:18:34| INFO: Dataset sample 0.20 of dataset imdb finished [took 33.9557s]
+30/10/23 14:18:34| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 14:18:44| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:18:46| INFO: ref finished [took 11.7451s]
+30/10/23 14:18:50| INFO: atc_mc finished [took 15.2294s]
+30/10/23 14:18:50| INFO: atc_ne finished [took 15.1239s]
+30/10/23 14:18:55| INFO: mul_sld finished [took 21.3092s]
+30/10/23 14:18:55| INFO: Dataset sample 0.10 of dataset imdb finished [took 21.7186s]
+30/10/23 14:18:55| ERROR: Configuration imdb_1prevs failed. Exception: 'mul_sld_bcts'
+30/10/23 14:18:55| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 14:32:36| INFO: dataset imdb
+30/10/23 14:32:43| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 14:32:56| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:32:58| INFO: ref finished [took 12.0197s]
+30/10/23 14:33:01| INFO: atc_mc finished [took 15.0884s]
+30/10/23 14:33:01| INFO: atc_ne finished [took 15.0503s]
+30/10/23 14:33:10| INFO: mul_sld finished [took 24.4470s]
+30/10/23 14:33:10| INFO: Dataset sample 0.90 of dataset imdb finished [took 26.6099s]
+30/10/23 14:33:10| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 14:33:23| INFO: ref finished [took 12.1812s]
+30/10/23 14:33:27| INFO: atc_mc finished [took 15.5589s]
+30/10/23 14:33:27| INFO: atc_ne finished [took 15.5283s]
+30/10/23 14:33:38| INFO: mul_sld finished [took 27.1282s]
+30/10/23 14:33:44| INFO: mul_sld_bcts finished [took 33.1098s]
+30/10/23 14:33:44| INFO: Dataset sample 0.80 of dataset imdb finished [took 33.9196s]
+30/10/23 14:33:44| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 14:33:57| INFO: ref finished [took 12.5959s]
+30/10/23 14:34:01| INFO: atc_mc finished [took 15.9389s]
+30/10/23 14:34:01| INFO: atc_ne finished [took 16.0795s]
+30/10/23 14:34:13| INFO: mul_sld finished [took 28.1568s]
+30/10/23 14:34:20| INFO: mul_sld_bcts finished [took 35.7147s]
+30/10/23 14:34:20| INFO: Dataset sample 0.50 of dataset imdb finished [took 36.3828s]
+30/10/23 14:34:20| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 14:34:33| INFO: ref finished [took 12.2399s]
+30/10/23 14:34:37| INFO: atc_mc finished [took 15.4570s]
+30/10/23 14:34:37| INFO: atc_ne finished [took 15.5302s]
+30/10/23 14:34:52| INFO: mul_sld_bcts finished [took 31.1972s]
+30/10/23 14:34:54| INFO: mul_sld finished [took 32.9409s]
+30/10/23 14:34:54| INFO: Dataset sample 0.20 of dataset imdb finished [took 33.5034s]
+30/10/23 14:34:54| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 14:35:04| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:35:06| INFO: ref finished [took 11.6742s]
+30/10/23 14:35:09| INFO: atc_mc finished [took 14.8324s]
+30/10/23 14:35:10| INFO: atc_ne finished [took 14.8661s]
+30/10/23 14:35:15| INFO: mul_sld finished [took 21.1356s]
+30/10/23 14:35:15| INFO: Dataset sample 0.10 of dataset imdb finished [took 21.5814s]
+30/10/23 14:35:15| ERROR: Configuration imdb_1prevs failed. Exception: ('acc', None)
+30/10/23 14:35:15| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 14:37:47| INFO: dataset imdb
+30/10/23 14:37:54| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 14:38:07| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:38:09| INFO: ref finished [took 12.0443s]
+30/10/23 14:38:12| INFO: atc_mc finished [took 14.8929s]
+30/10/23 14:38:12| INFO: atc_ne finished [took 15.0431s]
+30/10/23 14:38:21| INFO: mul_sld finished [took 24.7987s]
+30/10/23 14:38:21| INFO: Dataset sample 0.90 of dataset imdb finished [took 27.0182s]
+30/10/23 14:38:21| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 14:38:35| INFO: ref finished [took 12.4504s]
+30/10/23 14:38:38| INFO: atc_mc finished [took 16.1560s]
+30/10/23 14:38:39| INFO: atc_ne finished [took 16.1785s]
+30/10/23 14:38:49| INFO: mul_sld finished [took 27.0617s]
+30/10/23 14:38:55| INFO: mul_sld_bcts finished [took 32.7384s]
+30/10/23 14:38:55| INFO: Dataset sample 0.80 of dataset imdb finished [took 33.5347s]
+30/10/23 14:38:55| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 14:39:08| INFO: ref finished [took 12.4381s]
+30/10/23 14:39:11| INFO: atc_mc finished [took 15.6709s]
+30/10/23 14:39:11| INFO: atc_ne finished [took 15.7319s]
+30/10/23 14:39:23| INFO: mul_sld finished [took 27.9301s]
+30/10/23 14:39:31| INFO: mul_sld_bcts finished [took 35.5094s]
+30/10/23 14:39:31| INFO: Dataset sample 0.50 of dataset imdb finished [took 36.1333s]
+30/10/23 14:39:31| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 14:39:44| INFO: ref finished [took 12.0382s]
+30/10/23 14:39:47| INFO: atc_mc finished [took 15.0164s]
+30/10/23 14:39:47| INFO: atc_ne finished [took 15.1080s]
+30/10/23 14:40:02| INFO: mul_sld_bcts finished [took 30.9659s]
+30/10/23 14:40:04| INFO: mul_sld finished [took 32.9418s]
+30/10/23 14:40:04| INFO: Dataset sample 0.20 of dataset imdb finished [took 33.4681s]
+30/10/23 14:40:04| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 14:40:14| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:40:17| INFO: ref finished [took 11.8501s]
+30/10/23 14:40:20| INFO: atc_mc finished [took 14.8473s]
+30/10/23 14:40:21| INFO: atc_ne finished [took 15.2000s]
+30/10/23 14:40:26| INFO: mul_sld finished [took 21.4799s]
+30/10/23 14:40:26| INFO: Dataset sample 0.10 of dataset imdb finished [took 21.9220s]
+30/10/23 14:40:26| ERROR: Configuration imdb_1prevs failed. Exception: NDFrame.droplevel() got an unexpected keyword argument 'index'
+30/10/23 14:40:26| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 14:42:13| INFO: dataset imdb
+30/10/23 14:42:20| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 14:42:33| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:42:34| INFO: ref finished [took 12.1951s]
+30/10/23 14:42:38| INFO: atc_ne finished [took 15.3431s]
+30/10/23 14:42:38| INFO: atc_mc finished [took 15.4508s]
+30/10/23 14:42:47| INFO: mul_sld finished [took 25.0246s]
+30/10/23 14:42:47| INFO: Dataset sample 0.90 of dataset imdb finished [took 27.1381s]
+30/10/23 14:42:47| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 14:43:00| INFO: ref finished [took 12.3269s]
+30/10/23 14:43:04| INFO: atc_ne finished [took 15.9216s]
+30/10/23 14:43:04| INFO: atc_mc finished [took 16.1140s]
+30/10/23 14:43:16| INFO: mul_sld finished [took 28.0575s]
+30/10/23 14:43:22| INFO: mul_sld_bcts finished [took 33.9201s]
+30/10/23 14:43:22| INFO: Dataset sample 0.80 of dataset imdb finished [took 34.7703s]
+30/10/23 14:43:22| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 14:43:35| INFO: ref finished [took 12.6508s]
+30/10/23 14:43:39| INFO: atc_mc finished [took 16.0527s]
+30/10/23 14:43:39| INFO: atc_ne finished [took 16.0515s]
+30/10/23 14:43:50| INFO: mul_sld finished [took 28.1061s]
+30/10/23 14:43:57| INFO: mul_sld_bcts finished [took 34.9278s]
+30/10/23 14:43:57| INFO: Dataset sample 0.50 of dataset imdb finished [took 35.6587s]
+30/10/23 14:43:57| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 14:44:10| INFO: ref finished [took 12.0801s]
+30/10/23 14:44:14| INFO: atc_mc finished [took 15.4685s]
+30/10/23 14:44:14| INFO: atc_ne finished [took 15.4165s]
+30/10/23 14:44:29| INFO: mul_sld_bcts finished [took 31.5628s]
+30/10/23 14:44:31| INFO: mul_sld finished [took 33.3113s]
+30/10/23 14:44:31| INFO: Dataset sample 0.20 of dataset imdb finished [took 33.8828s]
+30/10/23 14:44:31| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 14:44:41| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:44:44| INFO: ref finished [took 11.6822s]
+30/10/23 14:44:47| INFO: atc_mc finished [took 14.8091s]
+30/10/23 14:44:47| INFO: atc_ne finished [took 14.7900s]
+30/10/23 14:44:53| INFO: mul_sld finished [took 21.0390s]
+30/10/23 14:44:53| INFO: Dataset sample 0.10 of dataset imdb finished [took 21.4515s]
+30/10/23 14:44:53| ERROR: Configuration imdb_1prevs failed. Exception: 'function' object has no attribute 'index'
+30/10/23 14:44:53| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 14:46:34| INFO: dataset imdb
+30/10/23 14:46:41| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 14:46:54| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:46:56| INFO: ref finished [took 12.5001s]
+30/10/23 14:46:59| INFO: atc_mc finished [took 15.5415s]
+30/10/23 14:46:59| INFO: atc_ne finished [took 15.6358s]
+30/10/23 14:47:08| INFO: mul_sld finished [took 24.5102s]
+30/10/23 14:47:08| INFO: Dataset sample 0.90 of dataset imdb finished [took 26.5553s]
+30/10/23 14:47:08| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 14:47:21| INFO: ref finished [took 12.0997s]
+30/10/23 14:47:24| INFO: atc_mc finished [took 15.4285s]
+30/10/23 14:47:24| INFO: atc_ne finished [took 15.5599s]
+30/10/23 14:47:36| INFO: mul_sld finished [took 27.6146s]
+30/10/23 14:47:43| INFO: mul_sld_bcts finished [took 34.2610s]
+30/10/23 14:47:43| INFO: Dataset sample 0.80 of dataset imdb finished [took 35.0096s]
+30/10/23 14:47:43| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 14:47:56| INFO: ref finished [took 12.1238s]
+30/10/23 14:48:00| INFO: atc_mc finished [took 15.6990s]
+30/10/23 14:48:00| INFO: atc_ne finished [took 15.8708s]
+30/10/23 14:48:11| INFO: mul_sld finished [took 28.0048s]
+30/10/23 14:48:20| INFO: mul_sld_bcts finished [took 36.1524s]
+30/10/23 14:48:20| INFO: Dataset sample 0.50 of dataset imdb finished [took 36.8480s]
+30/10/23 14:48:20| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 14:48:32| INFO: ref finished [took 11.3690s]
+30/10/23 14:48:35| INFO: atc_mc finished [took 14.3092s]
+30/10/23 14:48:35| INFO: atc_ne finished [took 14.4043s]
+30/10/23 14:48:51| INFO: mul_sld_bcts finished [took 30.2595s]
+30/10/23 14:48:52| INFO: mul_sld finished [took 31.4270s]
+30/10/23 14:48:52| INFO: Dataset sample 0.20 of dataset imdb finished [took 31.9598s]
+30/10/23 14:48:52| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 14:49:02| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 14:49:04| INFO: ref finished [took 12.1449s]
+30/10/23 14:49:08| INFO: atc_mc finished [took 15.0332s]
+30/10/23 14:49:08| INFO: atc_ne finished [took 15.3463s]
+30/10/23 14:49:13| INFO: mul_sld finished [took 21.2802s]
+30/10/23 14:49:13| INFO: Dataset sample 0.10 of dataset imdb finished [took 21.7079s]
+30/10/23 14:49:14| ERROR: Configuration imdb_1prevs failed. Exception: unsupported operand type(s) for -: 'list' and 'list'
+30/10/23 14:49:14| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 15:10:08| INFO: dataset imdb
+30/10/23 15:10:14| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 15:10:26| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 15:10:27| INFO: ref finished [took 10.8100s]
+30/10/23 15:10:30| INFO: atc_mc finished [took 13.5996s]
+30/10/23 15:10:30| INFO: atc_ne finished [took 13.6110s]
+30/10/23 15:10:39| INFO: mul_sld finished [took 22.7361s]
+30/10/23 15:10:39| INFO: Dataset sample 0.90 of dataset imdb finished [took 24.8056s]
+30/10/23 15:10:39| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 15:10:51| INFO: ref finished [took 10.9293s]
+30/10/23 15:10:54| INFO: atc_mc finished [took 13.8377s]
+30/10/23 15:10:54| INFO: atc_ne finished [took 13.9983s]
+30/10/23 15:11:05| INFO: mul_sld finished [took 25.1977s]
+30/10/23 15:11:11| INFO: mul_sld_bcts finished [took 31.1124s]
+30/10/23 15:11:11| INFO: Dataset sample 0.80 of dataset imdb finished [took 31.8294s]
+30/10/23 15:11:11| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 15:11:23| INFO: ref finished [took 11.0056s]
+30/10/23 15:11:26| INFO: atc_mc finished [took 14.3946s]
+30/10/23 15:11:27| INFO: atc_ne finished [took 14.6355s]
+30/10/23 15:11:38| INFO: mul_sld finished [took 26.2697s]
+30/10/23 15:11:45| INFO: mul_sld_bcts finished [took 33.8992s]
+30/10/23 15:11:45| INFO: Dataset sample 0.50 of dataset imdb finished [took 34.4963s]
+30/10/23 15:11:45| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 15:11:57| INFO: ref finished [took 10.9836s]
+30/10/23 15:12:00| INFO: atc_mc finished [took 13.8378s]
+30/10/23 15:12:00| INFO: atc_ne finished [took 13.8318s]
+30/10/23 15:12:16| INFO: mul_sld_bcts finished [took 29.9813s]
+30/10/23 15:12:17| INFO: mul_sld finished [took 30.7175s]
+30/10/23 15:12:17| INFO: Dataset sample 0.20 of dataset imdb finished [took 31.2508s]
+30/10/23 15:12:17| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 15:12:26| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 15:12:28| INFO: ref finished [took 10.4376s]
+30/10/23 15:12:31| INFO: atc_ne finished [took 13.3510s]
+30/10/23 15:12:31| INFO: atc_mc finished [took 13.5172s]
+30/10/23 15:12:37| INFO: mul_sld finished [took 19.7440s]
+30/10/23 15:12:37| INFO: Dataset sample 0.10 of dataset imdb finished [took 20.1519s]
+30/10/23 15:12:37| ERROR: Configuration imdb_1prevs failed. Exception: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+30/10/23 15:12:37| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 17:12:41| INFO: dataset imdb
+30/10/23 17:12:48| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 17:13:01| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 17:13:03| INFO: ref finished [took 12.6699s]
+30/10/23 17:13:07| INFO: atc_ne finished [took 15.6073s]
+30/10/23 17:13:07| INFO: atc_mc finished [took 15.6695s]
+30/10/23 17:13:15| INFO: mul_sld finished [took 24.8617s]
+30/10/23 17:13:15| INFO: Dataset sample 0.90 of dataset imdb finished [took 27.6018s]
+30/10/23 17:13:15| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 17:13:29| INFO: ref finished [took 12.6205s]
+30/10/23 17:13:33| INFO: atc_mc finished [took 16.2005s]
+30/10/23 17:13:33| INFO: atc_ne finished [took 16.2091s]
+30/10/23 17:13:43| INFO: mul_sld finished [took 27.1113s]
+30/10/23 17:13:49| INFO: mul_sld_bcts finished [took 33.3939s]
+30/10/23 17:13:49| INFO: Dataset sample 0.80 of dataset imdb finished [took 34.1222s]
+30/10/23 17:13:49| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 17:14:04| INFO: ref finished [took 13.2345s]
+30/10/23 17:14:07| INFO: atc_mc finished [took 16.5475s]
+30/10/23 17:14:07| INFO: atc_ne finished [took 16.6557s]
+30/10/23 17:14:19| INFO: mul_sld finished [took 28.8817s]
+30/10/23 17:14:27| INFO: mul_sld_bcts finished [took 36.5726s]
+30/10/23 17:14:27| INFO: Dataset sample 0.50 of dataset imdb finished [took 37.2057s]
+30/10/23 17:14:27| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 17:14:39| INFO: ref finished [took 11.7051s]
+30/10/23 17:14:42| INFO: atc_mc finished [took 14.8335s]
+30/10/23 17:14:43| INFO: atc_ne finished [took 15.0826s]
+30/10/23 17:14:59| INFO: mul_sld_bcts finished [took 31.7685s]
+30/10/23 17:15:00| INFO: mul_sld finished [took 33.2861s]
+30/10/23 17:15:00| INFO: Dataset sample 0.20 of dataset imdb finished [took 33.8225s]
+30/10/23 17:15:00| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 17:15:11| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 17:15:13| INFO: ref finished [took 12.0927s]
+30/10/23 17:15:17| INFO: atc_mc finished [took 15.4201s]
+30/10/23 17:15:17| INFO: atc_ne finished [took 15.5212s]
+30/10/23 17:15:23| INFO: mul_sld finished [took 21.7236s]
+30/10/23 17:15:23| INFO: Dataset sample 0.10 of dataset imdb finished [took 22.2065s]
+30/10/23 17:15:23| ERROR: Configuration imdb_1prevs failed. Exception: operands could not be broadcast together with shapes (0,) (0,21) 
+30/10/23 17:15:23| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 17:16:39| INFO: dataset imdb
+30/10/23 17:16:46| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 17:16:58| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 17:17:00| INFO: ref finished [took 11.7575s]
+30/10/23 17:17:03| INFO: atc_ne finished [took 14.7709s]
+30/10/23 17:17:03| INFO: atc_mc finished [took 14.8925s]
+30/10/23 17:17:12| INFO: mul_sld finished [took 23.7037s]
+30/10/23 17:17:12| INFO: Dataset sample 0.90 of dataset imdb finished [took 25.8491s]
+30/10/23 17:17:12| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 17:17:25| INFO: ref finished [took 12.2081s]
+30/10/23 17:17:28| INFO: atc_ne finished [took 15.3145s]
+30/10/23 17:17:28| INFO: atc_mc finished [took 15.5166s]
+30/10/23 17:17:39| INFO: mul_sld finished [took 26.7520s]
+30/10/23 17:17:45| INFO: mul_sld_bcts finished [took 32.0850s]
+30/10/23 17:17:45| INFO: Dataset sample 0.80 of dataset imdb finished [took 32.8702s]
+30/10/23 17:17:45| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 17:17:57| INFO: ref finished [took 11.9494s]
+30/10/23 17:18:01| INFO: atc_mc finished [took 15.3034s]
+30/10/23 17:18:01| INFO: atc_ne finished [took 15.3254s]
+30/10/23 17:18:12| INFO: mul_sld finished [took 27.2902s]
+30/10/23 17:18:20| INFO: mul_sld_bcts finished [took 34.4237s]
+30/10/23 17:18:20| INFO: Dataset sample 0.50 of dataset imdb finished [took 35.1216s]
+30/10/23 17:18:20| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 17:18:32| INFO: ref finished [took 11.7945s]
+30/10/23 17:18:35| INFO: atc_mc finished [took 14.9218s]
+30/10/23 17:18:36| INFO: atc_ne finished [took 14.9745s]
+30/10/23 17:18:51| INFO: mul_sld_bcts finished [took 30.7287s]
+30/10/23 17:18:53| INFO: mul_sld finished [took 32.5641s]
+30/10/23 17:18:53| INFO: Dataset sample 0.20 of dataset imdb finished [took 33.0982s]
+30/10/23 17:18:53| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 17:19:02| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 17:19:05| INFO: ref finished [took 11.4568s]
+30/10/23 17:19:08| INFO: atc_mc finished [took 14.4778s]
+30/10/23 17:19:08| INFO: atc_ne finished [took 14.5099s]
+30/10/23 17:19:14| INFO: mul_sld finished [took 20.5183s]
+30/10/23 17:19:14| INFO: Dataset sample 0.10 of dataset imdb finished [took 20.9251s]
+30/10/23 17:19:14| ERROR: Configuration imdb_1prevs failed. Exception: operands could not be broadcast together with shapes (0,) (0,21) 
+30/10/23 17:19:14| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+30/10/23 19:57:49| INFO: dataset imdb
+30/10/23 19:58:00| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 19:58:11| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 19:58:22| INFO: ref finished [took 20.9010s]
+30/10/23 19:58:29| INFO: atc_ne finished [took 27.8453s]
+30/10/23 19:58:29| INFO: atc_mc finished [took 28.1079s]
+30/10/23 19:58:37| INFO: mul_sld finished [took 36.1699s]
+30/10/23 19:58:37| INFO: Dataset sample 0.90 of dataset imdb finished [took 36.7140s]
+30/10/23 19:58:37| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 19:59:01| INFO: ref finished [took 23.2803s]
+30/10/23 19:59:09| INFO: atc_ne finished [took 31.1099s]
+30/10/23 19:59:09| INFO: atc_mc finished [took 31.5916s]
+30/10/23 19:59:19| INFO: mul_sld finished [took 41.5113s]
+30/10/23 19:59:24| INFO: mul_sld_bcts finished [took 46.6603s]
+30/10/23 19:59:24| INFO: Dataset sample 0.80 of dataset imdb finished [took 47.4989s]
+30/10/23 19:59:24| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 19:59:49| INFO: ref finished [took 23.6312s]
+30/10/23 19:59:57| INFO: atc_ne finished [took 31.5195s]
+30/10/23 19:59:57| INFO: atc_mc finished [took 31.8197s]
+30/10/23 20:00:08| INFO: mul_sld finished [took 42.8675s]
+30/10/23 20:00:15| INFO: mul_sld_bcts finished [took 50.5527s]
+30/10/23 20:00:16| INFO: Dataset sample 0.50 of dataset imdb finished [took 51.3659s]
+30/10/23 20:00:16| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 20:00:41| INFO: ref finished [took 24.2178s]
+30/10/23 20:00:48| INFO: atc_mc finished [took 31.9886s]
+30/10/23 20:00:49| INFO: atc_ne finished [took 32.1537s]
+30/10/23 20:01:03| INFO: mul_sld_bcts finished [took 46.2477s]
+30/10/23 20:01:07| INFO: mul_sld finished [took 50.8912s]
+30/10/23 20:01:07| INFO: Dataset sample 0.20 of dataset imdb finished [took 51.4589s]
+30/10/23 20:01:07| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 20:01:18| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 20:01:30| INFO: ref finished [took 22.6404s]
+30/10/23 20:01:38| INFO: atc_mc finished [took 29.8371s]
+30/10/23 20:01:38| INFO: atc_ne finished [took 30.2098s]
+30/10/23 20:01:41| INFO: mul_sld finished [took 33.6271s]
+30/10/23 20:01:41| INFO: Dataset sample 0.10 of dataset imdb finished [took 34.1993s]
+30/10/23 20:01:42| ERROR: Configuration imdb_1prevs failed. Exception: operands could not be broadcast together with shapes (0,) (0,21) 
+30/10/23 20:01:42| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 20:05:04| INFO: dataset imdb
+30/10/23 20:05:14| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 20:05:26| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 20:05:38| INFO: ref finished [took 22.7241s]
+30/10/23 20:05:45| INFO: atc_mc finished [took 29.9191s]
+30/10/23 20:05:45| INFO: atc_ne finished [took 29.8405s]
+30/10/23 20:05:52| INFO: mul_sld finished [took 37.4045s]
+30/10/23 20:05:52| INFO: Dataset sample 0.90 of dataset imdb finished [took 37.9554s]
+30/10/23 20:05:52| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 20:06:17| INFO: ref finished [took 23.2465s]
+30/10/23 20:06:25| INFO: atc_ne finished [took 31.0138s]
+30/10/23 20:06:25| INFO: atc_mc finished [took 31.1341s]
+30/10/23 20:06:34| INFO: mul_sld finished [took 40.8777s]
+30/10/23 20:06:40| INFO: mul_sld_bcts finished [took 46.7083s]
+30/10/23 20:06:40| INFO: Dataset sample 0.80 of dataset imdb finished [took 47.5062s]
+30/10/23 20:06:40| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:07:05| INFO: ref finished [took 24.3375s]
+30/10/23 20:07:15| INFO: atc_mc finished [took 33.8014s]
+30/10/23 20:07:15| INFO: atc_ne finished [took 33.7355s]
+30/10/23 20:07:25| INFO: mul_sld finished [took 44.2891s]
+30/10/23 20:07:32| INFO: mul_sld_bcts finished [took 51.2404s]
+30/10/23 20:07:32| INFO: Dataset sample 0.50 of dataset imdb finished [took 51.9917s]
+30/10/23 20:07:32| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 20:07:55| INFO: ref finished [took 21.6828s]
+30/10/23 20:08:01| INFO: atc_mc finished [took 28.2369s]
+30/10/23 20:08:01| INFO: atc_ne finished [took 28.4328s]
+30/10/23 20:08:15| INFO: mul_sld_bcts finished [took 41.9176s]
+30/10/23 20:08:18| INFO: mul_sld finished [took 45.4999s]
+30/10/23 20:08:18| INFO: Dataset sample 0.20 of dataset imdb finished [took 46.0301s]
+30/10/23 20:08:18| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 20:08:28| WARNING: Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 20:08:38| INFO: ref finished [took 19.4082s]
+30/10/23 20:08:45| INFO: atc_mc finished [took 26.2343s]
+30/10/23 20:08:45| INFO: atc_ne finished [took 26.2322s]
+30/10/23 20:08:48| INFO: mul_sld finished [took 29.8392s]
+30/10/23 20:08:48| INFO: Dataset sample 0.10 of dataset imdb finished [took 30.3563s]
+----------------------------------------------------------------------------------------------------
+30/10/23 20:29:28| INFO: dataset imdb
+30/10/23 20:29:38| INFO: Dataset sample 0.50 of dataset imdb started
+	30/10/23 20:29:59| INFO: ref finished [took 19.1581s]
+	30/10/23 20:30:06| INFO: atc_mc finished [took 26.3398s]
+	30/10/23 20:30:07| INFO: atc_ne finished [took 26.4359s]
+30/10/23 20:30:07| INFO: Dataset sample 0.50 of dataset imdb finished [took 28.7984s]
+----------------------------------------------------------------------------------------------------
+30/10/23 20:31:50| INFO: dataset imdb
+30/10/23 20:32:00| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:33:59|INFO:	ref finished [took 118.1306s]
+----------------------------------------------------------------------------------------------------
+30/10/23 20:36:06| INFO: dataset imdb
+30/10/23 20:36:17| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:38:52|WARNING:	Method ref failed. Exception: "['acc_score' 'f1_score' 'ref'] not in index"
+30/10/23 20:41:28|WARNING:	Method atc_mc failed. Exception: "['acc' 'acc_score' 'atc_mc' 'f1' 'f1_score'] not in index"
+30/10/23 20:41:32|WARNING:	Method atc_ne failed. Exception: "['acc' 'acc_score' 'atc_ne' 'f1' 'f1_score'] not in index"
+30/10/23 20:41:32| INFO: Dataset sample 0.50 of dataset imdb finished [took 315.4626s]
+30/10/23 20:41:32| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:41:32| ERROR: Configuration imdb_1prevs failed. Exception: 'module' object is not callable
+30/10/23 20:41:32| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 20:41:43| INFO: dataset imdb
+30/10/23 20:41:54| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:42:26| WARNING:	Method ref failed. Exception: Shape of passed values is (2, 1), indices imply (1, 2)
+30/10/23 20:43:01| WARNING:	Method atc_mc failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:43:08| WARNING:	Method atc_ne failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:43:08| INFO: Dataset sample 0.50 of dataset imdb finished [took 73.6011s]
+30/10/23 20:43:08| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:43:08| ERROR: Configuration imdb_1prevs failed. Exception: 'module' object is not callable
+30/10/23 20:43:08| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 20:44:25| INFO: dataset imdb
+30/10/23 20:44:35| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:44:37| WARNING:	Method ref failed. Exception: Shape of passed values is (2, 1), indices imply (1, 2)
+30/10/23 20:44:37| WARNING:	Method atc_mc failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:44:38| WARNING:	Method atc_ne failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:44:38| INFO: Dataset sample 0.50 of dataset imdb finished [took 2.6758s]
+30/10/23 20:44:38| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:44:38| ERROR: Configuration imdb_1prevs failed. Exception: 'module' object is not callable
+30/10/23 20:44:38| ERROR: estimate comparison failed. Exceprion: 'module' object is not callable
+----------------------------------------------------------------------------------------------------
+30/10/23 20:47:08| INFO: dataset imdb
+30/10/23 20:47:18| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:47:20| WARNING:	Method ref failed. Exception: Shape of passed values is (2, 1), indices imply (1, 2)
+30/10/23 20:47:21| WARNING:	Method atc_mc failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:47:21| WARNING:	Method atc_ne failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:47:21| INFO: Dataset sample 0.50 of dataset imdb finished [took 2.6147s]
+30/10/23 20:47:21| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:47:21| ERROR: Configuration imdb_1prevs failed. Exception: No objects to concatenate
+----------------------------------------------------------------------------------------------------
+30/10/23 20:50:07| INFO: dataset imdb
+30/10/23 20:50:17| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:50:19| WARNING:	Method ref failed. Exception: Shape of passed values is (2, 1), indices imply (1, 2)
+30/10/23 20:50:20| WARNING:	Method atc_mc failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:50:20| WARNING:	Method atc_ne failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:50:20| INFO: Dataset sample 0.50 of dataset imdb finished [took 2.5897s]
+30/10/23 20:50:20| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:50:20| ERROR: Configuration imdb_1prevs failed. Exception: No objects to concatenate
+----------------------------------------------------------------------------------------------------
+30/10/23 20:51:29| INFO: dataset imdb
+30/10/23 20:51:39| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:51:42| WARNING:	Method ref failed. Exception: Shape of passed values is (2, 1), indices imply (1, 2)
+30/10/23 20:51:42| WARNING:	Method atc_mc failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:51:42| WARNING:	Method atc_ne failed. Exception: Shape of passed values is (4, 1), indices imply (1, 4)
+30/10/23 20:51:42| INFO: Dataset sample 0.50 of dataset imdb finished [took 2.5821s]
+30/10/23 20:51:42| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:51:42| ERROR: Configuration imdb_1prevs failed. Exception: No objects to concatenate
+----------------------------------------------------------------------------------------------------
+30/10/23 20:56:28| INFO: dataset imdb
+30/10/23 20:56:38| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:56:40| WARNING:	Method ref failed. Exception: cannot reshape array of size 1 into shape (1,2)
+30/10/23 20:56:40| WARNING:	Method atc_mc failed. Exception: cannot reshape array of size 1 into shape (1,4)
+30/10/23 20:56:40| WARNING:	Method atc_ne failed. Exception: cannot reshape array of size 1 into shape (1,4)
+30/10/23 20:56:40| INFO: Dataset sample 0.50 of dataset imdb finished [took 2.6150s]
+30/10/23 20:56:40| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:56:40| ERROR: Configuration imdb_1prevs failed. Exception: No objects to concatenate
+----------------------------------------------------------------------------------------------------
+30/10/23 20:57:13| INFO: dataset imdb
+30/10/23 20:57:23| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 20:59:40| WARNING:	Method ref failed. Exception: cannot reshape array of size 1 into shape (1,2)
+30/10/23 20:59:51| WARNING:	Method atc_mc failed. Exception: cannot reshape array of size 1 into shape (1,4)
+30/10/23 20:59:52| WARNING:	Method atc_ne failed. Exception: cannot reshape array of size 1 into shape (1,4)
+30/10/23 20:59:52| INFO: Dataset sample 0.50 of dataset imdb finished [took 149.2395s]
+30/10/23 20:59:52| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 20:59:52| ERROR: Configuration imdb_1prevs failed. Exception: No objects to concatenate
+----------------------------------------------------------------------------------------------------
+30/10/23 21:00:04| INFO: dataset imdb
+30/10/23 21:00:14| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:01:33| INFO:	ref finished [took 78.2917s]
+30/10/23 21:01:42| INFO:	atc_mc finished [took 86.9003s]
+----------------------------------------------------------------------------------------------------
+30/10/23 21:01:59| INFO: dataset imdb
+30/10/23 21:02:09| INFO: Dataset sample 0.50 of dataset imdb started
+----------------------------------------------------------------------------------------------------
+30/10/23 21:04:09| INFO: dataset imdb
+30/10/23 21:04:19| INFO: Dataset sample 0.50 of dataset imdb started
+----------------------------------------------------------------------------------------------------
+30/10/23 21:06:25| INFO: dataset imdb
+30/10/23 21:06:35| INFO: Dataset sample 0.50 of dataset imdb started
+----------------------------------------------------------------------------------------------------
+30/10/23 21:07:33| INFO: dataset imdb
+30/10/23 21:07:43| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:07:45| WARNING:	Method ref failed. Exception: setting an array element with a sequence.
+30/10/23 21:07:45| WARNING:	Method atc_mc failed. Exception: setting an array element with a sequence.
+30/10/23 21:07:45| WARNING:	Method atc_ne failed. Exception: setting an array element with a sequence.
+30/10/23 21:07:45| INFO: Dataset sample 0.50 of dataset imdb finished [took 2.5382s]
+30/10/23 21:07:45| WARNING: Dataset sample 0.50 of dataset imdb failed. Exception: No objects to concatenate
+30/10/23 21:07:45| ERROR: Configuration imdb_1prevs failed. Exception: No objects to concatenate
+----------------------------------------------------------------------------------------------------
+30/10/23 21:09:07| INFO: dataset imdb
+30/10/23 21:09:16| INFO: Dataset sample 0.50 of dataset imdb started
+----------------------------------------------------------------------------------------------------
+30/10/23 21:10:48| INFO: dataset imdb
+30/10/23 21:10:58| INFO: Dataset sample 0.50 of dataset imdb started
+----------------------------------------------------------------------------------------------------
+30/10/23 21:18:53| INFO: dataset imdb
+30/10/23 21:19:03| INFO: Dataset sample 0.50 of dataset imdb started
+----------------------------------------------------------------------------------------------------
+30/10/23 21:22:03| INFO: dataset imdb
+30/10/23 21:22:12| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:22:31| INFO:	ref finished [took 17.0861s]
+30/10/23 21:22:37| INFO:	atc_mc finished [took 23.6279s]
+30/10/23 21:22:38| INFO:	atc_ne finished [took 23.7395s]
+30/10/23 21:22:38| INFO: Dataset sample 0.50 of dataset imdb finished [took 25.2007s]
+----------------------------------------------------------------------------------------------------
+30/10/23 21:29:55| INFO: dataset imdb
+30/10/23 21:30:05| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:30:23| INFO:	ref finished [took 16.7801s]
+30/10/23 21:30:30| INFO:	atc_mc finished [took 23.5645s]
+30/10/23 21:30:30| INFO:	atc_ne finished [took 23.5639s]
+30/10/23 21:30:30| INFO: Dataset sample 0.50 of dataset imdb finished [took 25.0459s]
+----------------------------------------------------------------------------------------------------
+30/10/23 21:33:45| INFO: dataset imdb
+30/10/23 21:33:55| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:34:13| INFO:	ref finished [took 17.0169s]
+30/10/23 21:34:20| INFO:	atc_mc finished [took 23.4725s]
+30/10/23 21:34:20| INFO:	atc_ne finished [took 23.5928s]
+30/10/23 21:34:20| INFO: Dataset sample 0.50 of dataset imdb finished [took 24.9542s]
+----------------------------------------------------------------------------------------------------
+30/10/23 21:37:32| INFO: dataset imdb
+30/10/23 21:37:39| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:37:49| INFO:	ref finished [took 8.9050s]
+30/10/23 21:37:52| INFO:	atc_mc finished [took 11.7412s]
+30/10/23 21:37:52| INFO:	atc_ne finished [took 11.7256s]
+30/10/23 21:37:52| INFO: Dataset sample 0.50 of dataset imdb finished [took 12.9758s]
+30/10/23 21:37:53| ERROR: Configuration imdb_1prevs failed. Exception: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+----------------------------------------------------------------------------------------------------
+30/10/23 21:39:14| INFO: dataset imdb
+30/10/23 21:39:21| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:39:31| INFO:	ref finished [took 8.5615s]
+30/10/23 21:39:34| INFO:	atc_mc finished [took 11.4156s]
+30/10/23 21:39:34| INFO:	atc_ne finished [took 11.4156s]
+30/10/23 21:39:34| INFO: Dataset sample 0.50 of dataset imdb finished [took 12.7024s]
+30/10/23 21:39:35| ERROR: Configuration imdb_1prevs failed. Exception: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+----------------------------------------------------------------------------------------------------
+30/10/23 21:40:51| INFO: dataset imdb
+30/10/23 21:41:01| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:41:19| INFO:	ref finished [took 16.7164s]
+30/10/23 21:41:26| INFO:	atc_mc finished [took 23.3181s]
+30/10/23 21:41:26| INFO:	atc_ne finished [took 23.4811s]
+30/10/23 21:41:26| INFO: Dataset sample 0.50 of dataset imdb finished [took 24.9698s]
+----------------------------------------------------------------------------------------------------
+30/10/23 21:43:25| INFO: dataset imdb
+30/10/23 21:43:35| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:43:53| INFO:	ref finished [took 16.9333s]
+30/10/23 21:44:00| INFO:	atc_mc finished [took 23.4183s]
+30/10/23 21:44:00| INFO:	atc_ne finished [took 23.4274s]
+30/10/23 21:44:00| INFO: Dataset sample 0.50 of dataset imdb finished [took 24.9308s]
+30/10/23 21:44:19| ERROR: Configuration imdb_1prevs failed. Exception: only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices
+----------------------------------------------------------------------------------------------------
+30/10/23 21:45:16| INFO: dataset imdb
+30/10/23 21:45:26| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:45:44| INFO:	ref finished [took 17.6768s]
+30/10/23 21:45:51| INFO:	atc_mc finished [took 24.3756s]
+30/10/23 21:45:52| INFO:	atc_ne finished [took 24.5307s]
+30/10/23 21:45:52| INFO: Dataset sample 0.50 of dataset imdb finished [took 25.8971s]
+----------------------------------------------------------------------------------------------------
+30/10/23 21:48:20| INFO: dataset imdb
+30/10/23 21:48:27| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:48:36| INFO:	ref finished [took 8.6456s]
+30/10/23 21:48:39| INFO:	atc_mc finished [took 11.2686s]
+30/10/23 21:48:39| INFO:	atc_ne finished [took 11.3112s]
+30/10/23 21:48:39| INFO: Dataset sample 0.50 of dataset imdb finished [took 12.5747s]
+30/10/23 21:48:40| ERROR: Configuration imdb_1prevs failed. Exception: NDFrame.droplevel() got an unexpected keyword argument 'index'
+----------------------------------------------------------------------------------------------------
+30/10/23 21:49:49| INFO: dataset imdb
+30/10/23 21:49:55| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:50:05| INFO:	ref finished [took 8.6556s]
+30/10/23 21:50:08| INFO:	atc_mc finished [took 11.6953s]
+30/10/23 21:50:08| INFO:	atc_ne finished [took 11.6000s]
+30/10/23 21:50:08| INFO: Dataset sample 0.50 of dataset imdb finished [took 12.8578s]
+30/10/23 21:50:09| ERROR: Configuration imdb_1prevs failed. Exception: 'NoneType' object has no attribute 'groupby'
+----------------------------------------------------------------------------------------------------
+30/10/23 21:50:57| INFO: dataset imdb
+30/10/23 21:51:07| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:51:25| INFO:	ref finished [took 17.0426s]
+30/10/23 21:51:31| INFO:	atc_mc finished [took 23.5734s]
+30/10/23 21:51:31| INFO:	atc_ne finished [took 23.5276s]
+30/10/23 21:51:31| INFO: Dataset sample 0.50 of dataset imdb finished [took 24.8200s]
+----------------------------------------------------------------------------------------------------
+30/10/23 21:55:21| INFO: dataset imdb
+30/10/23 21:55:27| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:55:37| INFO:	ref finished [took 8.8453s]
+30/10/23 21:55:40| INFO:	atc_mc finished [took 11.5585s]
+30/10/23 21:55:40| INFO:	atc_ne finished [took 11.5871s]
+30/10/23 21:55:40| INFO: Dataset sample 0.50 of dataset imdb finished [took 12.8416s]
+30/10/23 21:55:41| ERROR: Configuration imdb_1prevs failed. Exception: 'DatasetReport' object has no attribute 'fit_scores'
+----------------------------------------------------------------------------------------------------
+30/10/23 21:57:00| INFO: dataset imdb
+30/10/23 21:57:06| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:57:16| INFO:	ref finished [took 8.5540s]
+30/10/23 21:57:19| INFO:	atc_mc finished [took 11.4482s]
+30/10/23 21:57:19| INFO:	atc_ne finished [took 11.5399s]
+30/10/23 21:57:19| INFO: Dataset sample 0.50 of dataset imdb finished [took 12.7681s]
+30/10/23 21:57:20| ERROR: Configuration imdb_1prevs failed. Exception: 'DatasetReport' object has no attribute 'fit_scores'
+----------------------------------------------------------------------------------------------------
+30/10/23 21:57:38| INFO: dataset imdb
+30/10/23 21:57:45| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 21:57:55| INFO:	ref finished [took 8.7982s]
+30/10/23 21:57:58| INFO:	atc_mc finished [took 11.4787s]
+30/10/23 21:57:58| INFO:	atc_ne finished [took 11.5419s]
+30/10/23 21:57:58| INFO: Dataset sample 0.50 of dataset imdb finished [took 12.8803s]
+----------------------------------------------------------------------------------------------------
+30/10/23 22:00:05| INFO: dataset imdb
+30/10/23 22:00:12| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 22:00:21| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 22:00:22| INFO:	ref finished [took 10.0983s]
+30/10/23 22:00:25| INFO:	atc_mc finished [took 13.0928s]
+30/10/23 22:00:26| INFO:	atc_ne finished [took 13.1088s]
+30/10/23 22:00:34| INFO:	mul_sld finished [took 22.3228s]
+30/10/23 22:00:34| INFO: Dataset sample 0.90 of dataset imdb finished [took 22.7020s]
+30/10/23 22:00:34| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 22:00:46| INFO:	ref finished [took 10.5937s]
+30/10/23 22:00:49| INFO:	atc_mc finished [took 13.5008s]
+30/10/23 22:00:49| INFO:	atc_ne finished [took 13.7521s]
+30/10/23 22:01:00| INFO:	mul_sld finished [took 25.0319s]
+30/10/23 22:01:06| INFO:	mul_sld_bcts finished [took 31.0525s]
+30/10/23 22:01:06| INFO: Dataset sample 0.80 of dataset imdb finished [took 31.7700s]
+30/10/23 22:01:06| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 22:01:17| INFO:	ref finished [took 10.6316s]
+30/10/23 22:01:21| INFO:	atc_ne finished [took 14.1054s]
+30/10/23 22:01:21| INFO:	atc_mc finished [took 14.4357s]
+30/10/23 22:01:33| INFO:	mul_sld finished [took 26.6800s]
+30/10/23 22:01:41| INFO:	mul_sld_bcts finished [took 34.4745s]
+30/10/23 22:01:41| INFO: Dataset sample 0.50 of dataset imdb finished [took 35.1450s]
+30/10/23 22:01:41| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 22:01:53| INFO:	ref finished [took 10.7413s]
+30/10/23 22:01:56| INFO:	atc_ne finished [took 13.5169s]
+30/10/23 22:01:56| INFO:	atc_mc finished [took 13.5849s]
+30/10/23 22:02:11| INFO:	mul_sld_bcts finished [took 29.3981s]
+30/10/23 22:02:12| INFO:	mul_sld finished [took 30.6705s]
+30/10/23 22:02:12| INFO: Dataset sample 0.20 of dataset imdb finished [took 31.2089s]
+30/10/23 22:02:12| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 22:02:22| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 22:02:24| INFO:	ref finished [took 10.3435s]
+30/10/23 22:02:26| INFO:	atc_mc finished [took 13.0763s]
+30/10/23 22:02:27| INFO:	atc_ne finished [took 13.2013s]
+30/10/23 22:02:32| INFO:	mul_sld finished [took 19.2237s]
+30/10/23 22:02:32| INFO: Dataset sample 0.10 of dataset imdb finished [took 19.7097s]
+----------------------------------------------------------------------------------------------------
+30/10/23 22:07:59| INFO: dataset imdb
+30/10/23 22:08:07| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 22:08:10| WARNING:	Method bin_sld failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:08:11| WARNING:	Method bin_sld_bcts failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:08:11| WARNING:	Method bin_sld_gs failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:08:11| WARNING:	Method mul_sld_gs failed. Exception: a must be greater than 0 unless no samples are taken
+30/10/23 22:08:18| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 22:08:20| INFO:	ref finished [took 11.3765s]
+30/10/23 22:08:23| INFO:	atc_mc finished [took 14.2141s]
+30/10/23 22:08:23| INFO:	atc_ne finished [took 14.0568s]
+30/10/23 22:08:31| INFO:	mul_sld finished [took 23.9496s]
+30/10/23 22:08:31| INFO: Dataset sample 0.90 of dataset imdb finished [took 24.5121s]
+30/10/23 22:08:31| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 22:08:48| INFO:	ref finished [took 14.8939s]
+30/10/23 22:08:52| INFO:	atc_mc finished [took 18.5014s]
+30/10/23 22:08:52| INFO:	atc_ne finished [took 18.4609s]
+30/10/23 22:09:05| INFO:	mul_sld finished [took 32.9898s]
+30/10/23 22:09:12| INFO:	mul_sld_bcts finished [took 39.3492s]
+30/10/23 22:11:48| INFO:	bin_sld_bcts finished [took 195.8293s]
+30/10/23 22:11:49| INFO:	bin_sld finished [took 196.6861s]
+30/10/23 22:12:44| INFO:	mul_sld_gs finished [took 250.9835s]
+30/10/23 22:16:16| INFO:	bin_sld_gs finished [took 462.9748s]
+30/10/23 22:16:16| INFO: Dataset sample 0.80 of dataset imdb finished [took 464.4318s]
+30/10/23 22:16:16| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 22:16:33| INFO:	ref finished [took 15.2921s]
+30/10/23 22:16:37| INFO:	atc_mc finished [took 18.9592s]
+30/10/23 22:16:37| INFO:	atc_ne finished [took 19.1317s]
+30/10/23 22:16:50| INFO:	mul_sld finished [took 33.4304s]
+30/10/23 22:16:59| INFO:	mul_sld_bcts finished [took 42.3496s]
+30/10/23 22:19:33| INFO:	bin_sld finished [took 196.1571s]
+30/10/23 22:19:36| INFO:	bin_sld_bcts finished [took 199.7857s]
+30/10/23 22:20:39| INFO:	mul_sld_gs finished [took 261.6674s]
+30/10/23 22:23:46| INFO:	bin_sld_gs finished [took 449.3788s]
+30/10/23 22:23:46| INFO: Dataset sample 0.50 of dataset imdb finished [took 450.7045s]
+30/10/23 22:23:46| INFO: Dataset sample 0.20 of dataset imdb started
+30/10/23 22:24:05| INFO:	ref finished [took 16.4122s]
+30/10/23 22:24:09| INFO:	atc_mc finished [took 20.4920s]
+30/10/23 22:24:09| INFO:	atc_ne finished [took 20.3723s]
+30/10/23 22:24:28| INFO:	mul_sld_bcts finished [took 40.3400s]
+30/10/23 22:24:30| INFO:	mul_sld finished [took 43.2311s]
+30/10/23 22:27:16| INFO:	bin_sld_bcts finished [took 208.6113s]
+30/10/23 22:27:21| INFO:	bin_sld finished [took 214.1596s]
+30/10/23 22:28:17| INFO:	mul_sld_gs finished [took 269.1075s]
+30/10/23 22:34:19| INFO:	bin_sld_gs finished [took 630.9727s]
+30/10/23 22:34:19| INFO: Dataset sample 0.20 of dataset imdb finished [took 632.2728s]
+30/10/23 22:34:19| INFO: Dataset sample 0.10 of dataset imdb started
+30/10/23 22:34:23| WARNING:	Method mul_sld_gs failed. Exception: a must be greater than 0 unless no samples are taken
+30/10/23 22:34:23| WARNING:	Method bin_sld failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 1
+30/10/23 22:34:26| WARNING:	Method bin_sld_bcts failed. Exception: Cannot have number of splits n_splits=5 greater than the number of samples: n_samples=4.
+30/10/23 22:34:31| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 22:34:34| INFO:	ref finished [took 13.7988s]
+30/10/23 22:34:37| INFO:	atc_mc finished [took 16.7490s]
+30/10/23 22:34:38| INFO:	atc_ne finished [took 16.7307s]
+30/10/23 22:34:43| INFO:	mul_sld finished [took 23.6079s]
+30/10/23 22:36:42| WARNING:	Method bin_sld_gs failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 1
+30/10/23 22:36:42| INFO: Dataset sample 0.10 of dataset imdb finished [took 143.1097s]
+----------------------------------------------------------------------------------------------------
+30/10/23 22:49:25| INFO: dataset imdb
+30/10/23 22:49:37| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 22:49:42| WARNING:	Method mul_sld_gs failed. Exception: a must be greater than 0 unless no samples are taken
+30/10/23 22:49:43| WARNING:	Method bin_sld failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:49:43| WARNING:	Method bin_sld_bcts failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:49:43| WARNING:	Method bin_sld_gs failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:49:51| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 22:50:02| INFO:	ref finished [took 22.5398s]
+30/10/23 22:50:09| INFO:	atc_mc finished [took 29.3095s]
+30/10/23 22:50:09| INFO:	atc_ne finished [took 29.2984s]
+30/10/23 22:50:16| INFO:	mul_sld finished [took 37.6287s]
+30/10/23 22:50:16| INFO: Dataset sample 0.90 of dataset imdb finished [took 38.3452s]
+----------------------------------------------------------------------------------------------------
+30/10/23 22:53:57| INFO: dataset imdb
+30/10/23 22:54:09| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 22:54:13| WARNING:	Method mul_sld_gs failed. Exception: a must be greater than 0 unless no samples are taken
+30/10/23 22:54:14| WARNING:	Method bin_sld failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:54:15| WARNING:	Method bin_sld_bcts failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:54:15| WARNING:	Method bin_sld_gs failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 22:54:22| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 22:54:33| INFO:	ref finished [took 22.4225s]
+30/10/23 22:54:40| INFO:	atc_ne finished [took 29.0085s]
+30/10/23 22:54:41| INFO:	atc_mc finished [took 29.6620s]
+30/10/23 22:54:48| INFO:	mul_sld finished [took 37.9580s]
+30/10/23 22:54:48| INFO: Dataset sample 0.90 of dataset imdb finished [took 38.6632s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:02:33| INFO: dataset imdb
+30/10/23 23:02:45| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 23:02:50| WARNING:	Method mul_sld_gs failed. Exception: a must be greater than 0 unless no samples are taken
+30/10/23 23:02:51| WARNING:	Method bin_sld failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 23:02:52| WARNING:	Method bin_sld_bcts failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 23:02:52| WARNING:	Method bin_sld_gs failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 23:02:59| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 23:03:10| INFO:	ref finished [took 23.4021s]
+30/10/23 23:03:17| INFO:	atc_mc finished [took 30.1849s]
+30/10/23 23:03:18| INFO:	atc_ne finished [took 30.4116s]
+30/10/23 23:03:25| INFO:	mul_sld finished [took 38.6513s]
+30/10/23 23:03:25| INFO: Dataset sample 0.90 of dataset imdb finished [took 39.3497s]
+30/10/23 23:07:32| INFO: Dataset sample 0.80 of dataset imdb started
+----------------------------------------------------------------------------------------------------
+30/10/23 23:08:15| INFO: dataset imdb
+30/10/23 23:08:26| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:08:51| INFO:	ref finished [took 23.6855s]
+30/10/23 23:08:59| INFO:	atc_mc finished [took 31.1520s]
+30/10/23 23:08:59| INFO:	atc_ne finished [took 31.1659s]
+30/10/23 23:09:10| INFO:	mul_sld finished [took 42.2066s]
+30/10/23 23:09:21| INFO:	mul_sld_bcts finished [took 52.9631s]
+30/10/23 23:09:21| INFO: Dataset sample 0.50 of dataset imdb finished [took 54.5286s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:14:11| INFO: dataset imdb
+30/10/23 23:14:22| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:14:47| INFO:	ref finished [took 22.8152s]
+30/10/23 23:14:55| INFO:	atc_mc finished [took 31.2100s]
+30/10/23 23:14:55| INFO:	atc_ne finished [took 31.2325s]
+30/10/23 23:15:06| INFO:	mul_sld finished [took 42.5389s]
+30/10/23 23:15:16| INFO:	mul_sld_bcts finished [took 52.7119s]
+30/10/23 23:15:16| INFO: Dataset sample 0.50 of dataset imdb finished [took 54.2106s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:16:16| INFO: dataset imdb
+30/10/23 23:16:27| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:16:51| INFO:	ref finished [took 22.6482s]
+30/10/23 23:17:00| INFO:	atc_ne finished [took 30.5701s]
+30/10/23 23:17:00| INFO:	atc_mc finished [took 30.9988s]
+30/10/23 23:17:10| INFO:	mul_sld finished [took 41.9572s]
+30/10/23 23:17:21| INFO:	mul_sld_bcts finished [took 52.6091s]
+30/10/23 23:17:21| INFO: Dataset sample 0.50 of dataset imdb finished [took 54.1182s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:20:27| INFO: dataset imdb
+30/10/23 23:20:38| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:21:02| INFO:	ref finished [took 22.7779s]
+30/10/23 23:21:10| INFO:	atc_mc finished [took 30.4191s]
+30/10/23 23:21:10| INFO:	atc_ne finished [took 30.8097s]
+30/10/23 23:21:20| INFO:	mul_sld finished [took 41.5927s]
+30/10/23 23:21:32| INFO:	mul_sld_bcts finished [took 52.6374s]
+30/10/23 23:21:32| INFO: Dataset sample 0.50 of dataset imdb finished [took 54.1125s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:24:11| INFO: dataset imdb
+30/10/23 23:24:22| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:24:46| INFO:	ref finished [took 23.2007s]
+30/10/23 23:24:54| INFO:	atc_ne finished [took 30.9437s]
+30/10/23 23:24:55| INFO:	atc_mc finished [took 31.6008s]
+30/10/23 23:25:05| INFO:	mul_sld finished [took 42.0673s]
+30/10/23 23:25:16| INFO:	mul_sld_bcts finished [took 52.6228s]
+30/10/23 23:25:16| INFO: Dataset sample 0.50 of dataset imdb finished [took 54.0611s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:33:01| INFO: dataset imdb
+30/10/23 23:33:11| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:33:36| INFO:	ref finished [took 22.9215s]
+30/10/23 23:33:44| INFO:	atc_mc finished [took 30.5897s]
+30/10/23 23:33:44| INFO:	atc_ne finished [took 30.4788s]
+30/10/23 23:33:55| INFO:	mul_sld finished [took 42.0598s]
+30/10/23 23:34:05| INFO:	mul_sld_bcts finished [took 52.1772s]
+30/10/23 23:34:05| INFO: Dataset sample 0.50 of dataset imdb finished [took 53.6878s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:38:11| INFO: dataset imdb
+30/10/23 23:38:22| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:38:47| INFO:	ref finished [took 22.8046s]
+30/10/23 23:38:56| INFO:	atc_mc finished [took 31.5660s]
+30/10/23 23:38:56| INFO:	atc_ne finished [took 31.5269s]
+30/10/23 23:39:06| INFO:	mul_sld finished [took 42.2553s]
+30/10/23 23:39:16| INFO:	mul_sld_bcts finished [took 52.2602s]
+30/10/23 23:39:16| INFO: Dataset sample 0.50 of dataset imdb finished [took 53.7890s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:46:40| INFO: dataset imdb
+30/10/23 23:46:51| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:47:16| INFO:	ref finished [took 22.8069s]
+30/10/23 23:47:24| INFO:	atc_mc finished [took 30.7916s]
+30/10/23 23:47:24| INFO:	atc_ne finished [took 30.8668s]
+30/10/23 23:47:35| INFO:	mul_sld finished [took 42.2809s]
+30/10/23 23:47:45| INFO:	mul_sld_bcts finished [took 52.5498s]
+30/10/23 23:47:45| INFO: Dataset sample 0.50 of dataset imdb finished [took 54.0424s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:50:43| INFO: dataset imdb
+30/10/23 23:50:50| INFO: Dataset sample 0.50 of dataset imdb started
+30/10/23 23:51:04| INFO:	ref finished [took 12.0863s]
+30/10/23 23:51:07| INFO:	atc_ne finished [took 15.0218s]
+30/10/23 23:51:08| INFO:	atc_mc finished [took 15.7900s]
+30/10/23 23:51:20| INFO:	mul_sld finished [took 28.7221s]
+30/10/23 23:51:31| INFO:	mul_sld_bcts finished [took 39.4698s]
+30/10/23 23:51:31| INFO: Dataset sample 0.50 of dataset imdb finished [took 40.8506s]
+----------------------------------------------------------------------------------------------------
+30/10/23 23:52:29| INFO: dataset imdb
+30/10/23 23:52:37| INFO: Dataset sample 0.90 of dataset imdb started
+30/10/23 23:52:40| WARNING:	Method bin_sld failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 23:52:41| WARNING:	Method bin_sld_bcts failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 23:52:41| WARNING:	Method mul_sld_gs failed. Exception: a must be greater than 0 unless no samples are taken
+30/10/23 23:52:41| WARNING:	Method bin_sld_gs failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+30/10/23 23:52:48| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+30/10/23 23:52:50| INFO:	ref finished [took 12.4800s]
+30/10/23 23:52:53| INFO:	atc_mc finished [took 15.1770s]
+30/10/23 23:52:54| INFO:	atc_ne finished [took 15.2184s]
+30/10/23 23:53:02| INFO:	mul_sld finished [took 24.9402s]
+30/10/23 23:53:02| INFO: Dataset sample 0.90 of dataset imdb finished [took 25.4588s]
+30/10/23 23:53:02| INFO: Dataset sample 0.80 of dataset imdb started
+30/10/23 23:53:20| INFO:	ref finished [took 16.3699s]
+30/10/23 23:53:25| INFO:	atc_ne finished [took 20.5069s]
+30/10/23 23:53:25| INFO:	atc_mc finished [took 20.7398s]
+30/10/23 23:53:38| INFO:	mul_sld finished [took 35.3572s]
+30/10/23 23:53:45| INFO:	mul_sld_bcts finished [took 41.8712s]
+30/10/23 23:56:35| INFO:	bin_sld finished [took 212.1758s]
+30/10/23 23:56:36| INFO:	bin_sld_bcts finished [took 213.3641s]
+30/10/23 23:57:38| INFO:	mul_sld_gs finished [took 274.6360s]
+31/10/23 00:01:13| INFO:	bin_sld_gs finished [took 490.0221s]
+31/10/23 00:01:13| INFO: Dataset sample 0.80 of dataset imdb finished [took 491.4099s]
+31/10/23 00:01:13| INFO: Dataset sample 0.50 of dataset imdb started
+31/10/23 00:01:32| INFO:	ref finished [took 17.1003s]
+31/10/23 00:01:37| INFO:	atc_ne finished [took 21.2159s]
+31/10/23 00:01:37| INFO:	atc_mc finished [took 21.6794s]
+31/10/23 00:01:51| INFO:	mul_sld finished [took 37.3507s]
+31/10/23 00:02:01| INFO:	mul_sld_bcts finished [took 46.7227s]
+31/10/23 00:04:46| INFO:	bin_sld finished [took 211.9902s]
+31/10/23 00:04:48| INFO:	bin_sld_bcts finished [took 213.3398s]
+31/10/23 00:05:55| INFO:	mul_sld_gs finished [took 279.4401s]
+31/10/23 00:08:56| INFO:	bin_sld_gs finished [took 461.6571s]
+31/10/23 00:08:56| INFO: Dataset sample 0.50 of dataset imdb finished [took 462.8616s]
+31/10/23 00:08:56| INFO: Dataset sample 0.20 of dataset imdb started
+31/10/23 00:09:15| INFO:	ref finished [took 17.3643s]
+31/10/23 00:09:20| INFO:	atc_mc finished [took 21.0373s]
+31/10/23 00:09:20| INFO:	atc_ne finished [took 21.2599s]
+31/10/23 00:09:38| INFO:	mul_sld_bcts finished [took 41.0473s]
+31/10/23 00:09:41| INFO:	mul_sld finished [took 43.7800s]
+31/10/23 00:12:30| INFO:	bin_sld_bcts finished [took 212.8639s]
+31/10/23 00:12:32| INFO:	bin_sld finished [took 215.5704s]
+31/10/23 00:13:29| INFO:	mul_sld_gs finished [took 270.7454s]
+31/10/23 00:19:19| INFO:	bin_sld_gs finished [took 621.7089s]
+31/10/23 00:19:19| INFO: Dataset sample 0.20 of dataset imdb finished [took 623.1501s]
+31/10/23 00:19:19| INFO: Dataset sample 0.10 of dataset imdb started
+31/10/23 00:19:24| WARNING:	Method mul_sld_gs failed. Exception: a must be greater than 0 unless no samples are taken
+31/10/23 00:19:24| WARNING:	Method bin_sld failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 1
+31/10/23 00:19:26| WARNING:	Method bin_sld_bcts failed. Exception: Cannot have number of splits n_splits=5 greater than the number of samples: n_samples=4.
+31/10/23 00:19:31| WARNING:	Method mul_sld_bcts failed. Exception: index 3 is out of bounds for axis 0 with size 3
+31/10/23 00:19:35| INFO:	ref finished [took 13.7926s]
+31/10/23 00:19:38| INFO:	atc_mc finished [took 16.8128s]
+31/10/23 00:19:39| INFO:	atc_ne finished [took 16.9032s]
+31/10/23 00:19:44| INFO:	mul_sld finished [took 23.7188s]
+31/10/23 00:21:43| WARNING:	Method bin_sld_gs failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 1
+31/10/23 00:21:43| INFO: Dataset sample 0.10 of dataset imdb finished [took 143.1001s]
+----------------------------------------------------------------------------------------------------
+31/10/23 01:36:56| INFO: dataset imdb
+31/10/23 01:37:04| INFO: Dataset sample 0.90 of dataset imdb started
+31/10/23 01:37:13| WARNING:	Method bin_sld_bcts failed. Exception:       fun: nan
+ hess_inv: <3x3 LbfgsInvHessProduct with dtype=float64>
+      jac: array([ 1.06687127, -0.00373246,  0.00373246])
+  message: 'ABNORMAL_TERMINATION_IN_LNSRCH'
+     nfev: 53
+      nit: 34
+     njev: 53
+   status: 2
+  success: False
+        x: array([  0.11536329, -12.93833991,  12.93833991])
+31/10/23 01:37:24| INFO:	ref finished [took 15.9844s]
+31/10/23 01:37:28| INFO:	atc_mc finished [took 19.7000s]
+31/10/23 01:37:28| INFO:	atc_ne finished [took 19.4612s]
+31/10/23 01:37:39| INFO:	mul_sld finished [took 33.2999s]
+31/10/23 01:37:49| INFO:	mul_sld_bcts finished [took 43.1402s]
+31/10/23 01:40:23| INFO:	bin_sld finished [took 197.7518s]
+31/10/23 01:41:23| INFO:	mul_sld_gs finished [took 256.4496s]
+31/10/23 01:42:49| INFO:	bin_sld_gs finished [took 342.7515s]
+31/10/23 01:42:49| INFO: Dataset sample 0.90 of dataset imdb finished [took 344.8637s]
+31/10/23 01:42:49| INFO: Dataset sample 0.50 of dataset imdb started
+31/10/23 01:43:10| INFO:	ref finished [took 17.6503s]
+31/10/23 01:43:15| INFO:	atc_mc finished [took 21.9510s]
+31/10/23 01:43:15| INFO:	atc_ne finished [took 21.5680s]
+31/10/23 01:43:29| INFO:	mul_sld finished [took 38.2515s]
+31/10/23 01:43:41| INFO:	mul_sld_bcts finished [took 48.9560s]
+31/10/23 01:46:29| INFO:	bin_sld_bcts finished [took 217.8464s]
+31/10/23 01:46:29| INFO:	bin_sld finished [took 218.6211s]
+31/10/23 01:47:51| INFO:	mul_sld_gs finished [took 298.6694s]
+31/10/23 01:50:25| INFO:	bin_sld_gs finished [took 452.8300s]
+31/10/23 01:50:25| INFO: Dataset sample 0.50 of dataset imdb finished [took 455.3596s]
+31/10/23 01:50:28| ERROR: Configuration imdb_2prevs failed. Exception: could not broadcast input array from shape (2100,7) into shape (2100,)
+----------------------------------------------------------------------------------------------------
+31/10/23 02:13:21| INFO: dataset imdb
+31/10/23 02:13:29| INFO: Dataset sample 0.90 of dataset imdb started
+31/10/23 02:13:37| WARNING:	Method bin_sld_bcts failed. Exception:       fun: nan
+ hess_inv: <3x3 LbfgsInvHessProduct with dtype=float64>
+      jac: array([ 1.06687127, -0.00373246,  0.00373246])
+  message: 'ABNORMAL_TERMINATION_IN_LNSRCH'
+     nfev: 53
+      nit: 34
+     njev: 53
+   status: 2
+  success: False
+        x: array([  0.11536329, -12.93833991,  12.93833991])
+31/10/23 02:13:48| INFO:	ref finished [took 16.5509s]
+31/10/23 02:13:52| INFO:	atc_mc finished [took 20.3138s]
+31/10/23 02:13:52| INFO:	atc_ne finished [took 20.1191s]
+31/10/23 02:14:02| INFO:	mul_sld finished [took 32.5158s]
+31/10/23 02:14:12| INFO:	mul_sld_bcts finished [took 42.0654s]
+31/10/23 02:16:44| INFO:	bin_sld finished [took 193.9189s]
+31/10/23 02:17:44| INFO:	mul_sld_gs finished [took 252.9066s]
+31/10/23 02:19:11| INFO:	bin_sld_gs finished [took 339.9813s]
+31/10/23 02:19:11| INFO: Dataset sample 0.90 of dataset imdb finished [took 341.6967s]
+31/10/23 02:19:11| INFO: Dataset sample 0.50 of dataset imdb started
+31/10/23 02:19:30| INFO:	ref finished [took 16.1334s]
+31/10/23 02:19:35| INFO:	atc_mc finished [took 20.5691s]
+31/10/23 02:19:35| INFO:	atc_ne finished [took 20.0126s]
+31/10/23 02:19:49| INFO:	mul_sld finished [took 36.4597s]
+31/10/23 02:20:02| INFO:	mul_sld_bcts finished [took 48.7131s]
+31/10/23 02:22:38| INFO:	bin_sld finished [took 205.8577s]
+31/10/23 02:22:41| INFO:	bin_sld_bcts finished [took 208.1999s]
+31/10/23 02:23:58| INFO:	mul_sld_gs finished [took 284.9247s]
+31/10/23 02:26:26| INFO:	bin_sld_gs finished [took 432.5665s]
+31/10/23 02:26:26| INFO: Dataset sample 0.50 of dataset imdb finished [took 435.0679s]
+----------------------------------------------------------------------------------------------------
+31/10/23 03:05:44| INFO: dataset rcv1_CCAT
+31/10/23 03:05:49| INFO: Dataset sample 0.90 of dataset rcv1_CCAT started
+31/10/23 03:06:59| INFO:	kfcv finished [took 59.0143s]
+31/10/23 03:06:59| INFO:	ref finished [took 56.9074s]
+31/10/23 03:07:03| INFO:	doc_feat finished [took 49.0683s]
+31/10/23 03:07:05| INFO:	atc_mc finished [took 59.3988s]
+31/10/23 03:07:07| INFO:	atc_ne finished [took 58.0283s]
+31/10/23 03:07:09| INFO:	mul_sld finished [took 76.8284s]
+31/10/23 03:07:19| INFO:	mul_sld_bcts finished [took 84.0129s]
+31/10/23 03:09:51| INFO:	bin_sld_bcts finished [took 237.9395s]
+31/10/23 03:09:53| INFO:	bin_sld finished [took 242.1415s]
+31/10/23 03:10:13| INFO:	mul_sld_gs finished [took 255.3743s]
+31/10/23 03:13:59| INFO:	bin_sld_gs finished [took 483.0217s]
+31/10/23 03:13:59| INFO: Dataset sample 0.90 of dataset rcv1_CCAT finished [took 489.9328s]
+31/10/23 03:13:59| INFO: Dataset sample 0.80 of dataset rcv1_CCAT started
+31/10/23 03:15:04| INFO:	ref finished [took 53.0703s]
+31/10/23 03:15:05| INFO:	kfcv finished [took 55.9779s]
+31/10/23 03:15:05| INFO:	doc_feat finished [took 48.1315s]
+31/10/23 03:15:10| INFO:	atc_mc finished [took 56.8062s]
+31/10/23 03:15:11| INFO:	atc_ne finished [took 55.9933s]
+31/10/23 03:15:20| INFO:	mul_sld finished [took 77.2840s]
+31/10/23 03:15:25| INFO:	mul_sld_bcts finished [took 80.0502s]
+31/10/23 03:17:55| INFO:	bin_sld finished [took 233.0173s]
+31/10/23 03:17:55| INFO:	bin_sld_bcts finished [took 231.2358s]
+31/10/23 03:18:59| INFO:	mul_sld_gs finished [took 291.7573s]
+31/10/23 03:21:50| INFO:	bin_sld_gs finished [took 463.8743s]
+31/10/23 03:21:50| INFO: Dataset sample 0.80 of dataset rcv1_CCAT finished [took 470.4706s]
+31/10/23 03:21:50| INFO: Dataset sample 0.70 of dataset rcv1_CCAT started
+31/10/23 03:22:52| INFO:	doc_feat finished [took 46.9563s]
+31/10/23 03:22:53| INFO:	ref finished [took 52.8185s]
+31/10/23 03:22:54| INFO:	kfcv finished [took 55.3202s]
+31/10/23 03:22:57| INFO:	atc_mc finished [took 55.1482s]
+31/10/23 03:22:58| INFO:	atc_ne finished [took 54.7420s]
+31/10/23 03:23:09| INFO:	mul_sld finished [took 76.8111s]
+31/10/23 03:23:14| INFO:	mul_sld_bcts finished [took 80.0460s]
+31/10/23 03:25:43| INFO:	bin_sld finished [took 231.7146s]
+31/10/23 03:25:44| INFO:	bin_sld_bcts finished [took 230.9954s]
+31/10/23 03:26:53| INFO:	mul_sld_gs finished [took 296.5824s]
+31/10/23 03:29:12| INFO:	bin_sld_gs finished [took 437.2666s]
+31/10/23 03:29:12| INFO: Dataset sample 0.70 of dataset rcv1_CCAT finished [took 442.6584s]
+31/10/23 03:29:12| INFO: Dataset sample 0.60 of dataset rcv1_CCAT started
+31/10/23 03:30:14| INFO:	doc_feat finished [took 47.2841s]
+31/10/23 03:30:15| INFO:	ref finished [took 52.5819s]
+31/10/23 03:30:16| INFO:	kfcv finished [took 54.9735s]
+31/10/23 03:30:19| INFO:	atc_mc finished [took 55.5994s]
+31/10/23 03:30:20| INFO:	atc_ne finished [took 55.0062s]
+31/10/23 03:30:30| INFO:	mul_sld finished [took 75.3263s]
+31/10/23 03:30:37| INFO:	mul_sld_bcts finished [took 80.4052s]
+31/10/23 03:33:04| INFO:	bin_sld finished [took 229.9416s]
+31/10/23 03:33:05| INFO:	bin_sld_bcts finished [took 229.0971s]
+31/10/23 03:34:12| INFO:	mul_sld_gs finished [took 292.9916s]
+31/10/23 03:37:15| INFO:	bin_sld_gs finished [took 477.2157s]
+31/10/23 03:37:15| INFO: Dataset sample 0.60 of dataset rcv1_CCAT finished [took 482.5150s]
+31/10/23 03:37:15| INFO: Dataset sample 0.50 of dataset rcv1_CCAT started
+31/10/23 03:38:17| INFO:	doc_feat finished [took 47.6798s]
+31/10/23 03:38:17| INFO:	ref finished [took 52.2283s]
+31/10/23 03:38:18| INFO:	kfcv finished [took 54.3535s]
+31/10/23 03:38:22| INFO:	atc_mc finished [took 55.4316s]
+31/10/23 03:38:23| INFO:	atc_ne finished [took 55.3697s]
+31/10/23 03:38:32| INFO:	mul_sld finished [took 74.3762s]
+31/10/23 03:38:39| INFO:	mul_sld_bcts finished [took 79.7216s]
+31/10/23 03:41:05| INFO:	bin_sld finished [took 228.4963s]
+31/10/23 03:41:08| INFO:	bin_sld_bcts finished [took 230.0901s]
+31/10/23 03:42:09| INFO:	mul_sld_gs finished [took 287.8477s]
+31/10/23 03:45:08| INFO:	bin_sld_gs finished [took 467.2633s]
+31/10/23 03:45:08| INFO: Dataset sample 0.50 of dataset rcv1_CCAT finished [took 472.6090s]
+31/10/23 03:45:08| INFO: Dataset sample 0.40 of dataset rcv1_CCAT started
+31/10/23 03:46:08| INFO:	doc_feat finished [took 47.0674s]
+31/10/23 03:46:09| INFO:	ref finished [took 51.5844s]
+31/10/23 03:46:09| INFO:	kfcv finished [took 53.6481s]
+31/10/23 03:46:14| INFO:	atc_mc finished [took 55.3679s]
+31/10/23 03:46:14| INFO:	atc_ne finished [took 54.6174s]
+31/10/23 03:46:21| INFO:	mul_sld finished [took 71.5925s]
+31/10/23 03:46:29| INFO:	mul_sld_bcts finished [took 77.5938s]
+31/10/23 03:48:55| INFO:	bin_sld finished [took 226.3217s]
+31/10/23 03:48:57| INFO:	bin_sld_bcts finished [took 226.5561s]
+31/10/23 03:50:04| INFO:	mul_sld_gs finished [took 289.8958s]
+31/10/23 03:53:13| INFO:	bin_sld_gs finished [took 479.9650s]
+31/10/23 03:53:13| INFO: Dataset sample 0.40 of dataset rcv1_CCAT finished [took 485.0438s]
+31/10/23 03:53:13| INFO: Dataset sample 0.30 of dataset rcv1_CCAT started
+31/10/23 03:54:15| INFO:	doc_feat finished [took 47.1959s]
+31/10/23 03:54:16| INFO:	ref finished [took 52.7452s]
+31/10/23 03:54:17| INFO:	kfcv finished [took 55.3715s]
+31/10/23 03:54:20| INFO:	atc_mc finished [took 55.5749s]
+31/10/23 03:54:21| INFO:	atc_ne finished [took 54.8719s]
+31/10/23 03:54:29| INFO:	mul_sld finished [took 74.1932s]
+31/10/23 03:54:37| INFO:	mul_sld_bcts finished [took 80.1150s]
+31/10/23 03:57:01| INFO:	bin_sld finished [took 227.2338s]
+31/10/23 03:57:06| INFO:	bin_sld_bcts finished [took 229.7342s]
+31/10/23 03:58:13| INFO:	mul_sld_gs finished [took 293.4750s]
+31/10/23 04:00:50| INFO:	bin_sld_gs finished [took 451.3322s]
+31/10/23 04:00:50| INFO: Dataset sample 0.30 of dataset rcv1_CCAT finished [took 456.9583s]
+31/10/23 04:00:50| INFO: Dataset sample 0.20 of dataset rcv1_CCAT started
+31/10/23 04:01:54| INFO:	doc_feat finished [took 48.9670s]
+31/10/23 04:01:54| INFO:	ref finished [took 54.3281s]
+31/10/23 04:01:55| INFO:	kfcv finished [took 57.0798s]
+31/10/23 04:01:59| INFO:	atc_mc finished [took 57.5663s]
+31/10/23 04:02:00| INFO:	atc_ne finished [took 57.1756s]
+31/10/23 04:02:07| INFO:	mul_sld finished [took 74.8552s]
+31/10/23 04:02:14| INFO:	mul_sld_bcts finished [took 79.8097s]
+31/10/23 04:04:43| INFO:	bin_sld finished [took 231.6926s]
+31/10/23 04:04:43| INFO:	bin_sld_bcts finished [took 229.9267s]
+31/10/23 04:05:23| INFO:	mul_sld_gs finished [took 266.8226s]
+31/10/23 04:08:36| INFO:	bin_sld_gs finished [took 460.9384s]
+31/10/23 04:08:36| INFO: Dataset sample 0.20 of dataset rcv1_CCAT finished [took 466.5653s]
+31/10/23 04:08:36| INFO: Dataset sample 0.10 of dataset rcv1_CCAT started
+31/10/23 04:08:46| WARNING:	Method mul_sld_gs failed. Exception: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2.
+31/10/23 04:08:46| WARNING:	Method bin_sld_bcts failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 1
+31/10/23 04:08:55| WARNING:	Method mul_sld_bcts failed. Exception:       fun: nan
+ hess_inv: <5x5 LbfgsInvHessProduct with dtype=float64>
+      jac: array([nan, nan, nan, nan, nan])
+  message: 'ABNORMAL_TERMINATION_IN_LNSRCH'
+     nfev: 21
+      nit: 0
+     njev: 21
+   status: 2
+  success: False
+        x: array([1., 0., 0., 0., 0.])
+31/10/23 04:09:33| INFO:	doc_feat finished [took 42.6167s]
+31/10/23 04:09:33| INFO:	ref finished [took 46.6961s]
+31/10/23 04:09:33| INFO:	kfcv finished [took 48.7570s]
+31/10/23 04:09:37| INFO:	atc_mc finished [took 49.6198s]
+31/10/23 04:09:38| INFO:	atc_ne finished [took 49.1195s]
+31/10/23 04:09:42| INFO:	mul_sld finished [took 63.1364s]
+31/10/23 04:11:02| WARNING:	Method bin_sld_gs failed. Exception: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2.
+31/10/23 04:12:05| INFO:	bin_sld finished [took 207.4063s]
+31/10/23 04:12:05| INFO: Dataset sample 0.10 of dataset rcv1_CCAT finished [took 208.7423s]
+31/10/23 04:12:16| ERROR: Configuration rcv1_CCAT_9prevs failed. Exception: 'DatasetReport' object has no attribute 'fit_scores'
+----------------------------------------------------------------------------------------------------
+31/10/23 11:30:20| INFO: dataset rcv1_CCAT
+31/10/23 11:30:26| INFO: Dataset sample 0.90 of dataset rcv1_CCAT started
+31/10/23 11:31:32| INFO:	doc_feat finished [took 48.1486s]
+31/10/23 11:31:32| INFO:	ref finished [took 53.9235s]
+31/10/23 11:31:33| INFO:	kfcv finished [took 56.4175s]
+31/10/23 11:31:37| INFO:	atc_mc finished [took 57.2963s]
+31/10/23 11:31:39| INFO:	atc_ne finished [took 56.1470s]
+31/10/23 11:31:43| INFO:	mul_sld finished [took 74.0703s]
+31/10/23 11:31:50| INFO:	mul_sld_bcts finished [took 78.8253s]
+31/10/23 11:34:16| INFO:	bin_sld_bcts finished [took 225.7409s]
+31/10/23 11:34:18| INFO:	bin_sld finished [took 229.9705s]
+31/10/23 11:34:42| INFO:	mul_sld_gs finished [took 247.4756s]
+31/10/23 11:38:30| INFO:	bin_sld_gs finished [took 477.2173s]
+31/10/23 11:38:30| INFO: Dataset sample 0.90 of dataset rcv1_CCAT finished [took 483.7632s]
+31/10/23 11:38:30| INFO: Dataset sample 0.80 of dataset rcv1_CCAT started
+31/10/23 11:39:32| INFO:	doc_feat finished [took 47.0343s]
+31/10/23 11:39:33| INFO:	ref finished [took 52.5674s]
+31/10/23 11:39:33| INFO:	kfcv finished [took 54.5521s]
+31/10/23 11:39:38| INFO:	atc_mc finished [took 55.5394s]
+31/10/23 11:39:38| INFO:	atc_ne finished [took 54.9616s]
+31/10/23 11:39:48| INFO:	mul_sld finished [took 75.9068s]
+31/10/23 11:39:53| INFO:	mul_sld_bcts finished [took 78.1581s]
+31/10/23 11:42:22| INFO:	bin_sld finished [took 230.5536s]
+31/10/23 11:42:23| INFO:	bin_sld_bcts finished [took 229.2262s]
+31/10/23 11:43:29| INFO:	mul_sld_gs finished [took 291.7013s]
+31/10/23 11:46:14| INFO:	bin_sld_gs finished [took 457.9059s]
+31/10/23 11:46:14| INFO: Dataset sample 0.80 of dataset rcv1_CCAT finished [took 463.5174s]
+31/10/23 11:46:14| INFO: Dataset sample 0.70 of dataset rcv1_CCAT started
+31/10/23 11:47:17| INFO:	doc_feat finished [took 46.4490s]
+31/10/23 11:47:17| INFO:	ref finished [took 52.6852s]
+31/10/23 11:47:17| INFO:	kfcv finished [took 55.0158s]
+31/10/23 11:47:21| INFO:	atc_mc finished [took 55.4861s]
+31/10/23 11:47:22| INFO:	atc_ne finished [took 54.9236s]
+31/10/23 11:47:32| INFO:	mul_sld finished [took 75.5717s]
+31/10/23 11:47:38| INFO:	mul_sld_bcts finished [took 80.0893s]
+31/10/23 11:50:02| INFO:	bin_sld finished [took 226.8402s]
+31/10/23 11:50:05| INFO:	bin_sld_bcts finished [took 227.7311s]
+31/10/23 11:51:15| INFO:	mul_sld_gs finished [took 294.0087s]
+31/10/23 11:53:36| INFO:	bin_sld_gs finished [took 436.3031s]
+31/10/23 11:53:36| INFO: Dataset sample 0.70 of dataset rcv1_CCAT finished [took 441.8200s]
+31/10/23 11:53:36| INFO: Dataset sample 0.60 of dataset rcv1_CCAT started
+31/10/23 11:54:37| INFO:	doc_feat finished [took 47.1550s]
+31/10/23 11:54:38| INFO:	ref finished [took 52.2980s]
+31/10/23 11:54:39| INFO:	kfcv finished [took 54.5489s]
+31/10/23 11:54:42| INFO:	atc_mc finished [took 55.2076s]
+31/10/23 11:54:43| INFO:	atc_ne finished [took 54.6137s]
+31/10/23 11:54:53| INFO:	mul_sld finished [took 74.8407s]
+31/10/23 11:54:59| INFO:	mul_sld_bcts finished [took 79.4977s]
+31/10/23 11:57:24| INFO:	bin_sld finished [took 226.9209s]
+31/10/23 11:57:26| INFO:	bin_sld_bcts finished [took 227.3112s]
+31/10/23 11:58:29| INFO:	mul_sld_gs finished [took 286.1947s]
+31/10/23 12:01:41| INFO:	bin_sld_gs finished [took 479.8610s]
+31/10/23 12:01:41| INFO: Dataset sample 0.60 of dataset rcv1_CCAT finished [took 485.3472s]
+31/10/23 12:01:41| INFO: Dataset sample 0.50 of dataset rcv1_CCAT started
+31/10/23 12:02:42| INFO:	doc_feat finished [took 46.7340s]
+31/10/23 12:02:42| INFO:	ref finished [took 51.5482s]
+31/10/23 12:02:43| INFO:	kfcv finished [took 53.9559s]
+31/10/23 12:02:47| INFO:	atc_mc finished [took 54.7558s]
+31/10/23 12:02:48| INFO:	atc_ne finished [took 54.5216s]
+31/10/23 12:02:57| INFO:	mul_sld finished [took 73.4013s]
+31/10/23 12:03:04| INFO:	mul_sld_bcts finished [took 78.9197s]
+31/10/23 12:05:30| INFO:	bin_sld finished [took 227.3887s]
+31/10/23 12:05:31| INFO:	bin_sld_bcts finished [took 226.6540s]
+31/10/23 12:06:37| INFO:	mul_sld_gs finished [took 289.2631s]
+31/10/23 12:09:30| INFO:	bin_sld_gs finished [took 463.2754s]
+31/10/23 12:09:30| INFO: Dataset sample 0.50 of dataset rcv1_CCAT finished [took 468.6356s]
+31/10/23 12:09:30| INFO: Dataset sample 0.40 of dataset rcv1_CCAT started
+31/10/23 12:10:30| INFO:	doc_feat finished [took 47.0178s]
+31/10/23 12:10:31| INFO:	ref finished [took 51.8808s]
+31/10/23 12:10:31| INFO:	kfcv finished [took 53.6165s]
+31/10/23 12:10:36| INFO:	atc_mc finished [took 55.8052s]
+31/10/23 12:10:36| INFO:	atc_ne finished [took 55.0541s]
+31/10/23 12:10:44| INFO:	mul_sld finished [took 72.1431s]
+31/10/23 12:10:52| INFO:	mul_sld_bcts finished [took 78.0435s]
+31/10/23 12:13:18| INFO:	bin_sld finished [took 227.6364s]
+31/10/23 12:13:20| INFO:	bin_sld_bcts finished [took 227.4485s]
+31/10/23 12:14:23| INFO:	mul_sld_gs finished [took 287.2824s]
+31/10/23 12:17:20| INFO:	bin_sld_gs finished [took 465.4084s]
+31/10/23 12:17:20| INFO: Dataset sample 0.40 of dataset rcv1_CCAT finished [took 470.5362s]
+31/10/23 12:17:20| INFO: Dataset sample 0.30 of dataset rcv1_CCAT started
+31/10/23 12:18:22| INFO:	doc_feat finished [took 46.7203s]
+31/10/23 12:18:24| INFO:	ref finished [took 52.8941s]
+31/10/23 12:18:24| INFO:	kfcv finished [took 55.1602s]
+31/10/23 12:18:27| INFO:	atc_mc finished [took 55.1296s]
+31/10/23 12:18:29| INFO:	atc_ne finished [took 54.8176s]
+31/10/23 12:18:36| INFO:	mul_sld finished [took 73.6368s]
+31/10/23 12:18:44| INFO:	mul_sld_bcts finished [took 79.2444s]
+31/10/23 12:21:09| INFO:	bin_sld finished [took 227.4633s]
+31/10/23 12:21:11| INFO:	bin_sld_bcts finished [took 227.8848s]
+31/10/23 12:22:18| INFO:	mul_sld_gs finished [took 290.8750s]
+31/10/23 12:25:01| INFO:	bin_sld_gs finished [took 455.0492s]
+31/10/23 12:25:01| INFO: Dataset sample 0.30 of dataset rcv1_CCAT finished [took 460.7077s]
+31/10/23 12:25:01| INFO: Dataset sample 0.20 of dataset rcv1_CCAT started
+31/10/23 12:26:04| INFO:	doc_feat finished [took 48.7419s]
+31/10/23 12:26:05| INFO:	ref finished [took 53.9956s]
+31/10/23 12:26:06| INFO:	kfcv finished [took 56.7159s]
+31/10/23 12:26:10| INFO:	atc_mc finished [took 57.0141s]
+31/10/23 12:26:11| INFO:	atc_ne finished [took 56.6235s]
+31/10/23 12:26:18| INFO:	mul_sld finished [took 74.9361s]
+31/10/23 12:26:24| INFO:	mul_sld_bcts finished [took 78.6411s]
+31/10/23 12:28:51| INFO:	bin_sld finished [took 228.5964s]
+31/10/23 12:28:51| INFO:	bin_sld_bcts finished [took 226.9077s]
+31/10/23 12:29:34| INFO:	mul_sld_gs finished [took 265.9319s]
+31/10/23 12:32:39| INFO:	bin_sld_gs finished [took 452.9439s]
+31/10/23 12:32:39| INFO: Dataset sample 0.20 of dataset rcv1_CCAT finished [took 458.4924s]
+31/10/23 12:32:39| INFO: Dataset sample 0.10 of dataset rcv1_CCAT started
+31/10/23 12:32:49| WARNING:	Method mul_sld_gs failed. Exception: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2.
+31/10/23 12:32:49| WARNING:	Method bin_sld_bcts failed. Exception: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 1
+31/10/23 12:32:57| WARNING:	Method mul_sld_bcts failed. Exception:       fun: nan
+ hess_inv: <5x5 LbfgsInvHessProduct with dtype=float64>
+      jac: array([nan, nan, nan, nan, nan])
+  message: 'ABNORMAL_TERMINATION_IN_LNSRCH'
+     nfev: 21
+      nit: 0
+     njev: 21
+   status: 2
+  success: False
+        x: array([1., 0., 0., 0., 0.])
+31/10/23 12:33:33| INFO:	doc_feat finished [took 40.8855s]
+31/10/23 12:33:34| INFO:	ref finished [took 44.7933s]
+31/10/23 12:33:34| INFO:	kfcv finished [took 47.0146s]
+31/10/23 12:33:38| INFO:	atc_mc finished [took 47.7008s]
+31/10/23 12:33:39| INFO:	atc_ne finished [took 47.4664s]
+31/10/23 12:33:42| INFO:	mul_sld finished [took 60.5341s]
+31/10/23 12:35:06| WARNING:	Method bin_sld_gs failed. Exception: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2.
+31/10/23 12:36:11| INFO:	bin_sld finished [took 210.5128s]
+31/10/23 12:36:11| INFO: Dataset sample 0.10 of dataset rcv1_CCAT finished [took 211.7476s]
+----------------------------------------------------------------------------------------------------
+31/10/23 13:07:34| INFO: dataset imdb_2prevs
+31/10/23 13:07:41| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 13:07:55| INFO:	ref finished [took 12.2932s]
+31/10/23 13:07:58| INFO:	atc_mc finished [took 15.8781s]
+31/10/23 13:07:58| INFO:	atc_ne finished [took 15.8256s]
+31/10/23 13:08:08| INFO:	mul_sld finished [took 25.6841s]
+31/10/23 13:08:18| INFO:	mul_sld_bcts finished [took 35.3498s]
+31/10/23 13:08:18| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 36.3540s]
+31/10/23 13:08:18| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 13:08:32| INFO:	ref finished [took 12.8011s]
+31/10/23 13:08:36| INFO:	atc_mc finished [took 16.7266s]
+31/10/23 13:08:36| INFO:	atc_ne finished [took 16.9577s]
+31/10/23 13:08:49| INFO:	mul_sld finished [took 30.1948s]
+31/10/23 13:09:00| INFO:	mul_sld_bcts finished [took 41.0998s]
+31/10/23 13:09:00| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 42.6008s]
+31/10/23 13:09:00| ERROR: estimate comparison failed. Exceprion: unsupported operand type(s) for /: 'NoneType' and 'str'
+----------------------------------------------------------------------------------------------------
+31/10/23 13:10:27| INFO: dataset imdb_2prevs
+31/10/23 13:10:34| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 13:10:47| INFO:	ref finished [took 11.6569s]
+31/10/23 13:10:51| INFO:	atc_mc finished [took 15.6380s]
+31/10/23 13:10:51| INFO:	atc_ne finished [took 15.5430s]
+31/10/23 13:11:00| INFO:	mul_sld finished [took 24.9236s]
+31/10/23 13:11:10| INFO:	mul_sld_bcts finished [took 34.5252s]
+31/10/23 13:11:10| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 35.4874s]
+31/10/23 13:11:10| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 13:11:23| INFO:	ref finished [took 11.5602s]
+31/10/23 13:11:26| INFO:	atc_ne finished [took 14.3888s]
+31/10/23 13:11:26| INFO:	atc_mc finished [took 14.5643s]
+31/10/23 13:11:39| INFO:	mul_sld finished [took 27.8023s]
+31/10/23 13:11:51| INFO:	mul_sld_bcts finished [took 39.2892s]
+31/10/23 13:11:51| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 40.6914s]
+31/10/23 13:11:51| DEBUG: ['COMP_ESTIMATORS', 'DATASET_DIR_UPDATE', 'DATASET_NAME', 'DATASET_N_PREVS', 'DATASET_PREVS', 'DATASET_TARGET', 'METRICS', 'OUT_DIR', 'OUT_DIR_NAME', 'PLOT_DIR_NAME', 'PLOT_ESTIMATORS', 'PLOT_OUT_DIR', 'PLOT_STDEV', 'PROTOCOL_N_PREVS', 'PROTOCOL_REPEATS', 'SAMPLE_SIZE', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__slotnames__', '__str__', '__subclasshook__', '__weakref__', '_current_conf', '_default', '_environ__getdict', '_environ__setdict', '_instance', '_keys', 'confs', 'exec', 'get_confs', 'get_plot_confs', 'load_conf', 'plot_confs']
+31/10/23 13:11:51| ERROR: estimate comparison failed. Exceprion: unsupported operand type(s) for /: 'NoneType' and 'str'
+----------------------------------------------------------------------------------------------------
+31/10/23 13:12:56| INFO: dataset imdb_2prevs
+31/10/23 13:13:03| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 13:13:15| INFO:	ref finished [took 11.2578s]
+31/10/23 13:13:19| INFO:	atc_mc finished [took 14.7895s]
+31/10/23 13:13:19| INFO:	atc_ne finished [took 14.8637s]
+31/10/23 13:13:28| INFO:	mul_sld finished [took 24.2622s]
+31/10/23 13:13:38| INFO:	mul_sld_bcts finished [took 34.0592s]
+31/10/23 13:13:38| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 34.9907s]
+31/10/23 13:13:38| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 13:13:52| INFO:	ref finished [took 12.2334s]
+31/10/23 13:13:56| INFO:	atc_ne finished [took 16.1148s]
+31/10/23 13:13:56| INFO:	atc_mc finished [took 16.4135s]
+31/10/23 13:14:10| INFO:	mul_sld finished [took 30.7003s]
+31/10/23 13:14:21| INFO:	mul_sld_bcts finished [took 41.5915s]
+31/10/23 13:14:21| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 43.0339s]
+31/10/23 13:14:21| ERROR: estimate comparison failed. Exceprion: 'environ' object has no attribute '__getdict'
+----------------------------------------------------------------------------------------------------
+31/10/23 14:05:25| ERROR: estimate comparison failed. Exceprion: 'environ' object has no attribute '_current_conf'
+----------------------------------------------------------------------------------------------------
+31/10/23 14:06:00| INFO: dataset imdb_2prevs
+31/10/23 14:06:07| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 14:06:19| INFO:	ref finished [took 10.8776s]
+31/10/23 14:06:23| INFO:	atc_ne finished [took 14.0744s]
+31/10/23 14:06:23| INFO:	atc_mc finished [took 14.4000s]
+31/10/23 14:06:33| INFO:	mul_sld finished [took 24.5149s]
+31/10/23 14:06:42| INFO:	mul_sld_bcts finished [took 33.9116s]
+31/10/23 14:06:42| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 34.8416s]
+31/10/23 14:06:42| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 14:06:55| INFO:	ref finished [took 11.2125s]
+31/10/23 14:06:59| INFO:	atc_ne finished [took 14.9235s]
+31/10/23 14:06:59| INFO:	atc_mc finished [took 15.1623s]
+31/10/23 14:07:12| INFO:	mul_sld finished [took 28.3463s]
+31/10/23 14:07:23| INFO:	mul_sld_bcts finished [took 39.0377s]
+31/10/23 14:07:23| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 40.4312s]
+31/10/23 14:07:23| ERROR: estimate comparison failed. Exceprion: 'environ' object has no attribute '__getdict'
+----------------------------------------------------------------------------------------------------
+31/10/23 14:09:14| INFO: dataset imdb_2prevs
+31/10/23 14:09:22| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 14:09:33| INFO:	ref finished [took 10.6213s]
+31/10/23 14:09:37| INFO:	atc_mc finished [took 14.2004s]
+31/10/23 14:09:37| INFO:	atc_ne finished [took 14.2574s]
+31/10/23 14:09:46| INFO:	mul_sld finished [took 23.8084s]
+31/10/23 14:09:56| INFO:	mul_sld_bcts finished [took 33.4634s]
+31/10/23 14:09:56| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 34.4023s]
+31/10/23 14:09:56| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 14:10:09| INFO:	ref finished [took 11.0452s]
+31/10/23 14:10:12| INFO:	atc_mc finished [took 14.0363s]
+31/10/23 14:10:12| INFO:	atc_ne finished [took 14.2492s]
+31/10/23 14:10:25| INFO:	mul_sld finished [took 27.1464s]
+31/10/23 14:10:35| INFO:	mul_sld_bcts finished [took 37.7957s]
+31/10/23 14:10:35| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 39.1750s]
+31/10/23 14:10:35| ERROR: estimate comparison failed. Exceprion: unsupported operand type(s) for /: 'NoneType' and 'str'
+----------------------------------------------------------------------------------------------------
+31/10/23 14:14:00| INFO: dataset imdb_2prevs
+31/10/23 14:14:07| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 14:14:19| INFO:	ref finished [took 11.0176s]
+31/10/23 14:14:22| INFO:	atc_mc finished [took 14.0422s]
+31/10/23 14:14:23| INFO:	atc_ne finished [took 14.2169s]
+31/10/23 14:14:31| INFO:	mul_sld finished [took 23.7014s]
+31/10/23 14:14:42| INFO:	mul_sld_bcts finished [took 33.7536s]
+31/10/23 14:14:42| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 34.7003s]
+31/10/23 14:14:42| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 14:14:54| INFO:	ref finished [took 11.0187s]
+31/10/23 14:14:57| INFO:	atc_mc finished [took 14.0175s]
+31/10/23 14:14:58| INFO:	atc_ne finished [took 14.4154s]
+31/10/23 14:15:10| INFO:	mul_sld finished [took 27.5946s]
+31/10/23 14:15:21| INFO:	mul_sld_bcts finished [took 38.0464s]
+31/10/23 14:15:21| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 39.4594s]
+31/10/23 14:15:21| DEBUG: {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['atc_mc', 'mul_sld', 'atc_ne', 'mul_sld_bcts', 'ref'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': None, 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': None, 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': True}
+31/10/23 14:15:21| ERROR: estimate comparison failed. Exceprion: unsupported operand type(s) for /: 'NoneType' and 'str'
+----------------------------------------------------------------------------------------------------
+31/10/23 14:30:59| INFO: dataset imdb_2prevs
+31/10/23 14:31:10| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 14:31:33| INFO:	ref finished [took 22.2885s]
+31/10/23 14:31:41| INFO:	atc_mc finished [took 29.8328s]
+31/10/23 14:31:41| INFO:	atc_ne finished [took 30.1421s]
+31/10/23 14:31:46| INFO:	mul_sld finished [took 35.8373s]
+31/10/23 14:31:57| INFO:	mul_sld_bcts finished [took 46.5130s]
+31/10/23 14:31:57| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 47.5379s]
+31/10/23 14:31:57| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 14:32:24| INFO:	ref finished [took 24.3912s]
+31/10/23 14:32:31| INFO:	atc_mc finished [took 31.2488s]
+31/10/23 14:32:31| INFO:	atc_ne finished [took 31.5120s]
+31/10/23 14:32:43| INFO:	mul_sld finished [took 44.6372s]
+31/10/23 14:32:54| INFO:	mul_sld_bcts finished [took 54.5749s]
+31/10/23 14:32:54| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 56.2358s]
+31/10/23 14:32:54| DEBUG: {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['mul_sld_bcts', 'atc_ne', 'atc_mc', 'ref', 'mul_sld'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': True}
+31/10/23 14:32:58| DEBUG: {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['mul_sld_bcts', 'atc_ne', 'atc_mc', 'ref', 'mul_sld'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['mul_sld_bcts', 'mul_sld', 'ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': False}
+----------------------------------------------------------------------------------------------------
+31/10/23 14:37:38| INFO: dataset imdb_2prevs
+31/10/23 14:37:45| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 14:37:58| INFO:	ref finished [took 11.4397s]
+31/10/23 14:38:01| INFO:	atc_mc finished [took 14.6411s]
+31/10/23 14:38:01| INFO:	atc_ne finished [took 14.8218s]
+31/10/23 14:38:11| INFO:	mul_sld finished [took 24.4862s]
+31/10/23 14:38:20| INFO:	mul_sld_bcts finished [took 33.9900s]
+31/10/23 14:38:20| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 34.9816s]
+31/10/23 14:38:20| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 14:38:33| INFO:	ref finished [took 11.3787s]
+31/10/23 14:38:36| INFO:	atc_mc finished [took 14.4366s]
+31/10/23 14:38:36| INFO:	atc_ne finished [took 14.3365s]
+31/10/23 14:38:50| INFO:	mul_sld finished [took 28.1585s]
+31/10/23 14:39:00| INFO:	mul_sld_bcts finished [took 38.5508s]
+31/10/23 14:39:00| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 40.0193s]
+31/10/23 14:39:00| DEBUG: {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['atc_ne', 'mul_sld', 'ref', 'mul_sld_bcts', 'atc_mc'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': True}
+31/10/23 14:39:03| DEBUG: {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['atc_ne', 'mul_sld', 'ref', 'mul_sld_bcts', 'atc_mc'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['mul_sld_bcts', 'mul_sld', 'ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': False}
+----------------------------------------------------------------------------------------------------
+31/10/23 14:44:15| INFO: dataset imdb_2prevs
+31/10/23 14:44:22| INFO: Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 14:44:35| INFO:	ref finished [took 11.5902s]
+31/10/23 14:44:38| INFO:	atc_mc finished [took 14.7915s]
+31/10/23 14:44:39| INFO:	atc_ne finished [took 14.8611s]
+31/10/23 14:44:48| INFO:	mul_sld finished [took 24.7670s]
+31/10/23 14:44:58| INFO:	mul_sld_bcts finished [took 34.3171s]
+31/10/23 14:44:58| INFO: Dataset sample 0.10 of dataset imdb_2prevs finished [took 35.3088s]
+31/10/23 14:44:58| INFO: Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 14:45:11| INFO:	ref finished [took 11.8887s]
+31/10/23 14:45:15| INFO:	atc_mc finished [took 15.2624s]
+31/10/23 14:45:15| INFO:	atc_ne finished [took 15.2085s]
+31/10/23 14:45:28| INFO:	mul_sld finished [took 28.5408s]
+31/10/23 14:45:38| INFO:	mul_sld_bcts finished [took 38.9976s]
+31/10/23 14:45:38| INFO: Dataset sample 0.50 of dataset imdb_2prevs finished [took 40.5854s]
+31/10/23 14:45:38| DEBUG: {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['atc_ne', 'mul_sld_bcts', 'atc_mc', 'ref', 'mul_sld'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': True}
+31/10/23 14:45:41| DEBUG: {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['atc_ne', 'mul_sld_bcts', 'atc_mc', 'ref', 'mul_sld'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['mul_sld_bcts', 'mul_sld', 'ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': False}
+----------------------------------------------------------------------------------------------------
+31/10/23 14:55:18| INFO     dataset imdb_2prevs
+31/10/23 14:55:26| INFO     Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 14:55:37| INFO    	ref finished [took 10.1990s]
+31/10/23 14:55:40| INFO    	atc_mc finished [took 13.4778s]
+31/10/23 14:55:41| INFO    	atc_ne finished [took 13.5559s]
+31/10/23 14:55:50| INFO    	mul_sld finished [took 23.0450s]
+31/10/23 14:55:59| INFO    	mul_sld_bcts finished [took 32.4582s]
+31/10/23 14:55:59| INFO     Dataset sample 0.10 of dataset imdb_2prevs finished [took 33.3679s]
+31/10/23 14:55:59| INFO     Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 14:56:11| INFO    	ref finished [took 10.3415s]
+31/10/23 14:56:14| INFO    	atc_mc finished [took 13.4638s]
+31/10/23 14:56:14| INFO    	atc_ne finished [took 13.4791s]
+31/10/23 14:56:27| INFO    	mul_sld finished [took 26.3298s]
+31/10/23 14:56:38| INFO    	mul_sld_bcts finished [took 37.2449s]
+31/10/23 14:56:38| INFO     Dataset sample 0.50 of dataset imdb_2prevs finished [took 38.6430s]
+31/10/23 14:56:38| DEBUG    {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['mul_sld_bcts', 'atc_mc', 'ref', 'mul_sld', 'atc_ne'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': True}
+31/10/23 14:56:41| DEBUG    {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['mul_sld_bcts', 'atc_mc', 'ref', 'mul_sld', 'atc_ne'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['mul_sld_bcts', 'mul_sld', 'ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': False}
+----------------------------------------------------------------------------------------------------
+31/10/23 15:00:19| INFO     dataset imdb_2prevs
+31/10/23 15:00:26| INFO     Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 15:00:38| INFO        	ref finished [took 10.7099s]
+31/10/23 15:00:41| INFO        	atc_ne finished [took 13.7392s]
+31/10/23 15:00:41| INFO        	atc_mc finished [took 13.9108s]
+31/10/23 15:00:50| INFO        	mul_sld finished [took 23.3628s]
+31/10/23 15:01:00| INFO        	mul_sld_bcts finished [took 33.0440s]
+31/10/23 15:01:00| INFO     Dataset sample 0.10 of dataset imdb_2prevs finished [took 33.9805s]
+31/10/23 15:01:00| INFO     Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 15:01:12| INFO        	ref finished [took 10.7020s]
+31/10/23 15:01:15| INFO        	atc_mc finished [took 13.9521s]
+31/10/23 15:01:15| INFO        	atc_ne finished [took 13.8623s]
+31/10/23 15:01:28| INFO        	mul_sld finished [took 26.8476s]
+31/10/23 15:01:39| INFO        	mul_sld_bcts finished [took 37.4291s]
+31/10/23 15:01:39| INFO     Dataset sample 0.50 of dataset imdb_2prevs finished [took 38.8721s]
+31/10/23 15:01:39| DEBUG    {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['ref', 'atc_mc', 'mul_sld', 'atc_ne', 'mul_sld_bcts'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': True}
+31/10/23 15:01:42| DEBUG    {'DATASET_NAME': 'imdb', 'DATASET_TARGET': None, 'METRICS': ['acc'], 'COMP_ESTIMATORS': ['ref', 'atc_mc', 'mul_sld', 'atc_ne', 'mul_sld_bcts'], 'DATASET_N_PREVS': 5, 'DATASET_PREVS': [0.5, 0.1], 'OUT_DIR_NAME': 'output', 'OUT_DIR': WindowsPath('output/imdb_2prevs'), 'PLOT_DIR_NAME': 'plot', 'PLOT_OUT_DIR': WindowsPath('output/imdb_2prevs/plot'), 'DATASET_DIR_UPDATE': False, 'PROTOCOL_N_PREVS': 21, 'PROTOCOL_REPEATS': 100, 'SAMPLE_SIZE': 1000, 'PLOT_ESTIMATORS': ['mul_sld_bcts', 'mul_sld', 'ref', 'atc_mc', 'atc_ne'], 'PLOT_STDEV': False}
+----------------------------------------------------------------------------------------------------
+31/10/23 15:02:43| INFO     dataset imdb_2prevs
+31/10/23 15:02:50| INFO     Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 15:03:02| INFO        	ref finished [took 10.5528s]
+31/10/23 15:03:05| INFO        	atc_mc finished [took 13.7838s]
+31/10/23 15:03:05| INFO        	atc_ne finished [took 13.6736s]
+31/10/23 15:03:14| INFO        	mul_sld finished [took 23.2705s]
+31/10/23 15:03:24| INFO        	mul_sld_bcts finished [took 32.8493s]
+31/10/23 15:03:24| INFO     Dataset sample 0.10 of dataset imdb_2prevs finished [took 33.7917s]
+31/10/23 15:03:24| INFO     Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 15:03:36| INFO        	ref finished [took 10.4338s]
+31/10/23 15:03:39| INFO        	atc_mc finished [took 13.5140s]
+31/10/23 15:03:39| INFO        	atc_ne finished [took 13.5920s]
+31/10/23 15:03:52| INFO        	mul_sld finished [took 26.7677s]
+31/10/23 15:04:03| INFO        	mul_sld_bcts finished [took 37.2882s]
+31/10/23 15:04:03| INFO     Dataset sample 0.50 of dataset imdb_2prevs finished [took 38.7014s]
