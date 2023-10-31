@@ -1441,3 +1441,35 @@
 31/10/23 15:03:52| INFO        	mul_sld finished [took 26.7677s]
 31/10/23 15:04:03| INFO        	mul_sld_bcts finished [took 37.2882s]
 31/10/23 15:04:03| INFO     Dataset sample 0.50 of dataset imdb_2prevs finished [took 38.7014s]
+----------------------------------------------------------------------------------------------------
+31/10/23 17:01:56| INFO     dataset imdb_2prevs
+31/10/23 17:02:03| INFO     Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 17:02:16| INFO        ref finished [took 11.7260s]
+31/10/23 17:02:19| INFO        atc_mc finished [took 14.9332s]
+31/10/23 17:02:20| INFO        atc_ne finished [took 14.9267s]
+31/10/23 17:02:29| INFO        mul_sld finished [took 25.0825s]
+31/10/23 17:02:39| INFO        mul_sld_bcts finished [took 35.1456s]
+31/10/23 17:02:39| INFO     Dataset sample 0.10 of dataset imdb_2prevs finished [took 36.1167s]
+31/10/23 17:02:39| INFO     Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 17:02:53| INFO        ref finished [took 12.1990s]
+31/10/23 17:02:57| INFO        atc_mc finished [took 15.9130s]
+31/10/23 17:02:57| INFO        atc_ne finished [took 15.8122s]
+31/10/23 17:03:10| INFO        mul_sld finished [took 29.0681s]
+31/10/23 17:03:21| INFO        mul_sld_bcts finished [took 40.0346s]
+31/10/23 17:03:21| INFO     Dataset sample 0.50 of dataset imdb_2prevs finished [took 41.6137s]
+----------------------------------------------------------------------------------------------------
+31/10/23 17:04:35| INFO     dataset imdb_2prevs
+31/10/23 17:04:42| INFO     Dataset sample 0.10 of dataset imdb_2prevs started
+31/10/23 17:04:56| INFO        ref finished [took 11.5027s]
+31/10/23 17:05:00| INFO        atc_mc finished [took 15.1600s]
+31/10/23 17:05:00| INFO        atc_ne finished [took 15.0072s]
+31/10/23 17:05:09| INFO        mul_sld finished [took 24.7931s]
+31/10/23 17:05:19| INFO        mul_sld_bcts finished [took 34.6305s]
+31/10/23 17:05:19| INFO     Dataset sample 0.10 of dataset imdb_2prevs finished [took 37.1778s]
+31/10/23 17:05:19| INFO     Dataset sample 0.50 of dataset imdb_2prevs started
+31/10/23 17:05:33| INFO        ref finished [took 12.2649s]
+31/10/23 17:05:36| INFO        atc_mc finished [took 15.5987s]
+31/10/23 17:05:37| INFO        atc_ne finished [took 15.8214s]
+31/10/23 17:05:50| INFO        mul_sld finished [took 29.3523s]
+31/10/23 17:06:00| INFO        mul_sld_bcts finished [took 39.8376s]
+31/10/23 17:06:00| INFO     Dataset sample 0.50 of dataset imdb_2prevs finished [took 41.2888s]
