@@ -32,7 +32,6 @@ def estimate_comparison():
             traceback(e)
         for plot_conf in env.get_plot_confs():
             for m in env.METRICS:
-                log.debug(env.current)
                 output_path = env.OUT_DIR / f"{plot_conf}_{m}.md"
                 try:
                     _repr = dr.to_md(
