@@ -210,9 +210,10 @@ class CompReport:
         res += self.table(metric=metric, estimators=estimators).to_html() + "\n\n"
 
         plot_modes = np.array(["delta", "diagonal", "shift"], dtype="object")
-        whd = np.where(plot_modes == "delta")[0]
-        if len(whd) > 0:
-            plot_modes = np.insert(plot_modes, whd + 1, "delta_stdev")
+        if stdev:
+            whd = np.where(plot_modes == "delta")[0]
+            if len(whd) > 0:
+                plot_modes = np.insert(plot_modes, whd + 1, "delta_stdev")
         for mode in plot_modes:
             op = self.get_plots(
                 mode=mode,
@@ -325,7 +326,6 @@ class DatasetReport:
                 metric=metric,
                 name=conf,
                 train_prev=None,
-                fit_scores={k: np.mean(vals) for k, vals in self.fit_scores.items()},
                 stdevs=stdev_x_test.T.to_numpy(),
             )
             res += f"![plot_delta_stdev]({delta_stdev_op.relative_to(env.OUT_DIR).as_posix()})\n"
