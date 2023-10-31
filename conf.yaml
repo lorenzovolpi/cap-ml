@@ -2,17 +2,17 @@ debug_conf: &debug_conf
   global:
     METRICS: 
     - acc
-    DATASET_N_PREVS: 1
+    DATASET_N_PREVS: 5
+    DATASET_PREVS:
+    - 0.5
 
   datasets:
-    - DATASET_NAME: rcv1
-      DATASET_TARGET: CCAT
     - DATASET_NAME: imdb
 
   plot_confs:
     debug:
       PLOT_ESTIMATORS:
-        # - mul_sld_bcts
+        - mul_sld_bcts
         - mul_sld
         - ref
         - atc_mc
@@ -23,11 +23,15 @@ test_conf: &test_conf
     METRICS: 
     - acc
     - f1
-    DATASET_N_PREVS: 3
+    DATASET_N_PREVS: 2
+    DATASET_PREVS:
+    - 0.5
+    - 0.1
 
   datasets:
-    - DATASET_NAME: rcv1
-      DATASET_TARGET: CCAT
+    # - DATASET_NAME: rcv1
+    #   DATASET_TARGET: CCAT
+    - DATASET_NAME: imdb
 
   plot_confs:
     best_vs_atc:
@@ -100,4 +104,4 @@ main_conf: &main_conf
       - atc_ne
       - doc_feat
 
-exec: *main_conf
+exec: *test_conf

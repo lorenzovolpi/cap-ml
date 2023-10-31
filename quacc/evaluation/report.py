@@ -9,68 +9,48 @@ from quacc.environment import env
 from quacc.utils import fmt_line_md
 
 
+def _get_metric(metric: str):
+    return slice(None) if metric is None else metric
+
+
+def _get_estimators(estimators: List[str], cols: np.ndarray):
+    return slice(None) if estimators is None else cols[np.in1d(cols, estimators)]
+
+
 class EvaluationReport:
     def __init__(self, name=None):
-        self._prevs = []
-        self._dict = {}
+        self.data: pd.DataFrame = None
         self.fit_score = None
         self.name = name if name is not None else "default"
 
     def append_row(self, basep: np.ndarray | Tuple, **row):
         bp = basep[1]
-        self._prevs.append(bp)
-        for k, v in row.items():
-            if k not in self._dict:
-                self._dict[k] = {}
-            if bp not in self._dict[k]:
-                self._dict[k][bp] = []
-            self._dict[k][bp] = np.append(self._dict[k][bp], [v])
+        _keys, _values = zip(*row.items())
+        # _keys = list(row.keys())
+        # _values = list(row.values())
+
+        if self.data is None:
+            _idx = 0
+            self.data = pd.DataFrame(
+                {k: [v] for k, v in row.items()},
+                index=pd.MultiIndex.from_tuples([(bp, _idx)]),
+                columns=_keys,
+            )
+            return
+
+        _idx = len(self.data.loc[(bp,), :]) if (bp,) in self.data.index else 0
+        not_in_data = np.setdiff1d(list(row.keys()), self.data.columns.unique(0))
+        self.data.loc[:, not_in_data] = np.nan
+        self.data.loc[(bp, _idx), :] = row
+        return
 
     @property
-    def columns(self):
-        return self._dict.keys()
+    def columns(self) -> np.ndarray:
+        return self.data.columns.unique(0)
 
     @property
     def prevs(self):
-        return np.sort(np.unique([list(self._dict[_k].keys()) for _k in self._dict]))
-
-    # def group_by_prevs(self, metric: str = None, estimators: List[str] = None):
-    #     if self._g_dict is None:
-    #         self._g_prevs = []
-    #         self._g_dict = {k: [] for k in self._dict.keys()}
-
-    #         for col, vals in self._dict.items():
-    #             col_grouped = {}
-    #             for bp, v in zip(self._prevs, vals):
-    #                 if bp not in col_grouped:
-    #                     col_grouped[bp] = []
-    #                 col_grouped[bp].append(v)
-
-    #             self._g_dict[col] = [
-    #                 vs
-    #                 for bp, vs in sorted(col_grouped.items(), key=lambda cg: cg[0][1])
-    #             ]
-
-    #         self._g_prevs = sorted(
-    #             [(p0, p1) for [p0, p1] in np.unique(self._prevs, axis=0).tolist()],
-    #             key=lambda bp: bp[1],
-    #         )
-
-    #     fg_dict = _filter_dict(self._g_dict, metric, estimators)
-    #     return self._g_prevs, fg_dict
-
-    # def merge(self, other):
-    #     if not all(v1 == v2 for v1, v2 in zip(self._prevs, other._prevs)):
-    #         raise ValueError("other has not same base prevalences of self")
-
-    #     inters_keys = set(self._dict.keys()).intersection(set(other._dict.keys()))
-    #     if len(inters_keys) > 0:
-    #         raise ValueError(f"self and other have matching keys {str(inters_keys)}.")
-
-    #     report = EvaluationReport()
-    #     report._prevs = self._prevs
-    #     report._dict = self._dict | other._dict
-    #     return report
+        return np.sort(self.data.index.unique(0))
 
 
 class CompReport:
@@ -82,22 +62,16 @@ class CompReport:
         valid_prev=None,
         times=None,
     ):
-        all_prevs = np.array([er.prevs for er in reports])
-        if not np.all(all_prevs == all_prevs[0, :], axis=0).all():
-            raise ValueError(
-                "Not all evaluation reports have the same base prevalences"
+        self._data = (
+            pd.concat(
+                [er.data for er in reports],
+                keys=[er.name for er in reports],
+                axis=1,
             )
-        uq_names, name_c = np.unique([er.name for er in reports], return_counts=True)
-        if np.sum(name_c) > uq_names.shape[0]:
-            _matching = uq_names[[c > 1 for c in name_c]]
-            raise ValueError(
-                f"Evaluation reports have matching names: {_matching.tolist()}."
-            )
-
-        all_dicts = [{(k, er.name): v for k, v in er._dict.items()} for er in reports]
-        self._dict = {}
-        for d in all_dicts:
-            self._dict = self._dict | d
+            .swaplevel(0, 1, axis=1)
+            .sort_index(axis=1, level=0, sort_remaining=False)
+            .sort_index(axis=0, level=0)
+        )
 
         self.fit_scores = {
             er.name: er.fit_score for er in reports if er.fit_score is not None
@@ -107,177 +81,195 @@ class CompReport:
         self.times = times
 
     @property
-    def prevs(self):
-        return np.sort(np.unique([list(self._dict[_k].keys()) for _k in self._dict]))
+    def prevs(self) -> np.ndarray:
+        return np.sort(self._data.index.unique(0))
 
     @property
-    def cprevs(self):
+    def np_prevs(self) -> np.ndarray:
         return np.around([(1.0 - p, p) for p in self.prevs], decimals=2)
 
-    def data(self, metric: str = None, estimators: List[str] = None) -> dict:
-        f_dict = self._dict.copy()
-        if metric is not None:
-            f_dict = {(c0, c1): ls for ((c0, c1), ls) in f_dict.items() if c0 == metric}
-        if estimators is not None:
-            f_dict = {
-                (c0, c1): ls for ((c0, c1), ls) in f_dict.items() if c1 in estimators
-            }
-        if (metric, estimators) != (None, None):
-            f_dict = {c1: ls for ((c0, c1), ls) in f_dict.items()}
+    def data(self, metric: str = None, estimators: List[str] = None) -> pd.DataFrame:
+        _metric = _get_metric(metric)
+        _estimators = _get_estimators(estimators, self._data.columns.unique(1))
+        f_data: pd.DataFrame = self._data.copy().loc[:, (_metric, _estimators)]
 
-        return f_dict
+        if len(f_data.columns.unique(0)) == 1:
+            f_data = f_data.droplevel(level=0, axis=1)
 
-    def group_by_shift(self, metric: str = None, estimators: List[str] = None):
-        f_dict = self.data(metric=metric, estimators=estimators)
-        shift_prevs = np.around(
-            np.absolute(self.prevs - self.train_prev[1]), decimals=2
+        return f_data
+
+    def shift_data(
+        self, metric: str = None, estimators: List[str] = None
+    ) -> pd.DataFrame:
+        shift_idx_0 = np.around(
+            np.abs(
+                self._data.index.get_level_values(0).to_numpy() - self.train_prev[1]
+            ),
+            decimals=2,
         )
-        shift_dict = {col: {sp: [] for sp in shift_prevs} for col in f_dict.keys()}
-        for col, vals in f_dict.items():
-            for sp, bp in zip(shift_prevs, self.prevs):
-                shift_dict[col][sp] = np.concatenate(
-                    [shift_dict[col][sp], f_dict[col][bp]]
-                )
 
-        return np.sort(np.unique(shift_prevs)), shift_dict
+        shift_idx_1 = np.empty(shape=shift_idx_0.shape, dtype="<i4")
+        for _id in np.unique(shift_idx_0):
+            _wh = np.where(shift_idx_0 == _id)[0]
+            shift_idx_1[_wh] = np.arange(_wh.shape[0], dtype="<i4")
 
-    def avg_by_prevs(self, metric: str = None, estimators: List[str] = None):
+        shift_data = self._data.copy()
+        shift_data.index = pd.MultiIndex.from_arrays([shift_idx_0, shift_idx_1])
+        shift_data.sort_index(axis=0, level=0)
+
+        _metric = _get_metric(metric)
+        _estimators = _get_estimators(estimators, shift_data.columns.unique(1))
+        shift_data: pd.DataFrame = shift_data.loc[:, (_metric, _estimators)]
+
+        if len(shift_data.columns.unique(0)) == 1:
+            shift_data = shift_data.droplevel(level=0, axis=1)
+
+        return shift_data
+
+    def avg_by_prevs(
+        self, metric: str = None, estimators: List[str] = None
+    ) -> pd.DataFrame:
         f_dict = self.data(metric=metric, estimators=estimators)
-        return {
-            col: np.array([np.mean(vals[bp]) for bp in self.prevs])
-            for col, vals in f_dict.items()
-        }
+        return f_dict.groupby(level=0).mean()
 
-    def stdev_by_prevs(self, metric: str = None, estimators: List[str] = None):
+    def stdev_by_prevs(
+        self, metric: str = None, estimators: List[str] = None
+    ) -> pd.DataFrame:
         f_dict = self.data(metric=metric, estimators=estimators)
-        return {
-            col: np.array([np.std(vals[bp]) for bp in self.prevs])
-            for col, vals in f_dict.items()
-        }
+        return f_dict.groupby(level=0).std()
 
-    def avg_all(self, metric: str = None, estimators: List[str] = None):
-        f_dict = self.data(metric=metric, estimators=estimators)
-        return {
-            col: [np.mean(np.concatenate(list(vals.values())))]
-            for col, vals in f_dict.items()
-        }
-
-    def get_dataframe(self, metric="acc", estimators=None):
-        avg_dict = self.avg_by_prevs(metric=metric, estimators=estimators)
-        all_dict = self.avg_all(metric=metric, estimators=estimators)
-        for col in avg_dict.keys():
-            avg_dict[col] = np.append(avg_dict[col], all_dict[col])
-        return pd.DataFrame(
-            avg_dict,
-            index=self.prevs.tolist() + ["tot"],
-            columns=avg_dict.keys(),
-        )
+    def table(self, metric: str = None, estimators: List[str] = None) -> pd.DataFrame:
+        f_data = self.data(metric=metric, estimators=estimators)
+        avg_p = f_data.groupby(level=0).mean()
+        avg_p.loc["avg", :] = f_data.mean()
+        return avg_p
 
     def get_plots(
-        self,
-        modes=["delta", "diagonal", "shift"],
-        metric="acc",
-        estimators=None,
-        conf="default",
-        stdev=False,
-    ) -> Path:
-        pps = []
-        for mode in modes:
-            pp = []
-            if mode == "delta":
-                f_dict = self.avg_by_prevs(metric=metric, estimators=estimators)
-                _pp0 = plot.plot_delta(
-                    self.cprevs,
-                    f_dict,
-                    metric=metric,
-                    name=conf,
-                    train_prev=self.train_prev,
-                    fit_scores=self.fit_scores,
-                )
-                pp = [(mode, _pp0)]
-                if stdev:
-                    fs_dict = self.stdev_by_prevs(metric=metric, estimators=estimators)
-                    _pp1 = plot.plot_delta(
-                        self.cprevs,
-                        f_dict,
-                        metric=metric,
-                        name=conf,
-                        train_prev=self.train_prev,
-                        fit_scores=self.fit_scores,
-                        stdevs=fs_dict,
-                    )
-                    pp.append((f"{mode}_stdev", _pp1))
-            elif mode == "diagonal":
-                f_dict = {
-                    col: np.concatenate([vals[bp] for bp in self.prevs])
-                    for col, vals in self.data(
-                        metric=metric + "_score", estimators=estimators
-                    ).items()
-                }
-                reference = f_dict["ref"]
-                f_dict = {k: v for k, v in f_dict.items() if k != "ref"}
-                _pp0 = plot.plot_diagonal(
-                    reference,
-                    f_dict,
-                    metric=metric,
-                    name=conf,
-                    train_prev=self.train_prev,
-                )
-                pp = [(mode, _pp0)]
+        self, mode="delta", metric="acc", estimators=None, conf="default", stdev=False
+    ) -> List[Tuple[str, Path]]:
+        if mode == "delta":
+            avg_data = self.avg_by_prevs(metric=metric, estimators=estimators)
+            return plot.plot_delta(
+                base_prevs=self.np_prevs,
+                columns=avg_data.columns.to_numpy(),
+                data=avg_data.T.to_numpy(),
+                metric=metric,
+                name=conf,
+                train_prev=self.train_prev,
+            )
+        elif mode == "delta_stdev":
+            avg_data = self.avg_by_prevs(metric=metric, estimators=estimators)
+            st_data = self.stdev_by_prevs(metric=metric, estimators=estimators)
+            return plot.plot_delta(
+                base_prevs=self.np_prevs,
+                columns=avg_data.columns.to_numpy(),
+                data=avg_data.T.to_numpy(),
+                metric=metric,
+                name=conf,
+                train_prev=self.train_prev,
+                stdevs=st_data.T.to_numpy(),
+            )
+        elif mode == "diagonal":
+            f_data = self.data(metric=metric + "_score", estimators=estimators)
+            ref: pd.Series = f_data.loc[:, "ref"]
+            f_data.drop(columns=["ref"], inplace=True)
+            return plot.plot_diagonal(
+                reference=ref.to_numpy(),
+                columns=f_data.columns.to_numpy(),
+                data=f_data.T.to_numpy(),
+                metric=metric,
+                name=conf,
+                train_prev=self.train_prev,
+            )
+        elif mode == "shift":
+            shift_data = (
+                self.shift_data(metric=metric, estimators=estimators)
+                .groupby(level=0)
+                .mean()
+            )
+            shift_prevs = np.around(
+                [(1.0 - p, p) for p in np.sort(shift_data.index.unique(0))],
+                decimals=2,
+            )
+            return plot.plot_shift(
+                shift_prevs=shift_prevs,
+                columns=shift_data.columns.to_numpy(),
+                data=shift_data.T.to_numpy(),
+                metric=metric,
+                name=conf,
+                train_prev=self.train_prev,
+            )
 
-            elif mode == "shift":
-                s_prevs, s_dict = self.group_by_shift(
-                    metric=metric, estimators=estimators
-                )
-                _pp0 = plot.plot_shift(
-                    np.around([(1.0 - p, p) for p in s_prevs], decimals=2),
-                    {
-                        col: np.array([np.mean(vals[sp]) for sp in s_prevs])
-                        for col, vals in s_dict.items()
-                    },
-                    metric=metric,
-                    name=conf,
-                    train_prev=self.train_prev,
-                    fit_scores=self.fit_scores,
-                )
-                pp = [(mode, _pp0)]
-
-            pps.extend(pp)
-
-        return pps
-
-    def to_md(self, conf="default", metric="acc", estimators=None, stdev=False):
+    def to_md(self, conf="default", metric="acc", estimators=None, stdev=False) -> str:
         res = f"## {int(np.around(self.train_prev, decimals=2)[1]*100)}% positives\n"
         res += fmt_line_md(f"train: {str(self.train_prev)}")
         res += fmt_line_md(f"validation: {str(self.valid_prev)}")
         for k, v in self.times.items():
             res += fmt_line_md(f"{k}: {v:.3f}s")
         res += "\n"
-        res += (
-            self.get_dataframe(metric=metric, estimators=estimators).to_html() + "\n\n"
-        )
-        plot_modes = ["delta", "diagonal", "shift"]
-        for mode, op in self.get_plots(
-            modes=plot_modes,
-            metric=metric,
-            estimators=estimators,
-            conf=conf,
-            stdev=stdev,
-        ):
+        res += self.table(metric=metric, estimators=estimators).to_html() + "\n\n"
+
+        plot_modes = np.array(["delta", "diagonal", "shift"], dtype="object")
+        whd = np.where(plot_modes == "delta")[0]
+        if len(whd) > 0:
+            plot_modes = np.insert(plot_modes, whd + 1, "delta_stdev")
+        for mode in plot_modes:
+            op = self.get_plots(
+                mode=mode,
+                metric=metric,
+                estimators=estimators,
+                conf=conf,
+                stdev=stdev,
+            )
             res += f"![plot_{mode}]({op.relative_to(env.OUT_DIR).as_posix()})\n"
 
         return res
 
 
 class DatasetReport:
-    def __init__(self, name):
+    def __init__(self, name, crs=None):
         self.name = name
-        self._dict = None
-        self.crs: List[CompReport] = []
+        self.crs: List[CompReport] = [] if crs is None else crs
 
-    @property
-    def cprevs(self):
-        return np.around([(1.0 - p, p) for p in self.prevs], decimals=2)
+    def data(self, metric: str = None, estimators: str = None) -> pd.DataFrame:
+        def _cr_train_prev(cr: CompReport):
+            return cr.train_prev[1]
+
+        def _cr_data(cr: CompReport):
+            return cr.data(metric, estimators)
+
+        _crs_sorted = sorted(
+            [(_cr_train_prev(cr), _cr_data(cr)) for cr in self.crs],
+            key=lambda cr: len(cr[1].columns),
+            reverse=True,
+        )
+        _crs_train, _crs_data = zip(*_crs_sorted)
+
+        _data = pd.concat(_crs_data, axis=0, keys=_crs_train)
+        _data = _data.sort_index(axis=0, level=0)
+        return _data
+
+    def shift_data(self, metric: str = None, estimators: str = None) -> pd.DataFrame:
+        _shift_data: pd.DataFrame = pd.concat(
+            sorted(
+                [cr.shift_data(metric, estimators) for cr in self.crs],
+                key=lambda d: len(d.columns),
+                reverse=True,
+            ),
+            axis=0,
+        )
+
+        shift_idx_0 = _shift_data.index.get_level_values(0)
+
+        shift_idx_1 = np.empty(shape=shift_idx_0.shape, dtype="<i4")
+        for _id in np.unique(shift_idx_0):
+            _wh = np.where(shift_idx_0 == _id)[0]
+            shift_idx_1[_wh] = np.arange(_wh.shape[0])
+
+        _shift_data.index = pd.MultiIndex.from_arrays([shift_idx_0, shift_idx_1])
+        _shift_data = _shift_data.sort_index(axis=0, level=0)
+
+        return _shift_data
 
     def add(self, cr: CompReport):
         if cr is None:
@@ -285,57 +277,11 @@ class DatasetReport:
 
         self.crs.append(cr)
 
-        if self._dict is None:
-            self.prevs = cr.prevs
-            self._dict = {
-                col: {bp: vals[bp] for bp in self.prevs}
-                for col, vals in cr.data().items()
-            }
-            self.s_prevs, self.s_dict = cr.group_by_shift()
-            self.fit_scores = {k: [score] for k, score in cr.fit_scores.items()}
+    def __add__(self, cr: CompReport):
+        if cr is None:
             return
 
-        cr_dict = cr.data()
-        both_prevs = np.array([self.prevs, cr.prevs])
-        if not np.all(both_prevs == both_prevs[0, :]).all():
-            raise ValueError("Comp report has incompatible base prevalences")
-
-        for col, vals in cr_dict.items():
-            if col not in self._dict:
-                self._dict[col] = {}
-            for bp in self.prevs:
-                if bp not in self._dict[col]:
-                    self._dict[col][bp] = []
-                self._dict[col][bp] = np.concatenate(
-                    [self._dict[col][bp], cr_dict[col][bp]]
-                )
-
-        cr_s_prevs, cr_s_dict = cr.group_by_shift()
-        self.s_prevs = np.sort(np.unique(np.concatenate([self.s_prevs, cr_s_prevs])))
-
-        for col, vals in cr_s_dict.items():
-            if col not in self.s_dict:
-                self.s_dict[col] = {}
-            for sp in cr_s_prevs:
-                if sp not in self.s_dict[col]:
-                    self.s_dict[col][sp] = []
-                self.s_dict[col][sp] = np.concatenate(
-                    [self.s_dict[col][sp], cr_s_dict[col][sp]]
-                )
-
-        for sp in self.s_prevs:
-            for col, vals in self.s_dict.items():
-                if sp not in vals:
-                    vals[sp] = []
-
-        for k, score in cr.fit_scores.items():
-            if k not in self.fit_scores:
-                self.fit_scores[k] = []
-            self.fit_scores[k].append(score)
-
-    def __add__(self, cr: CompReport):
-        self.add(cr)
-        return self
+        return DatasetReport(self.name, crs=self.crs + [cr])
 
     def __iadd__(self, cr: CompReport):
         self.add(cr)
@@ -346,70 +292,51 @@ class DatasetReport:
         for cr in self.crs:
             res += f"{cr.to_md(conf, metric=metric, estimators=estimators, stdev=stdev)}\n\n"
 
-        f_dict = {
-            c1: v
-            for ((c0, c1), v) in self._dict.items()
-            if c0 == metric and c1 in estimators
-        }
-        s_avg_dict = {
-            col: np.array([np.mean(vals[sp]) for sp in self.s_prevs])
-            for col, vals in {
-                c1: v
-                for ((c0, c1), v) in self.s_dict.items()
-                if c0 == metric and c1 in estimators
-            }.items()
-        }
-        avg_dict = {
-            col: np.array([np.mean(vals[bp]) for bp in self.prevs])
-            for col, vals in f_dict.items()
-        }
-        if stdev:
-            stdev_dict = {
-                col: np.array([np.std(vals[bp]) for bp in self.prevs])
-                for col, vals in f_dict.items()
-            }
-        all_dict = {
-            col: [np.mean(np.concatenate(list(vals.values())))]
-            for col, vals in f_dict.items()
-        }
-        df = pd.DataFrame(
-            {col: np.append(avg_dict[col], val) for col, val in all_dict.items()},
-            index=self.prevs.tolist() + ["tot"],
-            columns=all_dict.keys(),
-        )
+        _data = self.data(metric=metric, estimators=estimators)
+        _shift_data = self.shift_data(metric=metric, estimators=estimators)
+
+        avg_x_test = _data.groupby(level=1).mean()
+        prevs_x_test = np.sort(avg_x_test.index.unique(0))
+        stdev_x_test = _data.groupby(level=1).std() if stdev else None
+        avg_x_test_tbl = _data.groupby(level=1).mean()
+        avg_x_test_tbl.loc["avg", :] = _data.mean()
+
+        avg_x_shift = _shift_data.groupby(level=0).mean()
+        prevs_x_shift = np.sort(avg_x_shift.index.unique(0))
 
         res += "## avg\n"
-        res += df.to_html() + "\n\n"
+        res += avg_x_test_tbl.to_html() + "\n\n"
 
         delta_op = plot.plot_delta(
-            np.around([(1.0 - p, p) for p in self.prevs], decimals=2),
-            avg_dict,
+            base_prevs=np.around([(1.0 - p, p) for p in prevs_x_test], decimals=2),
+            columns=avg_x_test.columns.to_numpy(),
+            data=avg_x_test.T.to_numpy(),
             metric=metric,
             name=conf,
             train_prev=None,
-            fit_scores={k: np.mean(vals) for k, vals in self.fit_scores.items()},
         )
         res += f"![plot_delta]({delta_op.relative_to(env.OUT_DIR).as_posix()})\n"
 
         if stdev:
             delta_stdev_op = plot.plot_delta(
-                np.around([(1.0 - p, p) for p in self.prevs], decimals=2),
-                avg_dict,
+                base_prevs=np.around([(1.0 - p, p) for p in prevs_x_test], decimals=2),
+                columns=avg_x_test.columns.to_numpy(),
+                data=avg_x_test.T.to_numpy(),
                 metric=metric,
                 name=conf,
                 train_prev=None,
                 fit_scores={k: np.mean(vals) for k, vals in self.fit_scores.items()},
-                stdevs=stdev_dict,
+                stdevs=stdev_x_test.T.to_numpy(),
             )
             res += f"![plot_delta_stdev]({delta_stdev_op.relative_to(env.OUT_DIR).as_posix()})\n"
 
         shift_op = plot.plot_shift(
-            np.around([(1.0 - p, p) for p in self.s_prevs], decimals=2),
-            s_avg_dict,
+            shift_prevs=np.around([(1.0 - p, p) for p in prevs_x_shift], decimals=2),
+            columns=avg_x_shift.columns.to_numpy(),
+            data=avg_x_shift.T.to_numpy(),
             metric=metric,
             name=conf,
             train_prev=None,
-            fit_scores={k: np.mean(vals) for k, vals in self.fit_scores.items()},
         )
         res += f"![plot_shift]({shift_op.relative_to(env.OUT_DIR).as_posix()})\n"
 
@@ -417,3 +344,175 @@ class DatasetReport:
 
     def __iter__(self):
         return (cr for cr in self.crs)
+
+
+def __test():
+    df = None
+    print(f"{df is None = }")
+    if df is None:
+        bp = 0.75
+        idx = 0
+        d = {"a": 0.0, "b": 0.1}
+        df = pd.DataFrame(
+            d,
+            index=pd.MultiIndex.from_tuples([(bp, idx)]),
+            columns=d.keys(),
+        )
+    print(df)
+    print("-" * 100)
+
+    bp = 0.75
+    idx = len(df.loc[bp, :])
+    df.loc[(bp, idx), :] = {"a": 0.2, "b": 0.3}
+    print(df)
+    print("-" * 100)
+
+    bp = 0.90
+    idx = len(df.loc[bp, :]) if bp in df.index else 0
+    df.loc[(bp, idx), :] = {"a": 0.2, "b": 0.3}
+    print(df)
+    print("-" * 100)
+
+    bp = 0.90
+    idx = len(df.loc[bp, :]) if bp in df.index else 0
+    d = {"a": 0.2, "v": 0.3, "e": 0.4}
+    notin = np.setdiff1d(list(d.keys()), df.columns)
+    df.loc[:, notin] = np.nan
+    df.loc[(bp, idx), :] = d
+    print(df)
+    print("-" * 100)
+
+    bp = 0.90
+    idx = len(df.loc[bp, :]) if bp in df.index else 0
+    d = {"a": 0.3, "v": 0.4, "e": 0.5}
+    notin = np.setdiff1d(list(d.keys()), df.columns)
+    print(f"{notin = }")
+    df.loc[:, notin] = np.nan
+    df.loc[(bp, idx), :] = d
+    print(df)
+    print("-" * 100)
+    print(f"{np.sort(np.unique(df.index.get_level_values(0))) = }")
+    print("-" * 100)
+
+    print(f"{df.loc[(0.75, ),:] = }\n")
+    print(f"{df.loc[(slice(None), 1),:] = }")
+    print("-" * 100)
+
+    print(f"{(0.75, ) in df.index = }")
+    print(f"{(0.7, ) in df.index = }")
+    print("-" * 100)
+
+    df1 = pd.DataFrame(
+        {
+            "a": np.linspace(0.0, 1.0, 6),
+            "b": np.linspace(1.0, 2.0, 6),
+            "e": np.linspace(2.0, 3.0, 6),
+            "v": np.linspace(0.0, 1.0, 6),
+        },
+        index=pd.MultiIndex.from_product([[0.75, 0.9], [0, 1, 2]]),
+        columns=["a", "b", "e", "v"],
+    )
+
+    df2 = (
+        pd.concat([df, df1], keys=["a", "b"], axis=1)
+        .swaplevel(0, 1, axis=1)
+        .sort_index(axis=1, level=0)
+    )
+    df3 = pd.concat([df1, df], keys=["b", "a"], axis=1)
+    print(df)
+    print(df1)
+    print(df2)
+    print(df3)
+    df = df3
+    print("-" * 100)
+
+    print(df.loc[:, ("b", ["e", "v"])])
+    print(df.loc[:, (slice(None), ["e", "v"])])
+    print(df.loc[:, ("b", slice(None))])
+    print(df.loc[:, ("b", slice(None))].droplevel(level=0, axis=1))
+    print(df.loc[:, (slice(None), ["e", "v"])].droplevel(level=0, axis=1))
+    print(len(df.loc[:, ("b", slice(None))].columns.unique(0)))
+    print("-" * 100)
+
+    idx_0 = np.around(np.abs(df.index.get_level_values(0).to_numpy() - 0.8), decimals=2)
+    midx = pd.MultiIndex.from_arrays([idx_0, df.index.get_level_values(1)])
+    print(midx)
+    dfs = df.copy()
+    dfs.index = midx
+    print(df)
+    print(dfs)
+    print("-" * 100)
+
+    df.loc[(0.85, 0), :] = np.linspace(0, 1, 8)
+    df.loc[(0.85, 1), :] = np.linspace(0, 1, 8)
+    df.loc[(0.85, 2), :] = np.linspace(0, 1, 8)
+    idx_0 = np.around(np.abs(df.index.get_level_values(0).to_numpy() - 0.8), decimals=2)
+    print(np.where(idx_0 == 0.05))
+    idx_1 = np.empty(shape=idx_0.shape, dtype="<i4")
+    print(idx_1)
+    for _id in np.unique(idx_0):
+        wh = np.where(idx_0 == _id)[0]
+        idx_1[wh] = np.arange(wh.shape[0])
+    midx = pd.MultiIndex.from_arrays([idx_0, idx_1])
+    dfs = df.copy()
+    dfs.index = midx
+    dfs.sort_index(level=0, axis=0, inplace=True)
+    print(df)
+    print(dfs)
+    print("-" * 100)
+
+    print(np.sort(dfs.index.unique(0)))
+    print("-" * 100)
+
+    print(df.groupby(level=0).mean())
+    print(dfs.groupby(level=0).mean())
+    print("-" * 100)
+
+    s = df.mean(axis=0)
+    dfa = df.groupby(level=0).mean()
+    dfa.loc["avg", :] = s
+    print(dfa)
+    print("-" * 100)
+
+    print(df)
+    dfn = df.loc[:, (slice(None), slice(None))]
+    print(dfn)
+    print(f"{df is dfn = }")
+    print("-" * 100)
+
+    a = np.array(["abc", "bcd", "cde", "bcd"], dtype="object")
+    print(a)
+    whb = np.where(a == "bcd")[0]
+    if len(whb) > 0:
+        a = np.insert(a, whb + 1, "pippo")
+    print(a)
+    print("-" * 100)
+
+    dff: pd.DataFrame = df.loc[:, ("a",)]
+    print(dff.to_dict(orient="list"))
+    dff = dff.drop(columns=["v"])
+    print(dff)
+    s: pd.Series = dff.loc[:, "e"]
+    print(s)
+    print(s.to_numpy())
+    print(type(s.to_numpy()))
+    print("-" * 100)
+
+    df3 = pd.concat([df, df], axis=0, keys=[0.5, 0.3]).sort_index(axis=0, level=0)
+    print(df3)
+    df3n = pd.concat([df, df], axis=0).sort_index(axis=0, level=0)
+    print(df3n)
+    df = df3
+    print("-" * 100)
+
+    print(df.groupby(level=1).mean(), df.groupby(level=1).count())
+    print("-" * 100)
+
+    print(df)
+    for ls in df.T.to_numpy():
+        print(ls)
+    print("-" * 100)
+
+
+if __name__ == "__main__":
+    __test()

@@ -1,13 +1,11 @@
-import traceback
 from sys import platform
+from traceback import print_exception as traceback
 
 import quacc.evaluation.comp as comp
 from quacc.dataset import Dataset
 from quacc.environment import env
-from quacc.logging import Logger
+from quacc.logger import Logger
 from quacc.utils import create_dataser_dir
-
-log = Logger.logger()
 
 
 def toast():
@@ -18,6 +16,7 @@ def toast():
 
 
 def estimate_comparison():
+    log = Logger.logger()
     for conf in env.get_confs():
         create_dataser_dir(conf, update=env.DATASET_DIR_UPDATE)
         dataset = Dataset(
@@ -49,6 +48,7 @@ def estimate_comparison():
 
 
 def main():
+    log = Logger.logger()
     try:
         estimate_comparison()
     except Exception as e:

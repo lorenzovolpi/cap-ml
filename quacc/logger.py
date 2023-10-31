@@ -102,7 +102,7 @@ class SubLogger:
         rh.setLevel(logging.DEBUG)
         rh.setFormatter(
             logging.Formatter(
-                fmt="%(asctime)s| %(levelname)s: %(message)s",
+                fmt="%(asctime)s| %(levelname)s:\t%(message)s",
                 datefmt="%d/%m/%y %H:%M:%S",
             )
         )
