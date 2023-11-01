@@ -1473,3 +1473,24 @@
 31/10/23 17:05:50| INFO        mul_sld finished [took 29.3523s]
 31/10/23 17:06:00| INFO        mul_sld_bcts finished [took 39.8376s]
 31/10/23 17:06:00| INFO     Dataset sample 0.50 of dataset imdb_2prevs finished [took 41.2888s]
+----------------------------------------------------------------------------------------------------
+31/10/23 20:19:37| INFO     dataset imdb_1prevs
+31/10/23 20:19:48| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+31/10/23 20:20:07| INFO        ref finished [took 17.4125s]
+----------------------------------------------------------------------------------------------------
+31/10/23 20:20:50| INFO     dataset imdb_1prevs
+31/10/23 20:21:01| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+31/10/23 20:21:19| INFO        ref finished [took 17.0717s]
+----------------------------------------------------------------------------------------------------
+31/10/23 20:22:05| INFO     dataset imdb_1prevs
+31/10/23 20:22:15| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+31/10/23 20:22:35| INFO        ref finished [took 18.4752s]
+----------------------------------------------------------------------------------------------------
+31/10/23 20:23:38| INFO     dataset imdb_1prevs
+31/10/23 20:23:48| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+31/10/23 20:24:08| INFO        ref finished [took 18.3216s]
+----------------------------------------------------------------------------------------------------
+01/11/23 13:07:19| INFO     dataset imdb_1prevs
+01/11/23 13:07:27| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+01/11/23 13:07:27| ERROR    Evaluation over imdb_1prevs failed. Exception: 'Invalid estimator: estimator mul_sld_gs does not exist'
+01/11/23 13:07:27| ERROR    Failed while saving configuration imdb_debug of imdb_1prevs. Exception: cannot access local variable 'dr' where it is not associated with a value

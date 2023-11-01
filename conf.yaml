@@ -5,7 +5,6 @@ debug_conf: &debug_conf
     DATASET_N_PREVS: 5
     DATASET_PREVS:
     - 0.5
-    - 0.1
 
   confs:
     - DATASET_NAME: imdb
@@ -13,17 +12,9 @@ debug_conf: &debug_conf
   plot_confs:
     debug:
       PLOT_ESTIMATORS:
+        - mul_sld_gs
         - ref
-        - atc_mc
-        - atc_ne
       PLOT_STDEV: true
-    debug_plus:
-      PLOT_ESTIMATORS:
-        - mul_sld_bcts
-        - mul_sld
-        - ref
-        - atc_mc
-        - atc_ne
 
 test_conf: &test_conf
   global:

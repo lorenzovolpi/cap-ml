@@ -1,13 +1,10 @@
-import quapy as qp
+import numpy as np
 
 
 def from_name(err_name):
-    if err_name == "f1e":
-        return f1e
-    elif err_name == "f1":
-        return f1
-    else:
-        return qp.error.from_name(err_name)
+    assert err_name in ERROR_NAMES, f"unknown error {err_name}"
+    callable_error = globals()[err_name]
+    return callable_error
 
 
 # def f1(prev):
@@ -36,5 +33,23 @@ def f1e(prev):
     return 1 - f1(prev)
 
 
-def acc(prev):
-    return (prev[0] + prev[3]) / sum(prev)
+def acc(prev: np.ndarray) -> float:
+    return (prev[0] + prev[3]) / np.sum(prev)
+
+
+def accd(true_prevs: np.ndarray, estim_prevs: np.ndarray) -> np.ndarray:
+    vacc = np.vectorize(acc, signature="(m)->()")
+    a_tp = vacc(true_prevs)
+    a_ep = vacc(estim_prevs)
+    return np.abs(a_tp - a_ep)
+
+
+def maccd(true_prevs: np.ndarray, estim_prevs: np.ndarray) -> float:
+    return accd(true_prevs, estim_prevs).mean()
+
+
+ACCURACY_ERROR = {maccd}
+ACCURACY_ERROR_SINGLE = {accd}
+ACCURACY_ERROR_NAMES = {func.__name__ for func in ACCURACY_ERROR}
+ACCURACY_ERROR_SINGLE_NAMES = {func.__name__ for func in ACCURACY_ERROR_SINGLE}
+ERROR_NAMES = ACCURACY_ERROR_NAMES | ACCURACY_ERROR_SINGLE_NAMES

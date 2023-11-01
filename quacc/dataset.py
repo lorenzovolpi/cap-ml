@@ -71,18 +71,16 @@ class Dataset:
 
         return all_train, test
 
-    def get_raw(self, validation=True) -> DatasetSample:
+    def get_raw(self) -> DatasetSample:
         all_train, test = {
             "spambase": self.__spambase,
             "imdb": self.__imdb,
             "rcv1": self.__rcv1,
         }[self._name]()
 
-        train, val = all_train, None
-        if validation:
-            train, val = all_train.split_stratified(
-                train_prop=TRAIN_VAL_PROP, random_state=0
-            )
+        train, val = all_train.split_stratified(
+            train_prop=TRAIN_VAL_PROP, random_state=0
+        )
 
         return DatasetSample(train, val, test)
 

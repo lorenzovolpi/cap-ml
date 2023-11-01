@@ -4,7 +4,7 @@ from abc import abstractmethod
 import numpy as np
 import quapy as qp
 from quapy.data import LabelledCollection
-from quapy.method.aggregative import CC, SLD
+from quapy.method.aggregative import CC, SLD, BaseQuantifier
 from quapy.model_selection import GridSearchQ
 from quapy.protocol import UPP
 from sklearn.base import BaseEstimator
@@ -14,9 +14,22 @@ from sklearn.model_selection import cross_val_predict
 from quacc.data import ExtendedCollection
 
 
-class AccuracyEstimator:
-    def __init__(self):
+class BaseAccuracyEstimator(BaseQuantifier):
+    def __init__(
+        self,
+        classifier: BaseEstimator,
+        quantifier: BaseQuantifier,
+    ):
         self.fit_score = None
+        self.__check_classifier(classifier)
+        self.classifier = classifier
+        self.quantifier = quantifier
+
+    def __check_classifier(self, classifier):
+        if not hasattr(classifier, "predict_proba"):
+            raise ValueError(
+                f"Passed classifier {classifier.__class__.__name__} cannot predict probabilities."
+            )
 
     def _gs_params(self, t_val: LabelledCollection):
         return {
@@ -33,85 +46,55 @@ class AccuracyEstimator:
             "verbose": True,
         }
 
-    def extend(self, base: LabelledCollection, pred_proba=None) -> ExtendedCollection:
+    def extend(self, coll: LabelledCollection, pred_proba=None) -> ExtendedCollection:
         if not pred_proba:
-            pred_proba = self.c_model.predict_proba(base.X)
-        return ExtendedCollection.extend_collection(base, pred_proba), pred_proba
+            pred_proba = self.classifier.predict_proba(coll.X)
+        return ExtendedCollection.extend_collection(coll, pred_proba)
 
     @abstractmethod
     def fit(self, train: LabelledCollection | ExtendedCollection):
         ...
 
     @abstractmethod
-    def estimate(self, instances, ext=False):
+    def estimate(self, instances, ext=False) -> np.ndarray:
         ...
 
 
-AE = AccuracyEstimator
+class MultiClassAccuracyEstimator(BaseAccuracyEstimator):
+    def __init__(
+        self,
+        classifier: BaseEstimator,
+        quantifier: BaseQuantifier,
+    ):
+        super().__init__(classifier, quantifier)
 
+    def fit(self, train: LabelledCollection):
+        pred_probs = self.classifier.predict_proba(train.X)
+        self.e_train = ExtendedCollection.extend_collection(train, pred_probs)
 
-class MulticlassAccuracyEstimator(AccuracyEstimator):
-    def __init__(self, c_model: BaseEstimator, q_model="SLD", gs=False, recalib=None):
-        super().__init__()
-        self.c_model = c_model
-        self._q_model_name = q_model.upper()
-        self.e_train = None
-        self.gs = gs
-        self.recalib = recalib
+        self.quantifier.fit(self.e_train)
 
-    def fit(self, train: LabelledCollection | ExtendedCollection):
-        # check if model is fit
-        # self.model.fit(*train.Xy)
-        if isinstance(train, LabelledCollection):
-            pred_prob_train = cross_val_predict(
-                self.c_model, *train.Xy, method="predict_proba"
-            )
-            self.e_train = ExtendedCollection.extend_collection(train, pred_prob_train)
-        else:
-            self.e_train = train
+        return self
 
-        if self._q_model_name == "SLD":
-            if self.gs:
-                t_train, t_val = self.e_train.split_stratified(0.6, random_state=0)
-                gs_params = self._gs_params(t_val)
-                self.q_model = GridSearchQ(
-                    SLD(LogisticRegression()),
-                    **gs_params,
-                )
-                self.q_model.fit(t_train)
-                self.fit_score = self.q_model.best_score_
-            else:
-                self.q_model = SLD(LogisticRegression(), recalib=self.recalib)
-                self.q_model.fit(self.e_train)
-        elif self._q_model_name == "CC":
-            self.q_model = CC(LogisticRegression())
-            self.q_model.fit(self.e_train)
-
-    def estimate(self, instances, ext=False):
+    def estimate(self, instances, ext=False) -> np.ndarray:
+        e_inst = instances
         if not ext:
-            pred_prob = self.c_model.predict_proba(instances)
+            pred_prob = self.classifier.predict_proba(instances)
             e_inst = ExtendedCollection.extend_instances(instances, pred_prob)
-        else:
-            e_inst = instances
 
-        estim_prev = self.q_model.quantify(e_inst)
+        estim_prev = self.quantifier.quantify(e_inst)
+        return self._check_prevalence_classes(estim_prev)
 
-        return self._check_prevalence_classes(
-            self.e_train.classes_, self.q_model, estim_prev
-        )
-
-    def _check_prevalence_classes(self, true_classes, q_model, estim_prev):
-        if isinstance(q_model, GridSearchQ):
-            estim_classes = q_model.best_model().classes_
-        else:
-            estim_classes = q_model.classes_
+    def _check_prevalence_classes(self, estim_prev) -> np.ndarray:
+        estim_classes = self.quantifier.classes_
+        true_classes = self.e_train.classes_
         for _cls in true_classes:
             if _cls not in estim_classes:
                 estim_prev = np.insert(estim_prev, _cls, [0.0], axis=0)
         return estim_prev
 
 
-class BinaryQuantifierAccuracyEstimator(AccuracyEstimator):
+class BinaryQuantifierAccuracyEstimator(BaseAccuracyEstimator):
     def __init__(self, c_model: BaseEstimator, q_model="SLD", gs=False, recalib=None):
         super().__init__()
         self.c_model = c_model
@@ -190,3 +173,8 @@ class BinaryQuantifierAccuracyEstimator(AccuracyEstimator):
             return np.asarray(list(map(lambda p: p * norm, q_model.quantify(inst))))
         else:
             return np.asarray([0.0, 0.0])
+
+
+BAE = BaseAccuracyEstimator
+MCAE = MultiClassAccuracyEstimator
+BQAE = BinaryQuantifierAccuracyEstimator

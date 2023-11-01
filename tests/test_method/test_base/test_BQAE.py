@@ -1,12 +1,12 @@
-import pytest
 import numpy as np
+import pytest
 import scipy.sparse as sp
 from sklearn.linear_model import LogisticRegression
 
-from quacc.estimator import BinaryQuantifierAccuracyEstimator
+from quacc.method.base import BinaryQuantifierAccuracyEstimator
 
 
-class TestBinaryQuantifierAccuracyEstimator:
+class TestBQAE:
     @pytest.mark.parametrize(
         "instances,preds0,preds1,result",
         [
