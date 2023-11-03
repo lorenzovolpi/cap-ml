@@ -12,8 +12,9 @@ debug_conf: &debug_conf
   plot_confs:
     debug:
       PLOT_ESTIMATORS:
-        - mul_sld_gs
+        - mul_sld
         - ref
+        - atc_mc
       PLOT_STDEV: true
 
 test_conf: &test_conf
@@ -21,24 +22,28 @@ test_conf: &test_conf
     METRICS: 
     - acc
     - f1
-    DATASET_N_PREVS: 2
-    DATASET_PREVS:
-    - 0.5
-    - 0.1
+    DATASET_N_PREVS: 9
 
   confs:
-    # - DATASET_NAME: rcv1
-    #   DATASET_TARGET: CCAT
-    - DATASET_NAME: imdb
+    - DATASET_NAME: rcv1
+      DATASET_TARGET: CCAT
+    # - DATASET_NAME: imdb
 
   plot_confs:
-    best_vs_atc:
+    2gs_vs_atc:
+      PLOT_ESTIMATORS:
+      - bin_sld_gs
+      - bin_sld_qgs
+      - mul_sld_gs
+      - mul_sld_qgs
+      - ref
+      - atc_mc
+      - atc_ne
+    sld_vs_pacc:
       PLOT_ESTIMATORS:
       - bin_sld
-      - bin_sld_bcts
       - bin_sld_gs
       - mul_sld
-      - mul_sld_bcts
       - mul_sld_gs
       - ref
       - atc_mc
@@ -102,4 +107,4 @@ main_conf: &main_conf
       - atc_ne
       - doc_feat
 
-exec: *debug_conf
+exec: *test_conf

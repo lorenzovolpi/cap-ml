@@ -7,8 +7,9 @@ from quapy.data import LabelledCollection
 from quapy.protocol import AbstractProtocol, OnLabelledCollectionProtocol
 
 import quacc as qc
-import quacc.evaluation.method as evaluation
+import quacc.error
 from quacc.data import ExtendedCollection
+from quacc.evaluation import evaluate
 from quacc.method.base import BaseAccuracyEstimator
 
 
@@ -138,8 +139,9 @@ class GridSearchAE(BaseAccuracyEstimator):
             model = deepcopy(self.model)
             # overrides default parameters with the parameters being explored at this iteration
             model.set_params(**params)
+            # print({k: v for k, v in model.get_params().items() if k in params})
             model.fit(training)
-            score = evaluation.evaluate(model, protocol=protocol, error_metric=error)
+            score = evaluate(model, protocol=protocol, error_metric=error)
 
             ttime = time() - tinit
             self._sout(
@@ -157,7 +159,6 @@ class GridSearchAE(BaseAccuracyEstimator):
         except Exception as e:
             self._sout(f"something went wrong for config {params}; skipping:")
             self._sout(f"\tException: {e}")
-            # traceback(e)
             score = None
 
         return params, score, model

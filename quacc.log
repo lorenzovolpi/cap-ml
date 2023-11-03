@@ -1494,3 +1494,97 @@
 01/11/23 13:07:27| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
 01/11/23 13:07:27| ERROR    Evaluation over imdb_1prevs failed. Exception: 'Invalid estimator: estimator mul_sld_gs does not exist'
 01/11/23 13:07:27| ERROR    Failed while saving configuration imdb_debug of imdb_1prevs. Exception: cannot access local variable 'dr' where it is not associated with a value
+----------------------------------------------------------------------------------------------------
+03/11/23 20:54:19| INFO     dataset rcv1_CCAT_9prevs
+03/11/23 20:54:24| INFO     Dataset sample 0.10 of dataset rcv1_CCAT_9prevs started
+03/11/23 20:54:28| WARNING     Method mul_sld_gs failed. Exception: Invalid parameter 'quantifier' for estimator EMQ(classifier=LogisticRegression()). Valid parameters are: ['classifier', 'exact_train_prev', 'recalib'].
+03/11/23 20:54:29| WARNING     Method mul_sld failed. Exception: evaluation_report() got an unexpected keyword argument 'protocor'
+03/11/23 20:54:30| WARNING     Method bin_sld_gs failed. Exception: Invalid parameter 'quantifier' for estimator EMQ(classifier=LogisticRegression()). Valid parameters are: ['classifier', 'exact_train_prev', 'recalib'].
+03/11/23 20:55:09| INFO        ref finished [took 38.5179s]
+----------------------------------------------------------------------------------------------------
+03/11/23 21:28:36| INFO     dataset rcv1_CCAT_9prevs
+03/11/23 21:28:41| INFO     Dataset sample 0.10 of dataset rcv1_CCAT_9prevs started
+03/11/23 21:28:45| WARNING     Method mul_sld failed. Exception: evaluation_report() got an unexpected keyword argument 'protocor'
+----------------------------------------------------------------------------------------------------
+03/11/23 21:31:03| INFO     dataset rcv1_CCAT_9prevs
+03/11/23 21:31:08| INFO     Dataset sample 0.10 of dataset rcv1_CCAT_9prevs started
+03/11/23 21:31:59| INFO        ref finished [took 45.6616s]
+03/11/23 21:32:03| INFO        atc_mc finished [took 48.4360s]
+03/11/23 21:32:07| INFO        atc_ne finished [took 51.0515s]
+03/11/23 21:32:23| INFO        mul_sld finished [took 72.9229s]
+03/11/23 21:34:43| INFO        bin_sld finished [took 213.9538s]
+03/11/23 21:36:27| INFO        mul_sld_gs finished [took 314.9357s]
+03/11/23 21:40:50| INFO        bin_sld_gs finished [took 579.2530s]
+03/11/23 21:40:50| INFO     Dataset sample 0.10 of dataset rcv1_CCAT_9prevs finished [took 582.5876s]
+03/11/23 21:40:50| INFO     Dataset sample 0.20 of dataset rcv1_CCAT_9prevs started
+03/11/23 21:41:39| INFO        ref finished [took 43.7409s]
+03/11/23 21:41:43| INFO        atc_mc finished [took 46.4580s]
+03/11/23 21:41:44| INFO        atc_ne finished [took 46.4267s]
+03/11/23 21:41:54| INFO        mul_sld finished [took 61.3005s]
+03/11/23 21:44:18| INFO        bin_sld finished [took 206.3680s]
+03/11/23 21:45:59| INFO        mul_sld_gs finished [took 304.4726s]
+03/11/23 21:50:33| INFO        bin_sld_gs finished [took 579.3455s]
+03/11/23 21:50:33| INFO     Dataset sample 0.20 of dataset rcv1_CCAT_9prevs finished [took 582.4808s]
+03/11/23 21:50:33| INFO     Dataset sample 0.30 of dataset rcv1_CCAT_9prevs started
+03/11/23 21:51:22| INFO        ref finished [took 43.6853s]
+03/11/23 21:51:26| INFO        atc_mc finished [took 47.1366s]
+03/11/23 21:51:30| INFO        atc_ne finished [took 49.4868s]
+03/11/23 21:51:34| INFO        mul_sld finished [took 59.0964s]
+03/11/23 21:53:59| INFO        bin_sld finished [took 205.0248s]
+03/11/23 21:55:50| INFO        mul_sld_gs finished [took 312.5630s]
+03/11/23 22:00:27| INFO        bin_sld_gs finished [took 591.1460s]
+03/11/23 22:00:27| INFO     Dataset sample 0.30 of dataset rcv1_CCAT_9prevs finished [took 594.3163s]
+03/11/23 22:00:27| INFO     Dataset sample 0.40 of dataset rcv1_CCAT_9prevs started
+03/11/23 22:01:15| INFO        ref finished [took 43.3806s]
+03/11/23 22:01:19| INFO        atc_mc finished [took 46.6674s]
+03/11/23 22:01:21| INFO        atc_ne finished [took 47.1220s]
+03/11/23 22:01:28| INFO        mul_sld finished [took 58.6799s]
+03/11/23 22:03:53| INFO        bin_sld finished [took 204.7659s]
+03/11/23 22:05:39| INFO        mul_sld_gs finished [took 307.8811s]
+03/11/23 22:10:32| INFO        bin_sld_gs finished [took 601.9995s]
+03/11/23 22:10:32| INFO     Dataset sample 0.40 of dataset rcv1_CCAT_9prevs finished [took 604.8406s]
+03/11/23 22:10:32| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_9prevs started
+03/11/23 22:11:20| INFO        ref finished [took 42.8256s]
+03/11/23 22:11:25| INFO        atc_mc finished [took 46.9203s]
+03/11/23 22:11:28| INFO        atc_ne finished [took 49.3042s]
+03/11/23 22:11:34| INFO        mul_sld finished [took 60.2744s]
+03/11/23 22:13:59| INFO        bin_sld finished [took 205.7078s]
+03/11/23 22:15:45| INFO        mul_sld_gs finished [took 309.0888s]
+03/11/23 22:20:32| INFO        bin_sld_gs finished [took 596.5102s]
+03/11/23 22:20:32| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_9prevs finished [took 599.5067s]
+03/11/23 22:20:32| INFO     Dataset sample 0.60 of dataset rcv1_CCAT_9prevs started
+03/11/23 22:21:20| INFO        ref finished [took 43.1698s]
+03/11/23 22:21:24| INFO        atc_mc finished [took 46.5768s]
+03/11/23 22:21:25| INFO        atc_ne finished [took 46.3408s]
+03/11/23 22:21:34| INFO        mul_sld finished [took 60.8070s]
+03/11/23 22:23:58| INFO        bin_sld finished [took 205.3362s]
+03/11/23 22:25:44| INFO        mul_sld_gs finished [took 308.1859s]
+03/11/23 22:30:44| INFO        bin_sld_gs finished [took 609.5468s]
+03/11/23 22:30:44| INFO     Dataset sample 0.60 of dataset rcv1_CCAT_9prevs finished [took 612.5803s]
+03/11/23 22:30:44| INFO     Dataset sample 0.70 of dataset rcv1_CCAT_9prevs started
+03/11/23 22:31:32| INFO        ref finished [took 43.2949s]
+03/11/23 22:31:37| INFO        atc_mc finished [took 46.3686s]
+03/11/23 22:31:40| INFO        atc_ne finished [took 49.2242s]
+03/11/23 22:31:47| INFO        mul_sld finished [took 60.9437s]
+03/11/23 22:34:11| INFO        bin_sld finished [took 205.9299s]
+03/11/23 22:35:56| INFO        mul_sld_gs finished [took 308.2738s]
+03/11/23 22:40:36| INFO        bin_sld_gs finished [took 588.7918s]
+03/11/23 22:40:36| INFO     Dataset sample 0.70 of dataset rcv1_CCAT_9prevs finished [took 591.8830s]
+03/11/23 22:40:36| INFO     Dataset sample 0.80 of dataset rcv1_CCAT_9prevs started
+03/11/23 22:41:24| INFO        ref finished [took 43.3321s]
+03/11/23 22:41:29| INFO        atc_mc finished [took 46.8041s]
+03/11/23 22:41:29| INFO        atc_ne finished [took 46.5810s]
+03/11/23 22:41:38| INFO        mul_sld finished [took 60.2962s]
+03/11/23 22:44:07| INFO        bin_sld finished [took 209.6435s]
+03/11/23 22:45:44| INFO        mul_sld_gs finished [took 304.4809s]
+03/11/23 22:50:39| INFO        bin_sld_gs finished [took 599.5588s]
+03/11/23 22:50:39| INFO     Dataset sample 0.80 of dataset rcv1_CCAT_9prevs finished [took 602.5720s]
+03/11/23 22:50:39| INFO     Dataset sample 0.90 of dataset rcv1_CCAT_9prevs started
+03/11/23 22:51:26| INFO        ref finished [took 42.4313s]
+03/11/23 22:51:30| INFO        atc_mc finished [took 45.5261s]
+03/11/23 22:51:34| INFO        atc_ne finished [took 48.4488s]
+03/11/23 22:51:47| INFO        mul_sld finished [took 66.4801s]
+03/11/23 22:54:08| INFO        bin_sld finished [took 208.4272s]
+03/11/23 22:55:49| INFO        mul_sld_gs finished [took 306.4505s]
+03/11/23 23:00:15| INFO        bin_sld_gs finished [took 573.7761s]
+03/11/23 23:00:15| INFO     Dataset sample 0.90 of dataset rcv1_CCAT_9prevs finished [took 576.7586s]

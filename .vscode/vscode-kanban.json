@@ -4,28 +4,10 @@
       "assignedTo": {
         "name": "Lorenzo Volpi"
       },
-      "creation_time": "2023-10-28T14:34:46.226Z",
-      "id": "4",
-      "references": [],
-      "title": "Aggingere estimator basati su PACC (quantificatore)"
-    },
-    {
-      "assignedTo": {
-        "name": "Lorenzo Volpi"
-      },
       "creation_time": "2023-10-28T14:33:36.069Z",
       "id": "2",
       "references": [],
       "title": "Creare plot avg con training prevalence sull'asse x e media rispetto a test prevalence"
-    },
-    {
-      "assignedTo": {
-        "name": "Lorenzo Volpi"
-      },
-      "creation_time": "2023-10-28T14:34:23.217Z",
-      "id": "3",
-      "references": [],
-      "title": "Relaizzare grid search per task specifico partedno da GridSearchQ"
     },
     {
       "assignedTo": {
@@ -42,12 +24,31 @@
       "assignedTo": {
         "name": "Lorenzo Volpi"
       },
+      "creation_time": "2023-10-28T14:34:23.217Z",
+      "id": "3",
+      "references": [],
+      "title": "Relaizzare grid search per task specifico partedno da GridSearchQ"
+    },
+    {
+      "assignedTo": {
+        "name": "Lorenzo Volpi"
+      },
+      "creation_time": "2023-10-28T14:34:46.226Z",
+      "id": "4",
+      "references": [],
+      "title": "Aggingere estimator basati su PACC (quantificatore)"
+    }
+  ],
+  "testing": [],
+  "done": [
+    {
+      "assignedTo": {
+        "name": "Lorenzo Volpi"
+      },
       "creation_time": "2023-10-28T14:35:12.683Z",
       "id": "5",
       "references": [],
       "title": "Rework rappresentazione dati di report"
     }
-  ],
-  "testing": [],
-  "done": []
+  ]
 }

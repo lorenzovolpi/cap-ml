@@ -10,7 +10,7 @@ from sklearn.linear_model import LogisticRegression
 from quacc.dataset import Dataset
 from quacc.error import acc
 from quacc.evaluation.report import CompReport, EvaluationReport
-from quacc.method.base import MultiClassAccuracyEstimator
+from quacc.method.base import BinaryQuantifierAccuracyEstimator
 from quacc.method.model_selection import GridSearchAE
 
 
@@ -21,8 +21,8 @@ def test_gs():
     classifier.fit(*d.train.Xy)
 
     quantifier = SLD(LogisticRegression())
-    estimator = MultiClassAccuracyEstimator(classifier, quantifier)
-    estimator.fit(d.validation)
+    # estimator = MultiClassAccuracyEstimator(classifier, quantifier)
+    estimator = BinaryQuantifierAccuracyEstimator(classifier, quantifier)
 
     v_train, v_val = d.validation.split_stratified(0.6, random_state=0)
     gs_protocol = UPP(v_val, sample_size=1000, repeats=100)
@@ -31,12 +31,14 @@ def test_gs():
         param_grid={
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
-            "q__recalib": [None, "bcts", "vs"],
+            "q__recalib": [None, "bcts", "ts"],
         },
         refit=False,
         protocol=gs_protocol,
         verbose=True,
     ).fit(v_train)
+
+    estimator.fit(d.validation)
 
     tstart = time()
     erb, ergs = EvaluationReport("base"), EvaluationReport("gs")
