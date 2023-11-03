@@ -1588,3 +1588,51 @@
 03/11/23 22:55:49| INFO        mul_sld_gs finished [took 306.4505s]
 03/11/23 23:00:15| INFO        bin_sld_gs finished [took 573.7761s]
 03/11/23 23:00:15| INFO     Dataset sample 0.90 of dataset rcv1_CCAT_9prevs finished [took 576.7586s]
+----------------------------------------------------------------------------------------------------
+03/11/23 23:33:15| INFO     dataset imdb_1prevs
+03/11/23 23:33:22| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+03/11/23 23:33:22| ERROR    Evaluation over imdb_1prevs failed. Exception: 'function' object is not iterable
+03/11/23 23:33:22| ERROR    Failed while saving configuration imdb_debug of imdb_1prevs. Exception: cannot access local variable 'dr' where it is not associated with a value
+----------------------------------------------------------------------------------------------------
+03/11/23 23:34:15| INFO     dataset imdb_1prevs
+03/11/23 23:34:23| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+03/11/23 23:34:35| INFO        atc_mc finished [took 11.5081s]
+03/11/23 23:34:45| INFO        ref finished [took 8.7754s]
+03/11/23 23:34:47| INFO        mul_sld finished [took 22.9651s]
+03/11/23 23:34:47| INFO     Dataset sample 0.50 of dataset imdb_1prevs finished [took 23.9721s]
+03/11/23 23:34:47| ERROR    Failed while saving configuration imdb_debug of imdb_1prevs. Exception: 'ref'
+----------------------------------------------------------------------------------------------------
+03/11/23 23:36:10| INFO     dataset imdb_1prevs
+03/11/23 23:36:30| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+03/11/23 23:38:02| INFO        atc_mc finished [took 56.2957s]
+03/11/23 23:38:03| INFO        mul_sld finished [took 57.6237s]
+03/11/23 23:38:40| INFO        ref finished [took 37.7811s]
+03/11/23 23:38:40| INFO     Dataset sample 0.50 of dataset imdb_1prevs finished [took 130.9031s]
+03/11/23 23:38:42| ERROR    Failed while saving configuration imdb_debug of imdb_1prevs. Exception: 'ref'
+----------------------------------------------------------------------------------------------------
+03/11/23 23:39:32| INFO     dataset imdb_1prevs
+03/11/23 23:39:42| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+03/11/23 23:40:08| INFO        atc_mc finished [took 24.7110s]
+03/11/23 23:40:23| INFO        mul_sld finished [took 40.2345s]
+03/11/23 23:40:26| INFO        ref finished [took 17.8417s]
+03/11/23 23:40:26| INFO     Dataset sample 0.50 of dataset imdb_1prevs finished [took 44.8087s]
+----------------------------------------------------------------------------------------------------
+03/11/23 23:41:18| INFO     dataset imdb_1prevs
+03/11/23 23:41:28| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+03/11/23 23:41:54| INFO        atc_mc finished [took 24.0569s]
+03/11/23 23:42:03| INFO        mul_sld finished [took 33.3390s]
+03/11/23 23:42:12| INFO        ref finished [took 16.9551s]
+03/11/23 23:42:12| INFO     Dataset sample 0.50 of dataset imdb_1prevs finished [took 43.2484s]
+----------------------------------------------------------------------------------------------------
+04/11/23 00:03:17| ERROR    Evaluation over imdb_1prevs failed. Exception: CompEstimatorName_.__init__() missing 1 required positional argument: 'ce'
+04/11/23 00:03:17| ERROR    Failed while saving configuration imdb_debug of imdb_1prevs. Exception: cannot access local variable 'dr' where it is not associated with a value
+----------------------------------------------------------------------------------------------------
+04/11/23 00:03:50| ERROR    Evaluation over imdb_1prevs failed. Exception: 'CompEstimator' object has no attribute '_CompEstimatorName___get'
+04/11/23 00:03:50| ERROR    Failed while saving configuration imdb_debug of imdb_1prevs. Exception: cannot access local variable 'dr' where it is not associated with a value
+----------------------------------------------------------------------------------------------------
+04/11/23 00:04:42| INFO     dataset imdb_1prevs
+04/11/23 00:04:53| INFO     Dataset sample 0.50 of dataset imdb_1prevs started
+04/11/23 00:05:13| INFO        ref finished [took 19.2363s]
+04/11/23 00:05:20| INFO        atc_mc finished [took 26.4278s]
+04/11/23 00:05:29| INFO        mul_sld finished [took 35.3110s]
+04/11/23 00:05:29| INFO     Dataset sample 0.50 of dataset imdb_1prevs finished [took 36.4422s]

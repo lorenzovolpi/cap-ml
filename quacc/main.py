@@ -7,6 +7,8 @@ from quacc.environment import env
 from quacc.logger import Logger
 from quacc.utils import create_dataser_dir
 
+CE = comp.CompEstimator()
+
 
 def toast():
     if platform == "win32":
@@ -26,7 +28,10 @@ def estimate_comparison():
         )
         create_dataser_dir(dataset.name, update=env.DATASET_DIR_UPDATE)
         try:
-            dr = comp.evaluate_comparison(dataset, estimators=env.COMP_ESTIMATORS)
+            dr = comp.evaluate_comparison(
+                dataset,
+                estimators=CE.name[env.COMP_ESTIMATORS],
+            )
         except Exception as e:
             log.error(f"Evaluation over {dataset.name} failed. Exception: {e}")
             traceback(e)
@@ -37,7 +42,7 @@ def estimate_comparison():
                     _repr = dr.to_md(
                         conf=plot_conf,
                         metric=m,
-                        estimators=env.PLOT_ESTIMATORS,
+                        estimators=CE.name[env.PLOT_ESTIMATORS],
                         stdev=env.PLOT_STDEV,
                     )
                     with open(output_path, "w") as f:

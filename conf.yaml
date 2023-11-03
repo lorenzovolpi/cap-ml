@@ -13,7 +13,6 @@ debug_conf: &debug_conf
     debug:
       PLOT_ESTIMATORS:
         - mul_sld
-        - ref
         - atc_mc
       PLOT_STDEV: true
 
@@ -107,4 +106,4 @@ main_conf: &main_conf
       - atc_ne
       - doc_feat
 
-exec: *test_conf
+exec: *debug_conf

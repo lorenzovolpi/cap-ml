@@ -3,6 +3,7 @@ import time
 from traceback import print_exception as traceback
 from typing import List
 
+import numpy as np
 import pandas as pd
 import quapy as qp
 
@@ -17,31 +18,63 @@ pd.set_option("display.float_format", "{:.4f}".format)
 qp.environ["SAMPLE_SIZE"] = env.SAMPLE_SIZE
 
 
+class CompEstimatorName_:
+    def __init__(self, ce):
+        self.ce = ce
+
+    def __getitem__(self, e: str | List[str]):
+        if isinstance(e, str):
+            return self.ce._CompEstimator__get(e)[0]
+        elif isinstance(e, list):
+            return list(self.ce._CompEstimator__get(e).keys())
+
+
+class CompEstimatorFunc_:
+    def __init__(self, ce):
+        self.ce = ce
+
+    def __getitem__(self, e: str | List[str]):
+        if isinstance(e, str):
+            return self.ce._CompEstimator__get(e)[1]
+        elif isinstance(e, list):
+            return list(self.ce._CompEstimator__get(e).values())
+
+
 class CompEstimator:
     __dict = method._methods | baseline._baselines
 
-    def __class_getitem__(cls, e: str | List[str]):
+    def __get(cls, e: str | List[str]):
         if isinstance(e, str):
             try:
-                return cls.__dict[e]
+                return (e, cls.__dict[e])
             except KeyError:
                 raise KeyError(f"Invalid estimator: estimator {e} does not exist")
         elif isinstance(e, list):
-            _subtr = [k for k in e if k not in cls.__dict]
+            _subtr = np.setdiff1d(e, list(cls.__dict.keys()))
             if len(_subtr) > 0:
                 raise KeyError(
                     f"Invalid estimator: estimator {_subtr[0]} does not exist"
                 )
 
-            return [fun for k, fun in cls.__dict.items() if k in e]
+            e_fun = {k: fun for k, fun in cls.__dict.items() if k in e}
+            if "ref" not in e:
+                e_fun["ref"] = cls.__dict["ref"]
+
+            return e_fun
+
+    @property
+    def name(self):
+        return CompEstimatorName_(self)
+
+    @property
+    def func(self):
+        return CompEstimatorFunc_(self)
 
 
-CE = CompEstimator
+CE = CompEstimator()
 
 
-def evaluate_comparison(
-    dataset: Dataset, estimators=["OUR_BIN_SLD", "OUR_MUL_SLD"]
-) -> EvaluationReport:
+def evaluate_comparison(dataset: Dataset, estimators=None) -> EvaluationReport:
     log = Logger.logger()
     # with multiprocessing.Pool(1) as pool:
     with multiprocessing.Pool(len(estimators)) as pool:
@@ -52,7 +85,9 @@ def evaluate_comparison(
                 f"Dataset sample {d.train_prev[1]:.2f} of dataset {dataset.name} started"
             )
             tstart = time.time()
-            tasks = [(estim, d.train, d.validation, d.test) for estim in CE[estimators]]
+            tasks = [
+                (estim, d.train, d.validation, d.test) for estim in CE.func[estimators]
+            ]
             results = [
                 pool.apply_async(estimate_worker, t, {"_env": env, "q": Logger.queue()})
                 for t in tasks
