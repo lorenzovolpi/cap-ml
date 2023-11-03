@@ -2,7 +2,7 @@ import inspect
 from functools import wraps
 
 import numpy as np
-from quapy.method.aggregative import SLD
+from quapy.method.aggregative import PACC, SLD
 from quapy.protocol import UPP, AbstractProtocol
 from sklearn.linear_model import LogisticRegression
 
@@ -126,4 +126,67 @@ def mul_sld_gs(c_model, validation, protocol) -> EvaluationReport:
     return evaluation_report(
         estimator=est,
         protocol=protocol,
+    )
+
+
+@method
+def bin_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(c_model, PACC(LogisticRegression(), recalib="bcts"))
+    est.fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mul_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(c_model, PACC(LogisticRegression(), recalib="bcts"))
+    est.fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def bin_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
+    v_train, v_val = validation.split_stratified(0.6, random_state=0)
+    model = BQAE(c_model, PACC(LogisticRegression()))
+    est = GridSearchAE(
+        model=model,
+        param_grid={
+            "q__classifier__C": np.logspace(-3, 3, 7),
+            "q__classifier__class_weight": [None, "balanced"],
+            "q__recalib": [None, "bcts", "vs"],
+        },
+        refit=False,
+        protocol=UPP(v_val, repeats=100),
+        verbose=False,
+    ).fit(v_train)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mul_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
+    v_train, v_val = validation.split_stratified(0.6, random_state=0)
+    model = MCAE(c_model, PACC(LogisticRegression()))
+    est = GridSearchAE(
+        model=model,
+        param_grid={
+            "q__classifier__C": np.logspace(-3, 3, 7),
+            "q__classifier__class_weight": [None, "balanced"],
+            "q__recalib": [None, "bcts", "vs"],
+        },
+        refit=False,
+        protocol=UPP(v_val, repeats=100),
+        verbose=False,
+    ).fit(v_train)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+        method_name="bin_sld_gs",
     )
