@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 
 import quacc as qc
 from quacc.evaluation.report import EvaluationReport
-from quacc.method.model_selection import GridSearchAE
+from quacc.method.model_selection import BQAEgsq, GridSearchAE, MCAEgsq
 
 from ..method.base import BQAE, MCAE, BaseAccuracyEstimator
 
@@ -49,8 +49,7 @@ def evaluation_report(
 
 @method
 def bin_sld(c_model, validation, protocol) -> EvaluationReport:
-    est = BQAE(c_model, SLD(LogisticRegression()))
-    est.fit(validation)
+    est = BQAE(c_model, SLD(LogisticRegression())).fit(validation)
     return evaluation_report(
         estimator=est,
         protocol=protocol,
@@ -59,8 +58,7 @@ def bin_sld(c_model, validation, protocol) -> EvaluationReport:
 
 @method
 def mul_sld(c_model, validation, protocol) -> EvaluationReport:
-    est = MCAE(c_model, SLD(LogisticRegression()))
-    est.fit(validation)
+    est = MCAE(c_model, SLD(LogisticRegression())).fit(validation)
     return evaluation_report(
         estimator=est,
         protocol=protocol,
@@ -68,9 +66,12 @@ def mul_sld(c_model, validation, protocol) -> EvaluationReport:
 
 
 @method
-def bin_sld_bcts(c_model, validation, protocol) -> EvaluationReport:
-    est = BQAE(c_model, SLD(LogisticRegression(), recalib="bcts"))
-    est.fit(validation)
+def binmc_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="max_conf",
+    ).fit(validation)
     return evaluation_report(
         estimator=est,
         protocol=protocol,
@@ -78,9 +79,12 @@ def bin_sld_bcts(c_model, validation, protocol) -> EvaluationReport:
 
 
 @method
-def mul_sld_bcts(c_model, validation, protocol) -> EvaluationReport:
-    est = MCAE(c_model, SLD(LogisticRegression(), recalib="bcts"))
-    est.fit(validation)
+def mulmc_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="max_conf",
+    ).fit(validation)
     return evaluation_report(
         estimator=est,
         protocol=protocol,
@@ -97,10 +101,11 @@ def bin_sld_gs(c_model, validation, protocol) -> EvaluationReport:
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
             "q__recalib": [None, "bcts", "vs"],
+            "confidence": [None, "max_conf"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
-        verbose=False,
+        verbose=True,
     ).fit(v_train)
     return evaluation_report(
         estimator=est,
@@ -118,10 +123,11 @@ def mul_sld_gs(c_model, validation, protocol) -> EvaluationReport:
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
             "q__recalib": [None, "bcts", "vs"],
+            "confidence": [None, "max_conf"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
-        verbose=False,
+        verbose=True,
     ).fit(v_train)
     return evaluation_report(
         estimator=est,
@@ -130,9 +136,46 @@ def mul_sld_gs(c_model, validation, protocol) -> EvaluationReport:
 
 
 @method
+def bin_sld_gsq(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAEgsq(
+        c_model,
+        SLD(LogisticRegression()),
+        param_grid={
+            "classifier__C": np.logspace(-3, 3, 7),
+            "classifier__class_weight": [None, "balanced"],
+            "recalib": [None, "bcts", "vs"],
+        },
+        refit=False,
+        verbose=False,
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mul_sld_gsq(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAEgsq(
+        c_model,
+        SLD(LogisticRegression()),
+        param_grid={
+            "classifier__C": np.logspace(-3, 3, 7),
+            "classifier__class_weight": [None, "balanced"],
+            "recalib": [None, "bcts", "vs"],
+        },
+        refit=False,
+        verbose=False,
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
 def bin_pacc(c_model, validation, protocol) -> EvaluationReport:
-    est = BQAE(c_model, PACC(LogisticRegression(), recalib="bcts"))
-    est.fit(validation)
+    est = BQAE(c_model, PACC(LogisticRegression())).fit(validation)
     return evaluation_report(
         estimator=est,
         protocol=protocol,
@@ -141,8 +184,7 @@ def bin_pacc(c_model, validation, protocol) -> EvaluationReport:
 
 @method
 def mul_pacc(c_model, validation, protocol) -> EvaluationReport:
-    est = MCAE(c_model, PACC(LogisticRegression(), recalib="bcts"))
-    est.fit(validation)
+    est = MCAE(c_model, PACC(LogisticRegression())).fit(validation)
     return evaluation_report(
         estimator=est,
         protocol=protocol,
@@ -158,7 +200,6 @@ def bin_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
         param_grid={
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
-            "q__recalib": [None, "bcts", "vs"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
@@ -179,7 +220,6 @@ def mul_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
         param_grid={
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
-            "q__recalib": [None, "bcts", "vs"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
@@ -188,5 +228,4 @@ def mul_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
     return evaluation_report(
         estimator=est,
         protocol=protocol,
-        method_name="bin_sld_gs",
     )

@@ -17,9 +17,11 @@ class BaseAccuracyEstimator(BaseQuantifier):
         self,
         classifier: BaseEstimator,
         quantifier: BaseQuantifier,
+        confidence=None,
     ):
         self.__check_classifier(classifier)
         self.quantifier = quantifier
+        self.confidence = confidence
 
     def __check_classifier(self, classifier):
         if not hasattr(classifier, "predict_proba"):
@@ -28,10 +30,37 @@ class BaseAccuracyEstimator(BaseQuantifier):
             )
         self.classifier = classifier
 
+    def __get_confidence(self):
+        if self.confidence is None:
+            return None
+
+        __confs = {
+            "max_conf": lambda probas: np.max(probas, axis=-1).reshape((len(probas), 1))
+        }
+        return __confs.get(self.confidence, None)
+
+    def __get_ext(self, pred_proba):
+        _ext = pred_proba
+        _f_conf = self.__get_confidence()
+        if _f_conf is not None:
+            _confs = _f_conf(pred_proba)
+            _ext = np.concatenate((_confs, pred_proba), axis=1)
+
+        return _ext
+
     def extend(self, coll: LabelledCollection, pred_proba=None) -> ExtendedCollection:
-        if not pred_proba:
+        if pred_proba is None:
             pred_proba = self.classifier.predict_proba(coll.X)
-        return ExtendedCollection.extend_collection(coll, pred_proba)
+
+        _ext = self.__get_ext(pred_proba)
+        return ExtendedCollection.extend_collection(coll, pred_proba=_ext)
+
+    def _extend_instances(self, instances: np.ndarray | csr_matrix, pred_proba=None):
+        if pred_proba is None:
+            pred_proba = self.classifier.predict_proba(instances)
+
+        _ext = self.__get_ext(pred_proba)
+        return ExtendedCollection.extend_instances(instances, _ext)
 
     @abstractmethod
     def fit(self, train: LabelledCollection | ExtendedCollection):
@@ -47,23 +76,24 @@ class MultiClassAccuracyEstimator(BaseAccuracyEstimator):
         self,
         classifier: BaseEstimator,
         quantifier: BaseQuantifier,
+        confidence: str = None,
     ):
-        super().__init__(classifier, quantifier)
+        super().__init__(
+            classifier=classifier,
+            quantifier=quantifier,
+            confidence=confidence,
+        )
         self.e_train = None
 
     def fit(self, train: LabelledCollection):
-        pred_probs = self.classifier.predict_proba(train.X)
-        self.e_train = ExtendedCollection.extend_collection(train, pred_probs)
+        self.e_train = self.extend(train)
 
         self.quantifier.fit(self.e_train)
 
         return self
 
     def estimate(self, instances, ext=False) -> np.ndarray:
-        e_inst = instances
-        if not ext:
-            pred_prob = self.classifier.predict_proba(instances)
-            e_inst = ExtendedCollection.extend_instances(instances, pred_prob)
+        e_inst = instances if ext else self._extend_instances(instances)
 
         estim_prev = self.quantifier.quantify(e_inst)
         return self._check_prevalence_classes(estim_prev)
@@ -78,18 +108,25 @@ class MultiClassAccuracyEstimator(BaseAccuracyEstimator):
 
 
 class BinaryQuantifierAccuracyEstimator(BaseAccuracyEstimator):
-    def __init__(self, classifier: BaseEstimator, quantifier: BaseAccuracyEstimator):
-        super().__init__(classifier, quantifier)
+    def __init__(
+        self,
+        classifier: BaseEstimator,
+        quantifier: BaseAccuracyEstimator,
+        confidence: str = None,
+    ):
+        super().__init__(
+            classifier=classifier,
+            quantifier=quantifier,
+            confidence=confidence,
+        )
         self.quantifiers = []
         self.e_trains = []
 
     def fit(self, train: LabelledCollection | ExtendedCollection):
-        pred_probs = self.classifier.predict_proba(train.X)
-        self.e_train = ExtendedCollection.extend_collection(train, pred_probs)
+        self.e_train = self.extend(train)
 
         self.n_classes = self.e_train.n_classes
         self.e_trains = self.e_train.split_by_pred()
-        self.quantifiers = [deepcopy(self.quantifier) for _ in self.e_trains]
 
         self.quantifiers = []
         for train in self.e_trains:
@@ -97,12 +134,11 @@ class BinaryQuantifierAccuracyEstimator(BaseAccuracyEstimator):
             quant.fit(train)
             self.quantifiers.append(quant)
 
+        return self
+
     def estimate(self, instances, ext=False):
         # TODO: test
-        e_inst = instances
-        if not ext:
-            pred_prob = self.classifier.predict_proba(instances)
-            e_inst = ExtendedCollection.extend_instances(instances, pred_prob)
+        e_inst = instances if ext else self._extend_instances(instances)
 
         _ncl = int(math.sqrt(self.n_classes))
         s_inst, norms = ExtendedCollection.split_inst_by_pred(_ncl, e_inst)

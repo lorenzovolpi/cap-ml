@@ -12,7 +12,30 @@ debug_conf: &debug_conf
   plot_confs:
     debug:
       PLOT_ESTIMATORS:
-        - mul_sld
+        - bin_sld_gs
+      PLOT_STDEV: true
+
+mc_conf: &mc_conf
+  global:
+    METRICS: 
+    - acc
+    DATASET_N_PREVS: 9
+    DATASET_PREVS:
+      - 0.4
+      - 0.5
+      - 0.6
+
+  confs:
+    - DATASET_NAME: rcv1
+      DATASET_TARGET: CCAT
+
+  plot_confs:
+    debug:
+      PLOT_ESTIMATORS:
+        - mulmc_sld
+        - mul_sld_gs
+        - bin_sld
+        - bin_sld_gs
         - atc_mc
       PLOT_STDEV: true
 
@@ -29,13 +52,20 @@ test_conf: &test_conf
     # - DATASET_NAME: imdb
 
   plot_confs:
-    2gs_vs_atc:
+    gs_vs_gsq:
       PLOT_ESTIMATORS:
+      - bin_sld
       - bin_sld_gs
-      - bin_sld_qgs
+      - bin_sld_gsq
+      - mul_sld
       - mul_sld_gs
-      - mul_sld_qgs
-      - ref
+      - mul_sld_gsq
+    gs_vs_atc:
+      PLOT_ESTIMATORS:
+      - bin_sld
+      - bin_sld_gs
+      - mul_sld
+      - mul_sld_gs
       - atc_mc
       - atc_ne
     sld_vs_pacc:
@@ -44,11 +74,23 @@ test_conf: &test_conf
       - bin_sld_gs
       - mul_sld
       - mul_sld_gs
-      - ref
+      - bin_pacc
+      - bin_pacc_gs
+      - mul_pacc
+      - mul_pacc_gs
+      - atc_mc
+      - atc_ne
+    pacc_vs_atc:
+      PLOT_ESTIMATORS:
+      - bin_pacc
+      - bin_pacc_gs
+      - mul_pacc
+      - mul_pacc_gs
       - atc_mc
       - atc_ne
 
 main_conf: &main_conf
+
   global:
     METRICS: 
     - acc
@@ -106,4 +148,4 @@ main_conf: &main_conf
       - atc_ne
       - doc_feat
 
-exec: *debug_conf
+exec: *mc_conf

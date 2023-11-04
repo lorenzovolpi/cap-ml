@@ -3,14 +3,22 @@ from copy import deepcopy
 from time import time
 from typing import Callable, Union
 
+import quapy as qp
 from quapy.data import LabelledCollection
-from quapy.protocol import AbstractProtocol, OnLabelledCollectionProtocol
+from quapy.model_selection import GridSearchQ
+from quapy.protocol import UPP, AbstractProtocol, OnLabelledCollectionProtocol
+from sklearn.base import BaseEstimator
 
 import quacc as qc
 import quacc.error
 from quacc.data import ExtendedCollection
 from quacc.evaluation import evaluate
-from quacc.method.base import BaseAccuracyEstimator
+from quacc.logger import SubLogger
+from quacc.method.base import (
+    BaseAccuracyEstimator,
+    BinaryQuantifierAccuracyEstimator,
+    MultiClassAccuracyEstimator,
+)
 
 
 class GridSearchAE(BaseAccuracyEstimator):
@@ -103,6 +111,12 @@ class GridSearchAE(BaseAccuracyEstimator):
             raise TimeoutError("no combination of hyperparameters seem to work")
 
         self._sout(
+            f"optimization finished: best params {self.best_params_} (score={self.best_score_:.5f}) "
+            f"[took {tend:.4f}s]"
+        )
+        log = SubLogger.logger()
+        log.debug(
+            f"[{self.model.__class__.__name__}] "
             f"optimization finished: best params {self.best_params_} (score={self.best_score_:.5f}) "
             f"[took {tend:.4f}s]"
         )
@@ -203,3 +217,84 @@ class GridSearchAE(BaseAccuracyEstimator):
         if hasattr(self, "best_model_"):
             return self.best_model_
         raise ValueError("best_model called before fit")
+
+
+class MCAEgsq(MultiClassAccuracyEstimator):
+    def __init__(
+        self,
+        classifier: BaseEstimator,
+        quantifier: BaseAccuracyEstimator,
+        param_grid: dict,
+        error: Union[Callable, str] = qp.error.mae,
+        refit=True,
+        timeout=-1,
+        n_jobs=None,
+        verbose=False,
+    ):
+        self.param_grid = param_grid
+        self.refit = refit
+        self.timeout = timeout
+        self.n_jobs = n_jobs
+        self.verbose = verbose
+        self.error = error
+        super().__init__(classifier, quantifier)
+
+    def fit(self, train: LabelledCollection):
+        self.e_train = self.extend(train)
+        t_train, t_val = self.e_train.split_stratified(0.6, random_state=0)
+        self.quantifier = GridSearchQ(
+            deepcopy(self.quantifier),
+            param_grid=self.param_grid,
+            protocol=UPP(t_val, repeats=100),
+            error=self.error,
+            refit=self.refit,
+            timeout=self.timeout,
+            n_jobs=self.n_jobs,
+            verbose=self.verbose,
+        ).fit(self.e_train)
+
+        return self
+
+
+class BQAEgsq(BinaryQuantifierAccuracyEstimator):
+    def __init__(
+        self,
+        classifier: BaseEstimator,
+        quantifier: BaseAccuracyEstimator,
+        param_grid: dict,
+        error: Union[Callable, str] = qp.error.mae,
+        refit=True,
+        timeout=-1,
+        n_jobs=None,
+        verbose=False,
+    ):
+        self.param_grid = param_grid
+        self.refit = refit
+        self.timeout = timeout
+        self.n_jobs = n_jobs
+        self.verbose = verbose
+        self.error = error
+        super().__init__(classifier=classifier, quantifier=quantifier)
+
+    def fit(self, train: LabelledCollection):
+        self.e_train = self.extend(train)
+
+        self.n_classes = self.e_train.n_classes
+        self.e_trains = self.e_train.split_by_pred()
+
+        self.quantifiers = []
+        for e_train in self.e_trains:
+            t_train, t_val = e_train.split_stratified(0.6, random_state=0)
+            quantifier = GridSearchQ(
+                model=deepcopy(self.quantifier),
+                param_grid=self.param_grid,
+                protocol=UPP(t_val, repeats=100),
+                error=self.error,
+                refit=self.refit,
+                timeout=self.timeout,
+                n_jobs=self.n_jobs,
+                verbose=self.verbose,
+            ).fit(t_train)
+            self.quantifiers.append(quantifier)
+
+        return self

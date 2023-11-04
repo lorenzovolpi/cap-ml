@@ -27,7 +27,7 @@ def estimate_worker(_estimate, train, validation, test, _env=None, q=None):
         result = _estimate(model, validation, protocol)
     except Exception as e:
         log.warning(f"Method {_estimate.__name__} failed. Exception: {e}")
-        # traceback(e)
+        traceback(e)
         return {
             "name": _estimate.__name__,
             "result": None,
