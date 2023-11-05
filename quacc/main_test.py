@@ -9,6 +9,8 @@ from sklearn.linear_model import LogisticRegression
 
 from quacc.dataset import Dataset
 from quacc.error import acc
+from quacc.evaluation.baseline import ref
+from quacc.evaluation.method import mulmc_sld
 from quacc.evaluation.report import CompReport, EvaluationReport
 from quacc.method.base import BinaryQuantifierAccuracyEstimator
 from quacc.method.model_selection import GridSearchAE
@@ -74,5 +76,30 @@ def test_gs():
     win11toast.notify("Test", "completed")
 
 
+def test_mc():
+    d = Dataset(name="rcv1", target="CCAT", prevs=[0.9]).get()[0]
+    classifier = LogisticRegression().fit(*d.train.Xy)
+    protocol = APP(
+        d.test,
+        sample_size=1000,
+        repeats=100,
+        n_prevalences=21,
+        return_type="labelled_collection",
+    )
+
+    ref_er = ref(classifier, d.validation, protocol)
+    mulmc_er = mulmc_sld(classifier, d.validation, protocol)
+
+    cr = CompReport(
+        [mulmc_er, ref_er],
+        name="test_mc",
+        train_prev=d.train_prev,
+        valid_prev=d.validation_prev,
+    )
+
+    with open("test_mc.md", "w") as f:
+        f.write(cr.data().to_markdown())
+
+
 if __name__ == "__main__":
-    test_gs()
+    test_mc()

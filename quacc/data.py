@@ -4,7 +4,6 @@ from typing import List, Optional
 import numpy as np
 import scipy.sparse as sp
 from quapy.data import LabelledCollection
-from sklearn.base import BaseEstimator
 
 
 # Extended classes
@@ -131,31 +130,20 @@ class ExtendedCollection(LabelledCollection):
     def extend_collection(
         cls,
         base: LabelledCollection,
-        classifier: BaseEstimator = None,
-        pred_proba: np.ndarray = None,
+        pred_proba: np.ndarray,
     ):
-        if classifier is None and pred_proba is None:
-            raise AttributeError("classifier and pred_proba cannot be both None")
-
-        if classifier is not None and pred_proba is not None:
-            raise AttributeError(
-                "Not needed parameters: just one of classifier or pred_proba is needed"
-            )
-
-        if classifier:
-            pred_proba = classifier.predict_proba(base.X)
-
         n_classes = base.n_classes
 
         # n_X = [ X | predicted probs. ]
         n_x = cls.extend_instances(base.X, pred_proba)
 
         # n_y = (exptected y, predicted y)
-        pred = np.asarray([prob.argmax(axis=0) for prob in pred_proba])
+        pred_proba = pred_proba[:, -n_classes:]
+        preds = np.argmax(pred_proba, axis=-1)
         n_y = np.asarray(
             [
                 ExClassManager.get_ex(n_classes, true_class, pred_class)
-                for (true_class, pred_class) in zip(base.y, pred)
+                for (true_class, pred_class) in zip(base.y, preds)
             ]
         )
 

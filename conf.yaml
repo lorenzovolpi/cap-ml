@@ -4,7 +4,9 @@ debug_conf: &debug_conf
     - acc
     DATASET_N_PREVS: 5
     DATASET_PREVS:
+    - 0.2
     - 0.5
+    - 0.8
 
   confs:
     - DATASET_NAME: imdb
@@ -12,7 +14,8 @@ debug_conf: &debug_conf
   plot_confs:
     debug:
       PLOT_ESTIMATORS:
-        - bin_sld_gs
+        - mulmc_sld
+        - atc_mc
       PLOT_STDEV: true
 
 mc_conf: &mc_conf
@@ -20,22 +23,22 @@ mc_conf: &mc_conf
     METRICS: 
     - acc
     DATASET_N_PREVS: 9
-    DATASET_PREVS:
-      - 0.4
-      - 0.5
-      - 0.6
+    DATASET_DIR_UPDATE: true
 
   confs:
     - DATASET_NAME: rcv1
       DATASET_TARGET: CCAT
+    # - DATASET_NAME: imdb
 
   plot_confs:
-    debug:
+    debug3:
       PLOT_ESTIMATORS:
+        - binmc_sld
         - mulmc_sld
-        - mul_sld_gs
-        - bin_sld
+        - binne_sld
+        - mulne_sld
         - bin_sld_gs
+        - mul_sld_gs
         - atc_mc
       PLOT_STDEV: true
 

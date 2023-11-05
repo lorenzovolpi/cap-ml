@@ -30,7 +30,13 @@
     - nel caso di bin fare media dei due best score
 - [x] import baselines
 
+- [x] plot avg con train prevalence sull'asse x e media su test prevalecne
+- [x] realizzare grid search per task specifico partendo da GridSearchQ
+- [x] provare PACC come quantificatore
+- [ ] importare mandoline
+  - mandoline può essere importato, ma richiedere uno slicing delle features a priori che devere essere realizzato ad hoc
+- [ ] sistemare vecchie iw baselines
+  - non possono essere fixate perché dipendono da numpy
+- [ ] aggiungere etichette in shift plot
+- [ ] sistemare exact_train quapy
 - [ ] testare anche su imbd
-- [ ] plot avg con train prevalence sull'asse x e media su test prevalecne
-- [ ] realizzare grid search per task specifico partendo da GridSearchQ
-- [ ] provare PACC come quantificatore
