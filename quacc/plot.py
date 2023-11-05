@@ -27,7 +27,6 @@ def plot_delta(
     metric="acc",
     name="default",
     train_prev=None,
-    fit_scores=None,
     legend=True,
     avg=None,
 ) -> Path:
@@ -74,14 +73,6 @@ def plot_delta(
                 _ds + _st,
                 color=_cy["color"],
                 alpha=0.25,
-            )
-        if fit_scores is not None and method in fit_scores:
-            ax.plot(
-                base_prevs,
-                np.repeat(fit_scores[method], base_prevs.shape[0]),
-                color=_cy["color"],
-                linestyle="--",
-                markersize=0,
             )
 
     x_label = "test" if avg is None or avg == "train" else "train"
@@ -188,11 +179,11 @@ def plot_shift(
     columns,
     data,
     *,
+    counts=None,
     pos_class=1,
     metric="acc",
     name="default",
     train_prev=None,
-    fit_scores=None,
     legend=True,
 ) -> Path:
     if train_prev is not None:
@@ -223,15 +214,20 @@ def plot_shift(
             markersize=3,
             zorder=2,
         )
-
-        if fit_scores is not None and method in fit_scores:
-            ax.plot(
-                shift_prevs,
-                np.repeat(fit_scores[method], shift_prevs.shape[0]),
-                color=_cy["color"],
-                linestyle="--",
-                markersize=0,
-            )
+        if counts is not None:
+            _col_idx = np.where(columns == method)[0]
+            count = counts[_col_idx].flatten()
+            for prev, shift, cnt in zip(shift_prevs, shifts, count):
+                label = f"{cnt}"
+                plt.annotate(
+                    label,
+                    (prev, shift),
+                    textcoords="offset points",
+                    xytext=(0, 10),
+                    ha="center",
+                    color=_cy["color"],
+                    fontsize=12.0,
+                )
 
     ax.set(xlabel="dataset shift", ylabel=metric, title=title)
 

@@ -182,22 +182,21 @@ class CompReport:
                 train_prev=self.train_prev,
             )
         elif mode == "shift":
-            shift_data = (
-                self.shift_data(metric=metric, estimators=estimators)
-                .groupby(level=0)
-                .mean()
-            )
+            _shift_data = self.shift_data(metric=metric, estimators=estimators)
+            shift_avg = _shift_data.groupby(level=0).mean()
+            shift_counts = _shift_data.groupby(level=0).count()
             shift_prevs = np.around(
-                [(1.0 - p, p) for p in np.sort(shift_data.index.unique(0))],
+                [(1.0 - p, p) for p in np.sort(shift_avg.index.unique(0))],
                 decimals=2,
             )
             return plot.plot_shift(
                 shift_prevs=shift_prevs,
-                columns=shift_data.columns.to_numpy(),
-                data=shift_data.T.to_numpy(),
+                columns=shift_avg.columns.to_numpy(),
+                data=shift_avg.T.to_numpy(),
                 metric=metric,
                 name=conf,
                 train_prev=self.train_prev,
+                counts=shift_counts.T.to_numpy(),
             )
 
     def to_md(self, conf="default", metric="acc", estimators=None, stdev=False) -> str:
@@ -374,6 +373,7 @@ class DatasetReport:
         res += "### avg dataset shift\n"
 
         avg_shift = _shift_data.groupby(level=0).mean()
+        count_shift = _shift_data.groupby(level=0).count()
         prevs_shift = np.sort(avg_shift.index.unique(0))
 
         shift_op = plot.plot_shift(
@@ -383,6 +383,7 @@ class DatasetReport:
             metric=metric,
             name=conf,
             train_prev=None,
+            counts=count_shift.T.to_numpy(),
         )
         res += f"![plot_shift]({shift_op.relative_to(env.OUT_DIR).as_posix()})\n"
 

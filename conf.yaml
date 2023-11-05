@@ -151,4 +151,4 @@ main_conf: &main_conf
       - atc_ne
       - doc_feat
 
-exec: *mc_conf
+exec: *debug_conf
