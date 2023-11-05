@@ -27,6 +27,7 @@ def estimate_comparison():
             prevs=env.DATASET_PREVS,
         )
         create_dataser_dir(dataset.name, update=env.DATASET_DIR_UPDATE)
+        Logger.add_handler(env.OUT_DIR / f"{dataset.name}.log")
         try:
             dr = comp.evaluate_comparison(
                 dataset,
@@ -52,6 +53,7 @@ def estimate_comparison():
                         f"Failed while saving configuration {plot_conf} of {dataset.name}. Exception: {e}"
                     )
                     traceback(e)
+        Logger.clear_handlers()
 
     # print(df.to_latex(float_format="{:.4f}".format))
     # print(utils.avg_group_report(df).to_latex(float_format="{:.4f}".format))

@@ -2,6 +2,7 @@ import logging
 import logging.handlers
 import multiprocessing
 import threading
+from pathlib import Path
 
 
 class Logger:
@@ -11,6 +12,7 @@ class Logger:
     __queue = None
     __thread = None
     __setup = False
+    __handlers = []
 
     @classmethod
     def __logger_listener(cls, q):
@@ -61,6 +63,21 @@ class Logger:
         cls.__thread.start()
 
         cls.__setup = True
+
+    @classmethod
+    def add_handler(cls, path: Path):
+        root = logging.getLogger("listener")
+        rh = logging.FileHandler(path, mode="a")
+        rh.setLevel(logging.DEBUG)
+        cls.__handlers.append(rh)
+        root.addHandler(rh)
+
+    @classmethod
+    def clear_handlers(cls):
+        root = logging.getLogger("listener")
+        for h in cls.__handlers:
+            root.removeHandler(h)
+        cls.__handlers.clear()
 
     @classmethod
     def queue(cls):
