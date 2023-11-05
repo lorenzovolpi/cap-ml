@@ -37,6 +37,6 @@
 - [x] plot avg con train prevalence sull'asse x e media su test prevalecne
 - [x] realizzare grid search per task specifico partendo da GridSearchQ
 - [x] provare PACC come quantificatore
-- [ ] aggiungere etichette in shift plot
+- [x] aggiungere etichette in shift plot
 - [ ] sistemare exact_train quapy
 - [ ] testare anche su imbd
