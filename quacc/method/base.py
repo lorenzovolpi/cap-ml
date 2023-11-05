@@ -31,11 +31,22 @@ class BaseAccuracyEstimator(BaseQuantifier):
         self.classifier = classifier
 
     def __get_confidence(self):
+        def max_conf(probas):
+            _mc = np.max(probas, axis=-1)
+            _min = 1.0 / probas.shape[1]
+            _norm_mc = (_mc - _min) / (1.0 - _min)
+            return _norm_mc
+
+        def entropy(probas):
+            _ent = np.sum(np.multiply(probas, np.log(probas + 1e-20)), axis=1)
+            return _ent
+
         if self.confidence is None:
             return None
 
         __confs = {
-            "max_conf": lambda probas: np.max(probas, axis=-1).reshape((len(probas), 1))
+            "max_conf": max_conf,
+            "entropy": entropy,
         }
         return __confs.get(self.confidence, None)
 
@@ -43,7 +54,7 @@ class BaseAccuracyEstimator(BaseQuantifier):
         _ext = pred_proba
         _f_conf = self.__get_confidence()
         if _f_conf is not None:
-            _confs = _f_conf(pred_proba)
+            _confs = _f_conf(pred_proba).reshape((len(pred_proba), 1))
             _ext = np.concatenate((_confs, pred_proba), axis=1)
 
         return _ext

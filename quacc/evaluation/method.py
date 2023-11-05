@@ -92,6 +92,32 @@ def mulmc_sld(c_model, validation, protocol) -> EvaluationReport:
 
 
 @method
+def binne_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="entropy",
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mulne_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="entropy",
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
 def bin_sld_gs(c_model, validation, protocol) -> EvaluationReport:
     v_train, v_val = validation.split_stratified(0.6, random_state=0)
     model = BQAE(c_model, SLD(LogisticRegression()))
@@ -101,7 +127,7 @@ def bin_sld_gs(c_model, validation, protocol) -> EvaluationReport:
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
             "q__recalib": [None, "bcts", "vs"],
-            "confidence": [None, "max_conf"],
+            "confidence": [None, "max_conf", "entropy"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
@@ -123,7 +149,7 @@ def mul_sld_gs(c_model, validation, protocol) -> EvaluationReport:
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
             "q__recalib": [None, "bcts", "vs"],
-            "confidence": [None, "max_conf"],
+            "confidence": [None, "max_conf", "entropy"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
@@ -200,6 +226,7 @@ def bin_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
         param_grid={
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
+            "confidence": [None, "max_conf", "entropy"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
@@ -220,6 +247,7 @@ def mul_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
         param_grid={
             "q__classifier__C": np.logspace(-3, 3, 7),
             "q__classifier__class_weight": [None, "balanced"],
+            "confidence": [None, "max_conf", "entropy"],
         },
         refit=False,
         protocol=UPP(v_val, repeats=100),
