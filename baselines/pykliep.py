@@ -74,7 +74,9 @@ class DensityRatioEstimator:
         #     X_test_shuffled = X_test.copy()
         X_test_shuffled = X_test.copy()
 
-        np.random.shuffle(X_test_shuffled)
+        X_test_index = np.arange(X_test_shuffled.shape[0])
+        np.random.shuffle(X_test_index)
+        X_test_shuffled = X_test_shuffled[X_test_index, :]
 
         j_scores = {}
 
