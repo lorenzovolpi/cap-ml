@@ -29,13 +29,14 @@ def plot_delta(
     train_prev=None,
     fit_scores=None,
     legend=True,
+    avg=None,
 ) -> Path:
     _base_title = "delta_stdev" if stdevs is not None else "delta"
     if train_prev is not None:
         t_prev_pos = int(round(train_prev[pos_class] * 100))
         title = f"{_base_title}_{name}_{t_prev_pos}_{metric}"
     else:
-        title = f"{_base_title}_{name}_avg_{metric}"
+        title = f"{_base_title}_{name}_avg_{avg}_{metric}"
 
     fig, ax = plt.subplots()
     ax.set_aspect("auto")
@@ -83,7 +84,12 @@ def plot_delta(
                 markersize=0,
             )
 
-    ax.set(xlabel="test prevalence", ylabel=metric, title=title)
+    x_label = "test" if avg is None or avg == "train" else "train"
+    ax.set(
+        xlabel=f"{x_label} prevalence",
+        ylabel=metric,
+        title=title,
+    )
 
     if legend:
         ax.legend(loc="center left", bbox_to_anchor=(1, 0.5))
