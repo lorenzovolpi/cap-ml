@@ -2,6 +2,7 @@ import itertools
 from copy import deepcopy
 from time import time
 from typing import Callable, Union
+import numpy as np
 
 import quapy as qp
 from quapy.data import LabelledCollection
@@ -189,7 +190,7 @@ class GridSearchAE(BaseAccuracyEstimator):
             by the model selection process.
         """
 
-        assert hasattr(self, "best_model_"), "quantify called before fit"
+        assert hasattr(self, "best_model_"), "estimate called before fit"
         return self.best_model().estimate(instances, ext=ext)
 
     def set_params(self, **parameters):
@@ -217,6 +218,7 @@ class GridSearchAE(BaseAccuracyEstimator):
         if hasattr(self, "best_model_"):
             return self.best_model_
         raise ValueError("best_model called before fit")
+
 
 
 class MCAEgsq(MultiClassAccuracyEstimator):
@@ -254,6 +256,11 @@ class MCAEgsq(MultiClassAccuracyEstimator):
         ).fit(self.e_train)
 
         return self
+
+    def estimate(self, instances, ext=False) -> np.ndarray:
+        e_inst = instances if ext else self._extend_instances(instances)
+        estim_prev = self.quantifier.quantify(e_inst)
+        return self._check_prevalence_classes(estim_prev, self.quantifier.best_model().classes_)
 
 
 class BQAEgsq(BinaryQuantifierAccuracyEstimator):
