@@ -102,17 +102,27 @@ main_conf: &main_conf
     DATASET_N_PREVS: 9
     DATASET_DIR_UPDATE: true
 
-  confs_competed:
+  confs:
     - DATASET_NAME: rcv1
       DATASET_TARGET: CCAT
     - DATASET_NAME: imdb
-  confs:
+  confs_next:
     - DATASET_NAME: rcv1
       DATASET_TARGET: GCAT
     - DATASET_NAME: rcv1
       DATASET_TARGET: MCAT
 
   plot_confs:
+    gs_vs_qgs:
+      PLOT_ESTIMATORS:
+      - mul_sld_gs
+      - bin_sld_gs
+      - mul_sld_gsq
+      - bin_sld_gsq
+      - atc_mc
+      - atc_ne
+      PLOT_STDEV: true
+  plot_confs_completed:
     max_conf_vs_atc_pacc:
       PLOT_ESTIMATORS:
       - bin_pacc
@@ -166,19 +176,6 @@ main_conf: &main_conf
       - mul_pacc
       - bin_pacc
       PLOT_STDEV: true
-
-  plot_confs_torepeat:
-    gs_vs_qgs:
-      # to repeat on rcv1_CCAT and imdb
-      PLOT_ESTIMATORS:
-      - mul_sld_gs
-      - bin_sld_gs
-      - mul_sld_gsq
-      - bin_sld_gsq
-      - atc_mc
-      - atc_ne
-      PLOT_STDEV: true
-  plot_confs_completed:
     max_conf_vs_atc:
       PLOT_ESTIMATORS:
       - bin_sld
