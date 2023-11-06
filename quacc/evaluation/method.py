@@ -2,7 +2,7 @@ import inspect
 from functools import wraps
 
 import numpy as np
-from quapy.method.aggregative import PACC, SLD
+from quapy.method.aggregative import PACC, SLD, CC
 from quapy.protocol import UPP, AbstractProtocol
 from sklearn.linear_model import LogisticRegression
 
@@ -13,8 +13,18 @@ from quacc.method.model_selection import BQAEgsq, GridSearchAE, MCAEgsq
 from ..method.base import BQAE, MCAE, BaseAccuracyEstimator
 
 _methods = {}
-
-
+_sld_param_grid = {
+    "q__classifier__C": np.logspace(-3, 3, 7),
+    "q__classifier__class_weight": [None, "balanced"],
+    "q__recalib": [None, "bcts"],
+    "q__exact_train_prev": [True],
+    "confidence": [None, "max_conf", "entropy"],
+}
+_pacc_param_grid = {
+    "q__classifier__C": np.logspace(-3, 3, 7),
+    "q__classifier__class_weight": [None, "balanced"],
+    "confidence": [None, "max_conf", "entropy"],
+}
 def method(func):
     @wraps(func)
     def wrapper(c_model, validation, protocol):
@@ -123,12 +133,7 @@ def bin_sld_gs(c_model, validation, protocol) -> EvaluationReport:
     model = BQAE(c_model, SLD(LogisticRegression()))
     est = GridSearchAE(
         model=model,
-        param_grid={
-            "q__classifier__C": np.logspace(-3, 3, 7),
-            "q__classifier__class_weight": [None, "balanced"],
-            "q__recalib": [None, "bcts", "vs"],
-            "confidence": [None, "max_conf", "entropy"],
-        },
+        param_grid=_sld_param_grid,
         refit=False,
         protocol=UPP(v_val, repeats=100),
         verbose=True,
@@ -145,12 +150,7 @@ def mul_sld_gs(c_model, validation, protocol) -> EvaluationReport:
     model = MCAE(c_model, SLD(LogisticRegression()))
     est = GridSearchAE(
         model=model,
-        param_grid={
-            "q__classifier__C": np.logspace(-3, 3, 7),
-            "q__classifier__class_weight": [None, "balanced"],
-            "q__recalib": [None, "bcts", "vs"],
-            "confidence": [None, "max_conf", "entropy"],
-        },
+        param_grid=_sld_param_grid,
         refit=False,
         protocol=UPP(v_val, repeats=100),
         verbose=True,
@@ -218,16 +218,48 @@ def mul_pacc(c_model, validation, protocol) -> EvaluationReport:
 
 
 @method
+def binmc_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(c_model, PACC(LogisticRegression()), confidence="max_conf").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mulmc_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(c_model, PACC(LogisticRegression()), confidence="max_conf").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+ 
+
+@method
+def binne_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(c_model, PACC(LogisticRegression()), confidence="entropy").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mulne_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(c_model, PACC(LogisticRegression()), confidence="entropy").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
 def bin_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
     v_train, v_val = validation.split_stratified(0.6, random_state=0)
     model = BQAE(c_model, PACC(LogisticRegression()))
     est = GridSearchAE(
         model=model,
-        param_grid={
-            "q__classifier__C": np.logspace(-3, 3, 7),
-            "q__classifier__class_weight": [None, "balanced"],
-            "confidence": [None, "max_conf", "entropy"],
-        },
+        param_grid=_pacc_param_grid,
         refit=False,
         protocol=UPP(v_val, repeats=100),
         verbose=False,
@@ -244,15 +276,29 @@ def mul_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
     model = MCAE(c_model, PACC(LogisticRegression()))
     est = GridSearchAE(
         model=model,
-        param_grid={
-            "q__classifier__C": np.logspace(-3, 3, 7),
-            "q__classifier__class_weight": [None, "balanced"],
-            "confidence": [None, "max_conf", "entropy"],
-        },
+        param_grid=_pacc_param_grid,
         refit=False,
         protocol=UPP(v_val, repeats=100),
         verbose=False,
     ).fit(v_train)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def bin_cc(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(c_model, CC(LogisticRegression())).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mul_cc(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(c_model, CC(LogisticRegression())).fit(validation)
     return evaluation_report(
         estimator=est,
         protocol=protocol,
