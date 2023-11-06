@@ -107,10 +107,9 @@ class MultiClassAccuracyEstimator(BaseAccuracyEstimator):
         e_inst = instances if ext else self._extend_instances(instances)
 
         estim_prev = self.quantifier.quantify(e_inst)
-        return self._check_prevalence_classes(estim_prev)
+        return self._check_prevalence_classes(estim_prev, self.quantifier.classes_)
 
-    def _check_prevalence_classes(self, estim_prev) -> np.ndarray:
-        estim_classes = self.quantifier.classes_
+    def _check_prevalence_classes(self, estim_prev, estim_classes) -> np.ndarray:
         true_classes = self.e_train.classes_
         for _cls in true_classes:
             if _cls not in estim_classes:

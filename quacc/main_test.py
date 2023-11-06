@@ -7,12 +7,13 @@ from quapy.method.aggregative import SLD
 from quapy.protocol import APP, UPP
 from sklearn.linear_model import LogisticRegression
 
+import quacc as qc
 from quacc.dataset import Dataset
 from quacc.error import acc
 from quacc.evaluation.baseline import ref
 from quacc.evaluation.method import mulmc_sld
 from quacc.evaluation.report import CompReport, EvaluationReport
-from quacc.method.base import BinaryQuantifierAccuracyEstimator
+from quacc.method.base import MCAE, BinaryQuantifierAccuracyEstimator
 from quacc.method.model_selection import GridSearchAE
 
 
@@ -101,5 +102,19 @@ def test_mc():
         f.write(cr.data().to_markdown())
 
 
+def test_et():
+    d = Dataset(name="imdb", prevs=[0.5]).get()[0]
+    classifier = LogisticRegression().fit(*d.train.Xy)
+    estimator = MCAE(
+        classifier,
+        SLD(LogisticRegression(), exact_train_prev=False),
+        confidence="max_conf",
+    ).fit(d.validation)
+    e_test = estimator.extend(d.test)
+    ep = estimator.estimate(e_test.X, ext=True)
+    print(f"{qc.error.acc(ep) = }")
+    print(f"{qc.error.acc(e_test.prevalence()) = }")
+
+
 if __name__ == "__main__":
-    test_mc()
+    test_et()
