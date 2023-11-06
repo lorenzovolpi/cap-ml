@@ -34,7 +34,6 @@ class Logger:
         rh = logging.FileHandler(cls.__logger_file, mode="a")
         rh.setLevel(logging.DEBUG)
         root.addHandler(rh)
-        root.info("-" * 100)
 
         # setup logger
         if cls.__manager is None:
@@ -96,6 +95,8 @@ class Logger:
     @classmethod
     def close(cls):
         if cls.__setup and cls.__thread is not None:
+            root = logging.getLogger("listener")
+            root.info("-" * 100)
             cls.__queue.put(None)
             cls.__thread.join()
             # cls.__manager.close()
