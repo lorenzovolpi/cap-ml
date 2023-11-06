@@ -38,5 +38,5 @@
 - [x] realizzare grid search per task specifico partendo da GridSearchQ
 - [x] provare PACC come quantificatore
 - [x] aggiungere etichette in shift plot
-- [ ] sistemare exact_train quapy
+- [x] sistemare exact_train quapy
 - [ ] testare anche su imbd

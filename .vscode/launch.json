@@ -19,7 +19,7 @@
             "request": "launch",
             "program": "C:\\Users\\Lorenzo Volpi\\source\\tesi\\quacc\\main_test.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": false
         },
     ]
 }
