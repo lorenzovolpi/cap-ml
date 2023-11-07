@@ -39,4 +39,6 @@
 - [x] provare PACC come quantificatore
 - [x] aggiungere etichette in shift plot
 - [x] sistemare exact_train quapy
-- [ ] testare anche su imbd
+- [x] testare anche su imbd
+
+- [ ] rivedere nuove baselines
