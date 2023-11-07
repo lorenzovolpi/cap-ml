@@ -115,7 +115,7 @@ class CompReport:
 
         shift_data = self._data.copy()
         shift_data.index = pd.MultiIndex.from_arrays([shift_idx_0, shift_idx_1])
-        shift_data.sort_index(axis=0, level=0)
+        shift_data = shift_data.sort_index(axis=0, level=0)
 
         _metric = _get_metric(metric)
         _estimators = _get_estimators(estimators, shift_data.columns.unique(1))
@@ -182,22 +182,21 @@ class CompReport:
                 train_prev=self.train_prev,
             )
         elif mode == "shift":
-            shift_data = (
-                self.shift_data(metric=metric, estimators=estimators)
-                .groupby(level=0)
-                .mean()
-            )
+            _shift_data = self.shift_data(metric=metric, estimators=estimators)
+            shift_avg = _shift_data.groupby(level=0).mean()
+            shift_counts = _shift_data.groupby(level=0).count()
             shift_prevs = np.around(
-                [(1.0 - p, p) for p in np.sort(shift_data.index.unique(0))],
+                [(1.0 - p, p) for p in np.sort(shift_avg.index.unique(0))],
                 decimals=2,
             )
             return plot.plot_shift(
                 shift_prevs=shift_prevs,
-                columns=shift_data.columns.to_numpy(),
-                data=shift_data.T.to_numpy(),
+                columns=shift_avg.columns.to_numpy(),
+                data=shift_avg.T.to_numpy(),
                 metric=metric,
                 name=conf,
                 train_prev=self.train_prev,
+                counts=shift_counts.T.to_numpy(),
             )
 
     def to_md(self, conf="default", metric="acc", estimators=None, stdev=False) -> str:
@@ -246,7 +245,7 @@ class DatasetReport:
         )
         _crs_train, _crs_data = zip(*_crs_sorted)
 
-        _data = pd.concat(_crs_data, axis=0, keys=_crs_train)
+        _data = pd.concat(_crs_data, axis=0, keys=np.around(_crs_train, decimals=2))
         _data = _data.sort_index(axis=0, level=0)
         return _data
 
@@ -296,47 +295,95 @@ class DatasetReport:
         _data = self.data(metric=metric, estimators=estimators)
         _shift_data = self.shift_data(metric=metric, estimators=estimators)
 
-        avg_x_test = _data.groupby(level=1).mean()
-        prevs_x_test = np.sort(avg_x_test.index.unique(0))
-        stdev_x_test = _data.groupby(level=1).std() if stdev else None
-        avg_x_test_tbl = _data.groupby(level=1).mean()
-        avg_x_test_tbl.loc["avg", :] = _data.mean()
-
-        avg_x_shift = _shift_data.groupby(level=0).mean()
-        prevs_x_shift = np.sort(avg_x_shift.index.unique(0))
-
         res += "## avg\n"
-        res += avg_x_test_tbl.to_html() + "\n\n"
+
+        ######################## avg on train ########################
+        res += "### avg on train\n"
+
+        avg_on_train = _data.groupby(level=1).mean()
+        prevs_on_train = np.sort(avg_on_train.index.unique(0))
+        stdev_on_train = _data.groupby(level=1).std() if stdev else None
+        avg_on_train_tbl = _data.groupby(level=1).mean()
+        avg_on_train_tbl.loc["avg", :] = _data.mean()
+
+        res += avg_on_train_tbl.to_html() + "\n\n"
 
         delta_op = plot.plot_delta(
-            base_prevs=np.around([(1.0 - p, p) for p in prevs_x_test], decimals=2),
-            columns=avg_x_test.columns.to_numpy(),
-            data=avg_x_test.T.to_numpy(),
+            base_prevs=np.around([(1.0 - p, p) for p in prevs_on_train], decimals=2),
+            columns=avg_on_train.columns.to_numpy(),
+            data=avg_on_train.T.to_numpy(),
             metric=metric,
             name=conf,
             train_prev=None,
+            avg="train",
         )
         res += f"![plot_delta]({delta_op.relative_to(env.OUT_DIR).as_posix()})\n"
 
         if stdev:
             delta_stdev_op = plot.plot_delta(
-                base_prevs=np.around([(1.0 - p, p) for p in prevs_x_test], decimals=2),
-                columns=avg_x_test.columns.to_numpy(),
-                data=avg_x_test.T.to_numpy(),
+                base_prevs=np.around(
+                    [(1.0 - p, p) for p in prevs_on_train], decimals=2
+                ),
+                columns=avg_on_train.columns.to_numpy(),
+                data=avg_on_train.T.to_numpy(),
                 metric=metric,
                 name=conf,
                 train_prev=None,
-                stdevs=stdev_x_test.T.to_numpy(),
+                stdevs=stdev_on_train.T.to_numpy(),
+                avg="train",
             )
             res += f"![plot_delta_stdev]({delta_stdev_op.relative_to(env.OUT_DIR).as_posix()})\n"
 
-        shift_op = plot.plot_shift(
-            shift_prevs=np.around([(1.0 - p, p) for p in prevs_x_shift], decimals=2),
-            columns=avg_x_shift.columns.to_numpy(),
-            data=avg_x_shift.T.to_numpy(),
+        ######################## avg on test ########################
+        res += "### avg on test\n"
+
+        avg_on_test = _data.groupby(level=0).mean()
+        prevs_on_test = np.sort(avg_on_test.index.unique(0))
+        stdev_on_test = _data.groupby(level=0).std() if stdev else None
+        avg_on_test_tbl = _data.groupby(level=0).mean()
+        avg_on_test_tbl.loc["avg", :] = _data.mean()
+
+        res += avg_on_test_tbl.to_html() + "\n\n"
+
+        delta_op = plot.plot_delta(
+            base_prevs=np.around([(1.0 - p, p) for p in prevs_on_test], decimals=2),
+            columns=avg_on_test.columns.to_numpy(),
+            data=avg_on_test.T.to_numpy(),
             metric=metric,
             name=conf,
             train_prev=None,
+            avg="test",
+        )
+        res += f"![plot_delta]({delta_op.relative_to(env.OUT_DIR).as_posix()})\n"
+
+        if stdev:
+            delta_stdev_op = plot.plot_delta(
+                base_prevs=np.around([(1.0 - p, p) for p in prevs_on_test], decimals=2),
+                columns=avg_on_test.columns.to_numpy(),
+                data=avg_on_test.T.to_numpy(),
+                metric=metric,
+                name=conf,
+                train_prev=None,
+                stdevs=stdev_on_test.T.to_numpy(),
+                avg="test",
+            )
+            res += f"![plot_delta_stdev]({delta_stdev_op.relative_to(env.OUT_DIR).as_posix()})\n"
+
+        ######################## avg shift ########################
+        res += "### avg dataset shift\n"
+
+        avg_shift = _shift_data.groupby(level=0).mean()
+        count_shift = _shift_data.groupby(level=0).count()
+        prevs_shift = np.sort(avg_shift.index.unique(0))
+
+        shift_op = plot.plot_shift(
+            shift_prevs=np.around([(1.0 - p, p) for p in prevs_shift], decimals=2),
+            columns=avg_shift.columns.to_numpy(),
+            data=avg_shift.T.to_numpy(),
+            metric=metric,
+            name=conf,
+            train_prev=None,
+            counts=count_shift.T.to_numpy(),
         )
         res += f"![plot_shift]({shift_op.relative_to(env.OUT_DIR).as_posix()})\n"
 

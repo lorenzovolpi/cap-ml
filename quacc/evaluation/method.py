@@ -1,23 +1,30 @@
+import inspect
 from functools import wraps
 
 import numpy as np
-import sklearn.metrics as metrics
-from quapy.data import LabelledCollection
-from quapy.protocol import AbstractStochasticSeededProtocol
-from sklearn.base import BaseEstimator
+from quapy.method.aggregative import PACC, SLD, CC
+from quapy.protocol import UPP, AbstractProtocol
+from sklearn.linear_model import LogisticRegression
 
-import quacc.error as error
+import quacc as qc
 from quacc.evaluation.report import EvaluationReport
+from quacc.method.model_selection import BQAEgsq, GridSearchAE, MCAEgsq
 
-from ..estimator import (
-    AccuracyEstimator,
-    BinaryQuantifierAccuracyEstimator,
-    MulticlassAccuracyEstimator,
-)
+from ..method.base import BQAE, MCAE, BaseAccuracyEstimator
 
 _methods = {}
-
-
+_sld_param_grid = {
+    "q__classifier__C": np.logspace(-3, 3, 7),
+    "q__classifier__class_weight": [None, "balanced"],
+    "q__recalib": [None, "bcts"],
+    "q__exact_train_prev": [True],
+    "confidence": [None, "max_conf", "entropy"],
+}
+_pacc_param_grid = {
+    "q__classifier__C": np.logspace(-3, 3, 7),
+    "q__classifier__class_weight": [None, "balanced"],
+    "confidence": [None, "max_conf", "entropy"],
+}
 def method(func):
     @wraps(func)
     def wrapper(c_model, validation, protocol):
@@ -28,108 +35,271 @@ def method(func):
     return wrapper
 
 
-def estimate(
-    estimator: AccuracyEstimator,
-    protocol: AbstractStochasticSeededProtocol,
-):
-    base_prevs, true_prevs, estim_prevs, pred_probas, labels = [], [], [], [], []
-    for sample in protocol():
-        e_sample, pred_proba = estimator.extend(sample)
-        estim_prev = estimator.estimate(e_sample.X, ext=True)
-        base_prevs.append(sample.prevalence())
-        true_prevs.append(e_sample.prevalence())
-        estim_prevs.append(estim_prev)
-        pred_probas.append(pred_proba)
-        labels.append(sample.y)
-
-    return base_prevs, true_prevs, estim_prevs, pred_probas, labels
-
-
 def evaluation_report(
-    estimator: AccuracyEstimator,
-    protocol: AbstractStochasticSeededProtocol,
-    method: str,
+    estimator: BaseAccuracyEstimator,
+    protocol: AbstractProtocol,
 ) -> EvaluationReport:
-    base_prevs, true_prevs, estim_prevs, pred_probas, labels = estimate(
-        estimator, protocol
-    )
-    report = EvaluationReport(name=method)
-
-    for base_prev, true_prev, estim_prev, pred_proba, label in zip(
-        base_prevs, true_prevs, estim_prevs, pred_probas, labels
-    ):
-        pred = np.argmax(pred_proba, axis=-1)
-        acc_score = error.acc(estim_prev)
-        f1_score = error.f1(estim_prev)
+    method_name = inspect.stack()[1].function
+    report = EvaluationReport(name=method_name)
+    for sample in protocol():
+        e_sample = estimator.extend(sample)
+        estim_prev = estimator.estimate(e_sample.X, ext=True)
+        acc_score = qc.error.acc(estim_prev)
+        f1_score = qc.error.f1(estim_prev)
         report.append_row(
-            base_prev,
+            sample.prevalence(),
             acc_score=acc_score,
-            acc=abs(metrics.accuracy_score(label, pred) - acc_score),
+            acc=abs(qc.error.acc(e_sample.prevalence()) - acc_score),
             f1_score=f1_score,
-            f1=abs(error.f1(true_prev) - f1_score),
+            f1=abs(qc.error.f1(e_sample.prevalence()) - f1_score),
         )
-
-    report.fit_score = estimator.fit_score
 
     return report
 
 
-def evaluate(
-    c_model: BaseEstimator,
-    validation: LabelledCollection,
-    protocol: AbstractStochasticSeededProtocol,
-    method: str,
-    q_model: str,
-    **kwargs,
-):
-    estimator: AccuracyEstimator = {
-        "bin": BinaryQuantifierAccuracyEstimator,
-        "mul": MulticlassAccuracyEstimator,
-    }[method](c_model, q_model=q_model.upper(), **kwargs)
-    estimator.fit(validation)
-    _method = f"{method}_{q_model}"
-    if "recalib" in kwargs:
-        _method += f"_{kwargs['recalib']}"
-    if ("gs", True) in kwargs.items():
-        _method += "_gs"
-    return evaluation_report(estimator, protocol, _method)
-
-
 @method
 def bin_sld(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "sld")
+    est = BQAE(c_model, SLD(LogisticRegression())).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
 
 
 @method
 def mul_sld(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "sld")
+    est = MCAE(c_model, SLD(LogisticRegression())).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
 
 
 @method
-def bin_sld_bcts(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "sld", recalib="bcts")
+def binmc_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="max_conf",
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
 
 
 @method
-def mul_sld_bcts(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "sld", recalib="bcts")
+def mulmc_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="max_conf",
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def binne_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="entropy",
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mulne_sld(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(
+        c_model,
+        SLD(LogisticRegression()),
+        confidence="entropy",
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
 
 
 @method
 def bin_sld_gs(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "sld", gs=True)
+    v_train, v_val = validation.split_stratified(0.6, random_state=0)
+    model = BQAE(c_model, SLD(LogisticRegression()))
+    est = GridSearchAE(
+        model=model,
+        param_grid=_sld_param_grid,
+        refit=False,
+        protocol=UPP(v_val, repeats=100),
+        verbose=True,
+    ).fit(v_train)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
 
 
 @method
 def mul_sld_gs(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "sld", gs=True)
+    v_train, v_val = validation.split_stratified(0.6, random_state=0)
+    model = MCAE(c_model, SLD(LogisticRegression()))
+    est = GridSearchAE(
+        model=model,
+        param_grid=_sld_param_grid,
+        refit=False,
+        protocol=UPP(v_val, repeats=100),
+        verbose=True,
+    ).fit(v_train)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def bin_sld_gsq(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAEgsq(
+        c_model,
+        SLD(LogisticRegression()),
+        param_grid={
+            "classifier__C": np.logspace(-3, 3, 7),
+            "classifier__class_weight": [None, "balanced"],
+            "recalib": [None, "bcts", "vs"],
+        },
+        refit=False,
+        verbose=False,
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mul_sld_gsq(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAEgsq(
+        c_model,
+        SLD(LogisticRegression()),
+        param_grid={
+            "classifier__C": np.logspace(-3, 3, 7),
+            "classifier__class_weight": [None, "balanced"],
+            "recalib": [None, "bcts", "vs"],
+        },
+        refit=False,
+        verbose=False,
+    ).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def bin_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(c_model, PACC(LogisticRegression())).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mul_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(c_model, PACC(LogisticRegression())).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def binmc_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(c_model, PACC(LogisticRegression()), confidence="max_conf").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mulmc_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(c_model, PACC(LogisticRegression()), confidence="max_conf").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+ 
+
+@method
+def binne_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = BQAE(c_model, PACC(LogisticRegression()), confidence="entropy").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mulne_pacc(c_model, validation, protocol) -> EvaluationReport:
+    est = MCAE(c_model, PACC(LogisticRegression()), confidence="entropy").fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def bin_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
+    v_train, v_val = validation.split_stratified(0.6, random_state=0)
+    model = BQAE(c_model, PACC(LogisticRegression()))
+    est = GridSearchAE(
+        model=model,
+        param_grid=_pacc_param_grid,
+        refit=False,
+        protocol=UPP(v_val, repeats=100),
+        verbose=False,
+    ).fit(v_train)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
+
+
+@method
+def mul_pacc_gs(c_model, validation, protocol) -> EvaluationReport:
+    v_train, v_val = validation.split_stratified(0.6, random_state=0)
+    model = MCAE(c_model, PACC(LogisticRegression()))
+    est = GridSearchAE(
+        model=model,
+        param_grid=_pacc_param_grid,
+        refit=False,
+        protocol=UPP(v_val, repeats=100),
+        verbose=False,
+    ).fit(v_train)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
 
 
 @method
 def bin_cc(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "bin", "cc")
+    est = BQAE(c_model, CC(LogisticRegression())).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )
 
 
 @method
 def mul_cc(c_model, validation, protocol) -> EvaluationReport:
-    return evaluate(c_model, validation, protocol, "mul", "cc")
+    est = MCAE(c_model, CC(LogisticRegression())).fit(validation)
+    return evaluation_report(
+        estimator=est,
+        protocol=protocol,
+    )

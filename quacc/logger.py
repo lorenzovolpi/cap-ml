@@ -2,6 +2,7 @@ import logging
 import logging.handlers
 import multiprocessing
 import threading
+from pathlib import Path
 
 
 class Logger:
@@ -11,6 +12,7 @@ class Logger:
     __queue = None
     __thread = None
     __setup = False
+    __handlers = []
 
     @classmethod
     def __logger_listener(cls, q):
@@ -32,7 +34,6 @@ class Logger:
         rh = logging.FileHandler(cls.__logger_file, mode="a")
         rh.setLevel(logging.DEBUG)
         root.addHandler(rh)
-        root.info("-" * 100)
 
         # setup logger
         if cls.__manager is None:
@@ -63,6 +64,21 @@ class Logger:
         cls.__setup = True
 
     @classmethod
+    def add_handler(cls, path: Path):
+        root = logging.getLogger("listener")
+        rh = logging.FileHandler(path, mode="a")
+        rh.setLevel(logging.DEBUG)
+        cls.__handlers.append(rh)
+        root.addHandler(rh)
+
+    @classmethod
+    def clear_handlers(cls):
+        root = logging.getLogger("listener")
+        for h in cls.__handlers:
+            root.removeHandler(h)
+        cls.__handlers.clear()
+
+    @classmethod
     def queue(cls):
         if not cls.__setup:
             cls.setup()
@@ -79,6 +95,8 @@ class Logger:
     @classmethod
     def close(cls):
         if cls.__setup and cls.__thread is not None:
+            root = logging.getLogger("listener")
+            root.info("-" * 100)
             cls.__queue.put(None)
             cls.__thread.join()
             # cls.__manager.close()
@@ -102,7 +120,7 @@ class SubLogger:
         rh.setLevel(logging.DEBUG)
         rh.setFormatter(
             logging.Formatter(
-                fmt="%(asctime)s| %(levelname)-12s\t%(message)s",
+                fmt="%(asctime)s| %(levelname)-12s%(message)s",
                 datefmt="%d/%m/%y %H:%M:%S",
             )
         )

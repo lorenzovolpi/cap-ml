@@ -27,15 +27,15 @@ def plot_delta(
     metric="acc",
     name="default",
     train_prev=None,
-    fit_scores=None,
     legend=True,
+    avg=None,
 ) -> Path:
     _base_title = "delta_stdev" if stdevs is not None else "delta"
     if train_prev is not None:
         t_prev_pos = int(round(train_prev[pos_class] * 100))
         title = f"{_base_title}_{name}_{t_prev_pos}_{metric}"
     else:
-        title = f"{_base_title}_{name}_avg_{metric}"
+        title = f"{_base_title}_{name}_avg_{avg}_{metric}"
 
     fig, ax = plt.subplots()
     ax.set_aspect("auto")
@@ -74,16 +74,13 @@ def plot_delta(
                 color=_cy["color"],
                 alpha=0.25,
             )
-        if fit_scores is not None and method in fit_scores:
-            ax.plot(
-                base_prevs,
-                np.repeat(fit_scores[method], base_prevs.shape[0]),
-                color=_cy["color"],
-                linestyle="--",
-                markersize=0,
-            )
 
-    ax.set(xlabel="test prevalence", ylabel=metric, title=title)
+    x_label = "test" if avg is None or avg == "train" else "train"
+    ax.set(
+        xlabel=f"{x_label} prevalence",
+        ylabel=metric,
+        title=title,
+    )
 
     if legend:
         ax.legend(loc="center left", bbox_to_anchor=(1, 0.5))
@@ -182,11 +179,11 @@ def plot_shift(
     columns,
     data,
     *,
+    counts=None,
     pos_class=1,
     metric="acc",
     name="default",
     train_prev=None,
-    fit_scores=None,
     legend=True,
 ) -> Path:
     if train_prev is not None:
@@ -217,15 +214,20 @@ def plot_shift(
             markersize=3,
             zorder=2,
         )
-
-        if fit_scores is not None and method in fit_scores:
-            ax.plot(
-                shift_prevs,
-                np.repeat(fit_scores[method], shift_prevs.shape[0]),
-                color=_cy["color"],
-                linestyle="--",
-                markersize=0,
-            )
+        if counts is not None:
+            _col_idx = np.where(columns == method)[0]
+            count = counts[_col_idx].flatten()
+            for prev, shift, cnt in zip(shift_prevs, shifts, count):
+                label = f"{cnt}"
+                plt.annotate(
+                    label,
+                    (prev, shift),
+                    textcoords="offset points",
+                    xytext=(0, 10),
+                    ha="center",
+                    color=_cy["color"],
+                    fontsize=12.0,
+                )
 
     ax.set(xlabel="dataset shift", ylabel=metric, title=title)
 

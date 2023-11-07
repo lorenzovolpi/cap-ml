@@ -1,7 +1,7 @@
+import math
 from typing import List, Optional
 
 import numpy as np
-import math
 import scipy.sparse as sp
 from quapy.data import LabelledCollection
 
@@ -128,7 +128,9 @@ class ExtendedCollection(LabelledCollection):
 
     @classmethod
     def extend_collection(
-        cls, base: LabelledCollection, pred_proba: np.ndarray
+        cls,
+        base: LabelledCollection,
+        pred_proba: np.ndarray,
     ):
         n_classes = base.n_classes
 
@@ -136,13 +138,13 @@ class ExtendedCollection(LabelledCollection):
         n_x = cls.extend_instances(base.X, pred_proba)
 
         # n_y = (exptected y, predicted y)
-        pred = np.asarray([prob.argmax(axis=0) for prob in pred_proba])
+        pred_proba = pred_proba[:, -n_classes:]
+        preds = np.argmax(pred_proba, axis=-1)
         n_y = np.asarray(
             [
                 ExClassManager.get_ex(n_classes, true_class, pred_class)
-                for (true_class, pred_class) in zip(base.y, pred)
+                for (true_class, pred_class) in zip(base.y, preds)
             ]
         )
 
         return ExtendedCollection(n_x, n_y, classes=[*range(0, n_classes * n_classes)])
-

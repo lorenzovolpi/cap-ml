@@ -1,0 +1,2205 @@
+# rcv1_CCAT_9prevs
+
+## 10% positives
+> train: [0.90003338 0.09996662]  
+> validation: [0.90003338 0.09996662]  
+> bin_sld: 227.883s  
+> mul_sld: 78.248s  
+> binmc_sld: 226.732s  
+> mulmc_sld: 66.259s  
+> binne_sld: 223.276s  
+> mulne_sld: 62.735s  
+> bin_pacc: 217.001s  
+> mul_pacc: 58.470s  
+> ref: 48.024s  
+> atc_mc: 51.785s  
+> tot: 230.591s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0172</td>
+      <td>0.0601</td>
+      <td>0.0463</td>
+      <td>0.2794</td>
+      <td>0.0022</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.2360</td>
+      <td>0.1726</td>
+      <td>0.0341</td>
+      <td>0.3914</td>
+      <td>0.2253</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.1377</td>
+      <td>0.0893</td>
+      <td>0.0241</td>
+      <td>0.3458</td>
+      <td>0.1997</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.1179</td>
+      <td>0.0463</td>
+      <td>0.0181</td>
+      <td>0.3112</td>
+      <td>0.2018</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0886</td>
+      <td>0.0309</td>
+      <td>0.0166</td>
+      <td>0.3073</td>
+      <td>0.1936</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0596</td>
+      <td>0.0232</td>
+      <td>0.0135</td>
+      <td>0.3223</td>
+      <td>0.1943</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0613</td>
+      <td>0.0220</td>
+      <td>0.0119</td>
+      <td>0.3063</td>
+      <td>0.1865</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0462</td>
+      <td>0.0238</td>
+      <td>0.0099</td>
+      <td>0.3085</td>
+      <td>0.1849</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0448</td>
+      <td>0.0360</td>
+      <td>0.0107</td>
+      <td>0.2957</td>
+      <td>0.1852</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0420</td>
+      <td>0.0463</td>
+      <td>0.0120</td>
+      <td>0.2974</td>
+      <td>0.1824</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0498</td>
+      <td>0.0578</td>
+      <td>0.0100</td>
+      <td>0.2859</td>
+      <td>0.1836</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0402</td>
+      <td>0.0685</td>
+      <td>0.0087</td>
+      <td>0.2806</td>
+      <td>0.1801</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0501</td>
+      <td>0.0768</td>
+      <td>0.0099</td>
+      <td>0.2922</td>
+      <td>0.1872</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0559</td>
+      <td>0.0899</td>
+      <td>0.0090</td>
+      <td>0.2879</td>
+      <td>0.1871</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0461</td>
+      <td>0.0923</td>
+      <td>0.0088</td>
+      <td>0.2679</td>
+      <td>0.1884</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0492</td>
+      <td>0.0968</td>
+      <td>0.0076</td>
+      <td>0.3014</td>
+      <td>0.1829</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0439</td>
+      <td>0.1005</td>
+      <td>0.0096</td>
+      <td>0.2807</td>
+      <td>0.1840</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0435</td>
+      <td>0.0994</td>
+      <td>0.0085</td>
+      <td>0.2694</td>
+      <td>0.1816</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0381</td>
+      <td>0.0772</td>
+      <td>0.0074</td>
+      <td>0.2521</td>
+      <td>0.1818</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0316</td>
+      <td>0.0473</td>
+      <td>0.0091</td>
+      <td>0.2870</td>
+      <td>0.1848</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0118</td>
+      <td>0.0173</td>
+      <td>0.0055</td>
+      <td>0.2664</td>
+      <td>0.1850</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0625</td>
+      <td>0.0654</td>
+      <td>0.0139</td>
+      <td>0.2970</td>
+      <td>0.1801</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_10_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_10_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_10_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_10_f1.png)
+
+
+## 20% positives
+> train: [0.79989987 0.20010013]  
+> validation: [0.80006676 0.19993324]  
+> bin_sld: 224.734s  
+> mul_sld: 70.409s  
+> binmc_sld: 223.361s  
+> mulmc_sld: 67.028s  
+> binne_sld: 223.604s  
+> mulne_sld: 67.347s  
+> bin_pacc: 218.304s  
+> mul_pacc: 60.326s  
+> ref: 49.515s  
+> atc_mc: 54.802s  
+> tot: 229.075s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0003</td>
+      <td>0.0910</td>
+      <td>0.0111</td>
+      <td>0.4677</td>
+      <td>0.1159</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.1180</td>
+      <td>0.0997</td>
+      <td>0.0952</td>
+      <td>0.0850</td>
+      <td>0.1303</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0605</td>
+      <td>0.0606</td>
+      <td>0.0483</td>
+      <td>0.0524</td>
+      <td>0.0916</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0441</td>
+      <td>0.0405</td>
+      <td>0.0306</td>
+      <td>0.0386</td>
+      <td>0.0794</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0313</td>
+      <td>0.0353</td>
+      <td>0.0248</td>
+      <td>0.0351</td>
+      <td>0.0673</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0226</td>
+      <td>0.0308</td>
+      <td>0.0197</td>
+      <td>0.0316</td>
+      <td>0.0623</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0185</td>
+      <td>0.0255</td>
+      <td>0.0191</td>
+      <td>0.0331</td>
+      <td>0.0592</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0118</td>
+      <td>0.0176</td>
+      <td>0.0125</td>
+      <td>0.0220</td>
+      <td>0.0518</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0126</td>
+      <td>0.0205</td>
+      <td>0.0160</td>
+      <td>0.0278</td>
+      <td>0.0536</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0101</td>
+      <td>0.0196</td>
+      <td>0.0148</td>
+      <td>0.0248</td>
+      <td>0.0510</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0105</td>
+      <td>0.0194</td>
+      <td>0.0142</td>
+      <td>0.0254</td>
+      <td>0.0518</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0100</td>
+      <td>0.0194</td>
+      <td>0.0134</td>
+      <td>0.0232</td>
+      <td>0.0533</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0125</td>
+      <td>0.0200</td>
+      <td>0.0136</td>
+      <td>0.0223</td>
+      <td>0.0506</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0123</td>
+      <td>0.0229</td>
+      <td>0.0154</td>
+      <td>0.0240</td>
+      <td>0.0480</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0130</td>
+      <td>0.0214</td>
+      <td>0.0143</td>
+      <td>0.0202</td>
+      <td>0.0453</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0142</td>
+      <td>0.0234</td>
+      <td>0.0147</td>
+      <td>0.0212</td>
+      <td>0.0428</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0160</td>
+      <td>0.0262</td>
+      <td>0.0132</td>
+      <td>0.0180</td>
+      <td>0.0472</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0170</td>
+      <td>0.0281</td>
+      <td>0.0141</td>
+      <td>0.0194</td>
+      <td>0.0461</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0177</td>
+      <td>0.0281</td>
+      <td>0.0137</td>
+      <td>0.0175</td>
+      <td>0.0439</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0172</td>
+      <td>0.0285</td>
+      <td>0.0132</td>
+      <td>0.0185</td>
+      <td>0.0468</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0011</td>
+      <td>0.0174</td>
+      <td>0.0156</td>
+      <td>0.0178</td>
+      <td>0.0425</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0224</td>
+      <td>0.0331</td>
+      <td>0.0213</td>
+      <td>0.0498</td>
+      <td>0.0610</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_20_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_20_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_20_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_20_f1.png)
+
+
+## 30% positives
+> train: [0.69993324 0.30006676]  
+> validation: [0.70010013 0.29989987]  
+> bin_sld: 218.651s  
+> mul_sld: 65.273s  
+> binmc_sld: 221.260s  
+> mulmc_sld: 64.594s  
+> binne_sld: 218.686s  
+> mulne_sld: 63.905s  
+> bin_pacc: 215.149s  
+> mul_pacc: 58.011s  
+> ref: 48.157s  
+> atc_mc: 52.112s  
+> tot: 224.561s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0002</td>
+      <td>0.0086</td>
+      <td>0.0132</td>
+      <td>0.0698</td>
+      <td>0.3301</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.0870</td>
+      <td>0.0812</td>
+      <td>0.0857</td>
+      <td>0.1096</td>
+      <td>0.0519</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0633</td>
+      <td>0.0718</td>
+      <td>0.0485</td>
+      <td>0.0717</td>
+      <td>0.0306</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0532</td>
+      <td>0.0681</td>
+      <td>0.0304</td>
+      <td>0.0480</td>
+      <td>0.0252</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0417</td>
+      <td>0.0599</td>
+      <td>0.0267</td>
+      <td>0.0329</td>
+      <td>0.0190</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0333</td>
+      <td>0.0551</td>
+      <td>0.0245</td>
+      <td>0.0278</td>
+      <td>0.0167</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0231</td>
+      <td>0.0401</td>
+      <td>0.0180</td>
+      <td>0.0242</td>
+      <td>0.0132</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0182</td>
+      <td>0.0326</td>
+      <td>0.0175</td>
+      <td>0.0226</td>
+      <td>0.0170</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0150</td>
+      <td>0.0289</td>
+      <td>0.0167</td>
+      <td>0.0190</td>
+      <td>0.0141</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0106</td>
+      <td>0.0229</td>
+      <td>0.0140</td>
+      <td>0.0170</td>
+      <td>0.0135</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0090</td>
+      <td>0.0181</td>
+      <td>0.0133</td>
+      <td>0.0143</td>
+      <td>0.0153</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0069</td>
+      <td>0.0160</td>
+      <td>0.0130</td>
+      <td>0.0135</td>
+      <td>0.0146</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0080</td>
+      <td>0.0123</td>
+      <td>0.0102</td>
+      <td>0.0121</td>
+      <td>0.0142</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0088</td>
+      <td>0.0099</td>
+      <td>0.0103</td>
+      <td>0.0127</td>
+      <td>0.0159</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0092</td>
+      <td>0.0097</td>
+      <td>0.0100</td>
+      <td>0.0112</td>
+      <td>0.0145</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0107</td>
+      <td>0.0094</td>
+      <td>0.0085</td>
+      <td>0.0110</td>
+      <td>0.0144</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0118</td>
+      <td>0.0089</td>
+      <td>0.0082</td>
+      <td>0.0087</td>
+      <td>0.0157</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0132</td>
+      <td>0.0097</td>
+      <td>0.0080</td>
+      <td>0.0100</td>
+      <td>0.0168</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0147</td>
+      <td>0.0115</td>
+      <td>0.0067</td>
+      <td>0.0102</td>
+      <td>0.0155</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0141</td>
+      <td>0.0115</td>
+      <td>0.0073</td>
+      <td>0.0106</td>
+      <td>0.0152</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0004</td>
+      <td>0.0038</td>
+      <td>0.0073</td>
+      <td>0.0100</td>
+      <td>0.0177</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0215</td>
+      <td>0.0281</td>
+      <td>0.0189</td>
+      <td>0.0270</td>
+      <td>0.0334</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_30_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_30_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_30_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_30_f1.png)
+
+
+## 40% positives
+> train: [0.59996662 0.40003338]  
+> validation: [0.59996662 0.40003338]  
+> bin_sld: 213.191s  
+> mul_sld: 64.472s  
+> binmc_sld: 212.647s  
+> mulmc_sld: 64.187s  
+> binne_sld: 214.524s  
+> mulne_sld: 63.741s  
+> bin_pacc: 208.132s  
+> mul_pacc: 57.195s  
+> ref: 48.218s  
+> atc_mc: 52.342s  
+> tot: 219.577s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0002</td>
+      <td>0.0027</td>
+      <td>0.1378</td>
+      <td>0.2041</td>
+      <td>0.3564</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.0662</td>
+      <td>0.0729</td>
+      <td>0.0828</td>
+      <td>0.0703</td>
+      <td>0.0506</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0438</td>
+      <td>0.0607</td>
+      <td>0.0616</td>
+      <td>0.0488</td>
+      <td>0.0460</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0444</td>
+      <td>0.0641</td>
+      <td>0.0428</td>
+      <td>0.0364</td>
+      <td>0.0318</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0408</td>
+      <td>0.0592</td>
+      <td>0.0312</td>
+      <td>0.0286</td>
+      <td>0.0254</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0426</td>
+      <td>0.0597</td>
+      <td>0.0233</td>
+      <td>0.0225</td>
+      <td>0.0197</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0315</td>
+      <td>0.0463</td>
+      <td>0.0223</td>
+      <td>0.0207</td>
+      <td>0.0174</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0279</td>
+      <td>0.0392</td>
+      <td>0.0182</td>
+      <td>0.0176</td>
+      <td>0.0129</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0231</td>
+      <td>0.0361</td>
+      <td>0.0150</td>
+      <td>0.0163</td>
+      <td>0.0118</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0179</td>
+      <td>0.0290</td>
+      <td>0.0132</td>
+      <td>0.0132</td>
+      <td>0.0095</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0152</td>
+      <td>0.0259</td>
+      <td>0.0109</td>
+      <td>0.0102</td>
+      <td>0.0088</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0113</td>
+      <td>0.0232</td>
+      <td>0.0086</td>
+      <td>0.0097</td>
+      <td>0.0085</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0097</td>
+      <td>0.0193</td>
+      <td>0.0085</td>
+      <td>0.0087</td>
+      <td>0.0078</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0081</td>
+      <td>0.0155</td>
+      <td>0.0077</td>
+      <td>0.0087</td>
+      <td>0.0093</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0077</td>
+      <td>0.0125</td>
+      <td>0.0083</td>
+      <td>0.0090</td>
+      <td>0.0090</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0070</td>
+      <td>0.0091</td>
+      <td>0.0073</td>
+      <td>0.0075</td>
+      <td>0.0075</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0062</td>
+      <td>0.0080</td>
+      <td>0.0057</td>
+      <td>0.0061</td>
+      <td>0.0066</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0070</td>
+      <td>0.0067</td>
+      <td>0.0060</td>
+      <td>0.0069</td>
+      <td>0.0084</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0078</td>
+      <td>0.0057</td>
+      <td>0.0055</td>
+      <td>0.0059</td>
+      <td>0.0078</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0083</td>
+      <td>0.0060</td>
+      <td>0.0050</td>
+      <td>0.0066</td>
+      <td>0.0097</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0003</td>
+      <td>0.0022</td>
+      <td>0.0048</td>
+      <td>0.0059</td>
+      <td>0.0090</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0203</td>
+      <td>0.0288</td>
+      <td>0.0251</td>
+      <td>0.0268</td>
+      <td>0.0321</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_40_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_40_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_40_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_40_f1.png)
+
+
+## 50% positives
+> train: [0.5 0.5]  
+> validation: [0.5 0.5]  
+> bin_sld: 214.324s  
+> mul_sld: 66.924s  
+> binmc_sld: 214.469s  
+> mulmc_sld: 65.323s  
+> binne_sld: 214.727s  
+> mulne_sld: 65.665s  
+> bin_pacc: 209.386s  
+> mul_pacc: 57.380s  
+> ref: 47.729s  
+> atc_mc: 52.153s  
+> tot: 220.021s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0001</td>
+      <td>0.0001</td>
+      <td>0.0224</td>
+      <td>0.1902</td>
+      <td>0.5135</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.1103</td>
+      <td>0.0701</td>
+      <td>0.0854</td>
+      <td>0.0644</td>
+      <td>0.1066</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0477</td>
+      <td>0.0384</td>
+      <td>0.0510</td>
+      <td>0.0383</td>
+      <td>0.0476</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0318</td>
+      <td>0.0371</td>
+      <td>0.0392</td>
+      <td>0.0329</td>
+      <td>0.0306</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0271</td>
+      <td>0.0350</td>
+      <td>0.0293</td>
+      <td>0.0248</td>
+      <td>0.0235</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0265</td>
+      <td>0.0361</td>
+      <td>0.0225</td>
+      <td>0.0202</td>
+      <td>0.0158</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0258</td>
+      <td>0.0314</td>
+      <td>0.0225</td>
+      <td>0.0200</td>
+      <td>0.0147</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0249</td>
+      <td>0.0276</td>
+      <td>0.0222</td>
+      <td>0.0185</td>
+      <td>0.0151</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0231</td>
+      <td>0.0264</td>
+      <td>0.0174</td>
+      <td>0.0155</td>
+      <td>0.0105</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0198</td>
+      <td>0.0228</td>
+      <td>0.0146</td>
+      <td>0.0139</td>
+      <td>0.0119</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0183</td>
+      <td>0.0204</td>
+      <td>0.0135</td>
+      <td>0.0124</td>
+      <td>0.0115</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0147</td>
+      <td>0.0169</td>
+      <td>0.0103</td>
+      <td>0.0099</td>
+      <td>0.0105</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0151</td>
+      <td>0.0163</td>
+      <td>0.0112</td>
+      <td>0.0110</td>
+      <td>0.0107</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0123</td>
+      <td>0.0137</td>
+      <td>0.0104</td>
+      <td>0.0102</td>
+      <td>0.0114</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0108</td>
+      <td>0.0120</td>
+      <td>0.0108</td>
+      <td>0.0105</td>
+      <td>0.0103</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0086</td>
+      <td>0.0094</td>
+      <td>0.0095</td>
+      <td>0.0096</td>
+      <td>0.0097</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0064</td>
+      <td>0.0086</td>
+      <td>0.0082</td>
+      <td>0.0087</td>
+      <td>0.0117</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0059</td>
+      <td>0.0071</td>
+      <td>0.0066</td>
+      <td>0.0078</td>
+      <td>0.0104</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0065</td>
+      <td>0.0067</td>
+      <td>0.0065</td>
+      <td>0.0080</td>
+      <td>0.0117</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0063</td>
+      <td>0.0064</td>
+      <td>0.0053</td>
+      <td>0.0074</td>
+      <td>0.0117</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0005</td>
+      <td>0.0024</td>
+      <td>0.0028</td>
+      <td>0.0062</td>
+      <td>0.0128</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0211</td>
+      <td>0.0212</td>
+      <td>0.0201</td>
+      <td>0.0257</td>
+      <td>0.0434</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_50_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_50_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_50_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_50_f1.png)
+
+
+## 60% positives
+> train: [0.40003338 0.59996662]  
+> validation: [0.40003338 0.59996662]  
+> bin_sld: 214.994s  
+> mul_sld: 67.090s  
+> binmc_sld: 213.157s  
+> mulmc_sld: 66.108s  
+> binne_sld: 214.970s  
+> mulne_sld: 66.024s  
+> bin_pacc: 209.135s  
+> mul_pacc: 57.235s  
+> ref: 48.002s  
+> atc_mc: 52.217s  
+> tot: 220.124s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0001</td>
+      <td>0.0000</td>
+      <td>0.0399</td>
+      <td>0.1454</td>
+      <td>0.5310</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.1167</td>
+      <td>0.0892</td>
+      <td>0.0823</td>
+      <td>0.0396</td>
+      <td>0.2044</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0728</td>
+      <td>0.0521</td>
+      <td>0.0822</td>
+      <td>0.0392</td>
+      <td>0.1045</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0507</td>
+      <td>0.0342</td>
+      <td>0.0774</td>
+      <td>0.0376</td>
+      <td>0.0571</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0318</td>
+      <td>0.0240</td>
+      <td>0.0582</td>
+      <td>0.0297</td>
+      <td>0.0407</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0305</td>
+      <td>0.0223</td>
+      <td>0.0540</td>
+      <td>0.0317</td>
+      <td>0.0228</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0287</td>
+      <td>0.0211</td>
+      <td>0.0452</td>
+      <td>0.0278</td>
+      <td>0.0196</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0264</td>
+      <td>0.0201</td>
+      <td>0.0414</td>
+      <td>0.0255</td>
+      <td>0.0125</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0241</td>
+      <td>0.0180</td>
+      <td>0.0349</td>
+      <td>0.0219</td>
+      <td>0.0100</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0196</td>
+      <td>0.0149</td>
+      <td>0.0279</td>
+      <td>0.0184</td>
+      <td>0.0101</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0208</td>
+      <td>0.0162</td>
+      <td>0.0247</td>
+      <td>0.0179</td>
+      <td>0.0081</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0159</td>
+      <td>0.0116</td>
+      <td>0.0201</td>
+      <td>0.0140</td>
+      <td>0.0076</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0143</td>
+      <td>0.0115</td>
+      <td>0.0152</td>
+      <td>0.0113</td>
+      <td>0.0060</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0130</td>
+      <td>0.0100</td>
+      <td>0.0128</td>
+      <td>0.0098</td>
+      <td>0.0060</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0146</td>
+      <td>0.0104</td>
+      <td>0.0135</td>
+      <td>0.0110</td>
+      <td>0.0055</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0128</td>
+      <td>0.0091</td>
+      <td>0.0104</td>
+      <td>0.0087</td>
+      <td>0.0051</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0118</td>
+      <td>0.0086</td>
+      <td>0.0085</td>
+      <td>0.0075</td>
+      <td>0.0042</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0117</td>
+      <td>0.0083</td>
+      <td>0.0077</td>
+      <td>0.0072</td>
+      <td>0.0042</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0107</td>
+      <td>0.0075</td>
+      <td>0.0064</td>
+      <td>0.0066</td>
+      <td>0.0045</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0087</td>
+      <td>0.0069</td>
+      <td>0.0049</td>
+      <td>0.0054</td>
+      <td>0.0037</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0021</td>
+      <td>0.0033</td>
+      <td>0.0029</td>
+      <td>0.0047</td>
+      <td>0.0034</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0256</td>
+      <td>0.0190</td>
+      <td>0.0319</td>
+      <td>0.0248</td>
+      <td>0.0510</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_60_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_60_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_60_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_60_f1.png)
+
+
+## 70% positives
+> train: [0.29989987 0.70010013]  
+> validation: [0.30006676 0.69993324]  
+> bin_sld: 217.809s  
+> mul_sld: 67.454s  
+> binmc_sld: 215.345s  
+> mulmc_sld: 65.596s  
+> binne_sld: 216.897s  
+> mulne_sld: 66.048s  
+> bin_pacc: 210.063s  
+> mul_pacc: 56.905s  
+> ref: 47.823s  
+> atc_mc: 51.936s  
+> tot: 222.297s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0001</td>
+      <td>0.0000</td>
+      <td>0.0020</td>
+      <td>0.0054</td>
+      <td>0.5749</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.1287</td>
+      <td>0.1285</td>
+      <td>0.1093</td>
+      <td>0.1049</td>
+      <td>0.3336</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0930</td>
+      <td>0.0992</td>
+      <td>0.0790</td>
+      <td>0.1048</td>
+      <td>0.2163</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0718</td>
+      <td>0.0750</td>
+      <td>0.0725</td>
+      <td>0.1007</td>
+      <td>0.1450</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0497</td>
+      <td>0.0545</td>
+      <td>0.0525</td>
+      <td>0.0879</td>
+      <td>0.1055</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0443</td>
+      <td>0.0465</td>
+      <td>0.0533</td>
+      <td>0.0835</td>
+      <td>0.0703</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0375</td>
+      <td>0.0378</td>
+      <td>0.0445</td>
+      <td>0.0711</td>
+      <td>0.0549</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0322</td>
+      <td>0.0340</td>
+      <td>0.0404</td>
+      <td>0.0654</td>
+      <td>0.0403</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0266</td>
+      <td>0.0259</td>
+      <td>0.0364</td>
+      <td>0.0580</td>
+      <td>0.0279</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0227</td>
+      <td>0.0219</td>
+      <td>0.0312</td>
+      <td>0.0508</td>
+      <td>0.0225</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0200</td>
+      <td>0.0188</td>
+      <td>0.0264</td>
+      <td>0.0433</td>
+      <td>0.0165</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0185</td>
+      <td>0.0158</td>
+      <td>0.0246</td>
+      <td>0.0394</td>
+      <td>0.0120</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0141</td>
+      <td>0.0120</td>
+      <td>0.0187</td>
+      <td>0.0312</td>
+      <td>0.0095</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0163</td>
+      <td>0.0126</td>
+      <td>0.0189</td>
+      <td>0.0281</td>
+      <td>0.0089</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0133</td>
+      <td>0.0096</td>
+      <td>0.0162</td>
+      <td>0.0249</td>
+      <td>0.0060</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0127</td>
+      <td>0.0086</td>
+      <td>0.0143</td>
+      <td>0.0211</td>
+      <td>0.0047</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0133</td>
+      <td>0.0087</td>
+      <td>0.0128</td>
+      <td>0.0174</td>
+      <td>0.0044</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0132</td>
+      <td>0.0082</td>
+      <td>0.0123</td>
+      <td>0.0145</td>
+      <td>0.0045</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0111</td>
+      <td>0.0060</td>
+      <td>0.0097</td>
+      <td>0.0114</td>
+      <td>0.0036</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0095</td>
+      <td>0.0050</td>
+      <td>0.0084</td>
+      <td>0.0085</td>
+      <td>0.0035</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0030</td>
+      <td>0.0029</td>
+      <td>0.0067</td>
+      <td>0.0074</td>
+      <td>0.0032</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0310</td>
+      <td>0.0301</td>
+      <td>0.0329</td>
+      <td>0.0467</td>
+      <td>0.0794</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_70_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_70_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_70_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_70_f1.png)
+
+
+## 80% positives
+> train: [0.19993324 0.80006676]  
+> validation: [0.20010013 0.79989987]  
+> bin_sld: 216.605s  
+> mul_sld: 66.881s  
+> binmc_sld: 215.549s  
+> mulmc_sld: 65.843s  
+> binne_sld: 217.993s  
+> mulne_sld: 64.859s  
+> bin_pacc: 208.788s  
+> mul_pacc: 56.643s  
+> ref: 47.697s  
+> atc_mc: 52.089s  
+> tot: 223.227s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0001</td>
+      <td>0.0000</td>
+      <td>0.0122</td>
+      <td>0.0038</td>
+      <td>0.5459</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.1267</td>
+      <td>0.1290</td>
+      <td>0.0428</td>
+      <td>0.0604</td>
+      <td>0.3941</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0989</td>
+      <td>0.1103</td>
+      <td>0.0371</td>
+      <td>0.0562</td>
+      <td>0.2954</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0757</td>
+      <td>0.0909</td>
+      <td>0.0319</td>
+      <td>0.0545</td>
+      <td>0.2206</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0552</td>
+      <td>0.0707</td>
+      <td>0.0253</td>
+      <td>0.0475</td>
+      <td>0.1701</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0470</td>
+      <td>0.0608</td>
+      <td>0.0279</td>
+      <td>0.0467</td>
+      <td>0.1277</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0374</td>
+      <td>0.0510</td>
+      <td>0.0229</td>
+      <td>0.0418</td>
+      <td>0.0994</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0314</td>
+      <td>0.0438</td>
+      <td>0.0209</td>
+      <td>0.0380</td>
+      <td>0.0774</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0249</td>
+      <td>0.0347</td>
+      <td>0.0187</td>
+      <td>0.0346</td>
+      <td>0.0563</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0189</td>
+      <td>0.0273</td>
+      <td>0.0149</td>
+      <td>0.0291</td>
+      <td>0.0440</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0147</td>
+      <td>0.0214</td>
+      <td>0.0120</td>
+      <td>0.0249</td>
+      <td>0.0323</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0136</td>
+      <td>0.0195</td>
+      <td>0.0129</td>
+      <td>0.0248</td>
+      <td>0.0206</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0084</td>
+      <td>0.0128</td>
+      <td>0.0087</td>
+      <td>0.0181</td>
+      <td>0.0152</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0093</td>
+      <td>0.0125</td>
+      <td>0.0093</td>
+      <td>0.0168</td>
+      <td>0.0098</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0076</td>
+      <td>0.0097</td>
+      <td>0.0071</td>
+      <td>0.0142</td>
+      <td>0.0072</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0073</td>
+      <td>0.0077</td>
+      <td>0.0058</td>
+      <td>0.0106</td>
+      <td>0.0056</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0083</td>
+      <td>0.0072</td>
+      <td>0.0051</td>
+      <td>0.0095</td>
+      <td>0.0049</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0077</td>
+      <td>0.0063</td>
+      <td>0.0046</td>
+      <td>0.0074</td>
+      <td>0.0053</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0084</td>
+      <td>0.0055</td>
+      <td>0.0038</td>
+      <td>0.0053</td>
+      <td>0.0055</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0073</td>
+      <td>0.0046</td>
+      <td>0.0044</td>
+      <td>0.0044</td>
+      <td>0.0068</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0027</td>
+      <td>0.0023</td>
+      <td>0.0033</td>
+      <td>0.0046</td>
+      <td>0.0076</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0291</td>
+      <td>0.0347</td>
+      <td>0.0158</td>
+      <td>0.0263</td>
+      <td>0.1025</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_80_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_80_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_80_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_80_f1.png)
+
+
+## 90% positives
+> train: [0.09996662 0.90003338]  
+> validation: [0.09996662 0.90003338]  
+> bin_sld: 218.933s  
+> mul_sld: 73.768s  
+> binmc_sld: 218.003s  
+> mulmc_sld: 61.731s  
+> binne_sld: 219.245s  
+> mulne_sld: 62.751s  
+> bin_pacc: 208.227s  
+> mul_pacc: 56.657s  
+> ref: 48.071s  
+> atc_mc: 52.099s  
+> tot: 224.345s  
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.0776</td>
+      <td>0.0434</td>
+      <td>0.4745</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.1094</td>
+      <td>0.1097</td>
+      <td>0.0625</td>
+      <td>0.0243</td>
+      <td>0.4016</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.1816</td>
+      <td>0.1513</td>
+      <td>0.0516</td>
+      <td>0.0605</td>
+      <td>0.3432</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.1703</td>
+      <td>0.1465</td>
+      <td>0.0423</td>
+      <td>0.0916</td>
+      <td>0.2909</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.1472</td>
+      <td>0.1315</td>
+      <td>0.0375</td>
+      <td>0.1016</td>
+      <td>0.2470</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.1320</td>
+      <td>0.1232</td>
+      <td>0.0275</td>
+      <td>0.1189</td>
+      <td>0.2076</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.1123</td>
+      <td>0.1082</td>
+      <td>0.0233</td>
+      <td>0.1389</td>
+      <td>0.1759</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0969</td>
+      <td>0.0971</td>
+      <td>0.0213</td>
+      <td>0.1651</td>
+      <td>0.1487</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0828</td>
+      <td>0.0853</td>
+      <td>0.0153</td>
+      <td>0.1625</td>
+      <td>0.1239</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0671</td>
+      <td>0.0705</td>
+      <td>0.0141</td>
+      <td>0.1888</td>
+      <td>0.1027</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0552</td>
+      <td>0.0600</td>
+      <td>0.0121</td>
+      <td>0.1851</td>
+      <td>0.0842</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0485</td>
+      <td>0.0534</td>
+      <td>0.0085</td>
+      <td>0.1980</td>
+      <td>0.0659</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0353</td>
+      <td>0.0401</td>
+      <td>0.0087</td>
+      <td>0.1751</td>
+      <td>0.0530</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0316</td>
+      <td>0.0361</td>
+      <td>0.0079</td>
+      <td>0.2171</td>
+      <td>0.0392</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0235</td>
+      <td>0.0273</td>
+      <td>0.0065</td>
+      <td>0.1894</td>
+      <td>0.0290</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0165</td>
+      <td>0.0198</td>
+      <td>0.0060</td>
+      <td>0.2024</td>
+      <td>0.0196</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0128</td>
+      <td>0.0143</td>
+      <td>0.0046</td>
+      <td>0.2014</td>
+      <td>0.0125</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0088</td>
+      <td>0.0095</td>
+      <td>0.0046</td>
+      <td>0.2195</td>
+      <td>0.0061</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0055</td>
+      <td>0.0050</td>
+      <td>0.0032</td>
+      <td>0.2361</td>
+      <td>0.0036</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0037</td>
+      <td>0.0033</td>
+      <td>0.0028</td>
+      <td>0.1823</td>
+      <td>0.0069</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0026</td>
+      <td>0.0021</td>
+      <td>0.0020</td>
+      <td>0.2097</td>
+      <td>0.0123</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0640</td>
+      <td>0.0616</td>
+      <td>0.0209</td>
+      <td>0.1577</td>
+      <td>0.1356</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_90_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_90_f1.png)
+![plot_diagonal](plot/diagonal_rcv1_CCAT_sld_vs_pacc_90_f1.png)
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_90_f1.png)
+
+
+## avg
+### avg on train
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0</th>
+      <td>0.0020</td>
+      <td>0.0180</td>
+      <td>0.0403</td>
+      <td>0.1566</td>
+      <td>0.3827</td>
+    </tr>
+    <tr>
+      <th>0.05</th>
+      <td>0.1221</td>
+      <td>0.1059</td>
+      <td>0.0756</td>
+      <td>0.1056</td>
+      <td>0.2109</td>
+    </tr>
+    <tr>
+      <th>0.1</th>
+      <td>0.0888</td>
+      <td>0.0815</td>
+      <td>0.0537</td>
+      <td>0.0909</td>
+      <td>0.1528</td>
+    </tr>
+    <tr>
+      <th>0.15</th>
+      <td>0.0733</td>
+      <td>0.0670</td>
+      <td>0.0428</td>
+      <td>0.0835</td>
+      <td>0.1203</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0571</td>
+      <td>0.0557</td>
+      <td>0.0336</td>
+      <td>0.0773</td>
+      <td>0.0991</td>
+    </tr>
+    <tr>
+      <th>0.25</th>
+      <td>0.0487</td>
+      <td>0.0508</td>
+      <td>0.0296</td>
+      <td>0.0784</td>
+      <td>0.0819</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0418</td>
+      <td>0.0426</td>
+      <td>0.0255</td>
+      <td>0.0760</td>
+      <td>0.0712</td>
+    </tr>
+    <tr>
+      <th>0.35</th>
+      <td>0.0351</td>
+      <td>0.0373</td>
+      <td>0.0227</td>
+      <td>0.0759</td>
+      <td>0.0623</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0308</td>
+      <td>0.0346</td>
+      <td>0.0201</td>
+      <td>0.0724</td>
+      <td>0.0548</td>
+    </tr>
+    <tr>
+      <th>0.45</th>
+      <td>0.0254</td>
+      <td>0.0306</td>
+      <td>0.0174</td>
+      <td>0.0726</td>
+      <td>0.0497</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0237</td>
+      <td>0.0287</td>
+      <td>0.0152</td>
+      <td>0.0688</td>
+      <td>0.0458</td>
+    </tr>
+    <tr>
+      <th>0.55</th>
+      <td>0.0199</td>
+      <td>0.0272</td>
+      <td>0.0133</td>
+      <td>0.0681</td>
+      <td>0.0415</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0186</td>
+      <td>0.0246</td>
+      <td>0.0116</td>
+      <td>0.0647</td>
+      <td>0.0394</td>
+    </tr>
+    <tr>
+      <th>0.65</th>
+      <td>0.0186</td>
+      <td>0.0248</td>
+      <td>0.0113</td>
+      <td>0.0684</td>
+      <td>0.0373</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0162</td>
+      <td>0.0228</td>
+      <td>0.0106</td>
+      <td>0.0620</td>
+      <td>0.0350</td>
+    </tr>
+    <tr>
+      <th>0.75</th>
+      <td>0.0154</td>
+      <td>0.0215</td>
+      <td>0.0093</td>
+      <td>0.0659</td>
+      <td>0.0325</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0145</td>
+      <td>0.0212</td>
+      <td>0.0084</td>
+      <td>0.0620</td>
+      <td>0.0323</td>
+    </tr>
+    <tr>
+      <th>0.85</th>
+      <td>0.0142</td>
+      <td>0.0204</td>
+      <td>0.0080</td>
+      <td>0.0625</td>
+      <td>0.0315</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0134</td>
+      <td>0.0170</td>
+      <td>0.0070</td>
+      <td>0.0615</td>
+      <td>0.0309</td>
+    </tr>
+    <tr>
+      <th>0.95</th>
+      <td>0.0118</td>
+      <td>0.0133</td>
+      <td>0.0067</td>
+      <td>0.0590</td>
+      <td>0.0321</td>
+    </tr>
+    <tr>
+      <th>1.0</th>
+      <td>0.0027</td>
+      <td>0.0060</td>
+      <td>0.0057</td>
+      <td>0.0592</td>
+      <td>0.0326</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0331</td>
+      <td>0.0358</td>
+      <td>0.0223</td>
+      <td>0.0758</td>
+      <td>0.0798</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_avg_train_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_avg_train_f1.png)
+### avg on test
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bin_sld</th>
+      <th>mul_sld</th>
+      <th>bin_pacc</th>
+      <th>mul_pacc</th>
+      <th>atc_mc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.1</th>
+      <td>0.0625</td>
+      <td>0.0654</td>
+      <td>0.0139</td>
+      <td>0.2970</td>
+      <td>0.1801</td>
+    </tr>
+    <tr>
+      <th>0.2</th>
+      <td>0.0224</td>
+      <td>0.0331</td>
+      <td>0.0213</td>
+      <td>0.0498</td>
+      <td>0.0610</td>
+    </tr>
+    <tr>
+      <th>0.3</th>
+      <td>0.0215</td>
+      <td>0.0281</td>
+      <td>0.0189</td>
+      <td>0.0270</td>
+      <td>0.0334</td>
+    </tr>
+    <tr>
+      <th>0.4</th>
+      <td>0.0203</td>
+      <td>0.0288</td>
+      <td>0.0251</td>
+      <td>0.0268</td>
+      <td>0.0321</td>
+    </tr>
+    <tr>
+      <th>0.5</th>
+      <td>0.0211</td>
+      <td>0.0212</td>
+      <td>0.0201</td>
+      <td>0.0257</td>
+      <td>0.0434</td>
+    </tr>
+    <tr>
+      <th>0.6</th>
+      <td>0.0256</td>
+      <td>0.0190</td>
+      <td>0.0319</td>
+      <td>0.0248</td>
+      <td>0.0510</td>
+    </tr>
+    <tr>
+      <th>0.7</th>
+      <td>0.0310</td>
+      <td>0.0301</td>
+      <td>0.0329</td>
+      <td>0.0467</td>
+      <td>0.0794</td>
+    </tr>
+    <tr>
+      <th>0.8</th>
+      <td>0.0291</td>
+      <td>0.0347</td>
+      <td>0.0158</td>
+      <td>0.0263</td>
+      <td>0.1025</td>
+    </tr>
+    <tr>
+      <th>0.9</th>
+      <td>0.0640</td>
+      <td>0.0616</td>
+      <td>0.0209</td>
+      <td>0.1577</td>
+      <td>0.1356</td>
+    </tr>
+    <tr>
+      <th>avg</th>
+      <td>0.0331</td>
+      <td>0.0358</td>
+      <td>0.0223</td>
+      <td>0.0758</td>
+      <td>0.0798</td>
+    </tr>
+  </tbody>
+</table>
+
+![plot_delta](plot/delta_rcv1_CCAT_sld_vs_pacc_avg_test_f1.png)
+![plot_delta_stdev](plot/delta_stdev_rcv1_CCAT_sld_vs_pacc_avg_test_f1.png)
+### avg dataset shift
+![plot_shift](plot/shift_rcv1_CCAT_sld_vs_pacc_avg_f1.png)

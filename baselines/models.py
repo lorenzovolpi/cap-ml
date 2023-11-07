@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
     results = []
     for sample in protocol():
-        wx = iw.logreg(d.validation.X, d.validation.y, sample.X)
+        wx = iw.kliep(d.validation.X, d.validation.y, sample.X)
         test_preds = lr.predict(sample.X)
         estim_acc = np.sum((1.0 * (val_preds == d.validation.y)) * wx) / np.sum(wx)
         true_acc = metrics.accuracy_score(sample.y, test_preds)

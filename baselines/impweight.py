@@ -4,6 +4,20 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KernelDensity
 
+from baselines import densratio
+from baselines.pykliep import DensityRatioEstimator
+
+
+def kliep(Xtr, ytr, Xte):
+    kliep = DensityRatioEstimator()
+    kliep.fit(Xtr, Xte)
+    return kliep.predict(Xtr)
+
+
+def usilf(Xtr, ytr, Xte, alpha=0.0):
+    dense_ratio_obj = densratio(Xtr, Xte, alpha=alpha, verbose=False)
+    return dense_ratio_obj.compute_density_ratio(Xtr)
+
 
 def logreg(Xtr, ytr, Xte):
     # check "Direct Density Ratio Estimation for
