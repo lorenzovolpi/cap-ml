@@ -1,4 +1,3 @@
-from sys import platform
 from traceback import print_exception as traceback
 
 import quacc.evaluation.comp as comp
@@ -8,13 +7,6 @@ from quacc.logger import Logger
 from quacc.utils import create_dataser_dir
 
 CE = comp.CompEstimator()
-
-
-def toast():
-    if platform == "win32":
-        import win11toast
-
-        win11toast.notify("Comp", "Completed Execution")
 
 
 def estimate_comparison():
@@ -67,7 +59,6 @@ def main():
         log.error(f"estimate comparison failed. Exceprion: {e}")
         traceback(e)
 
-    toast()
     Logger.close()
 
 

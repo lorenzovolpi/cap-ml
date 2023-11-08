@@ -24,7 +24,6 @@ pytest = "^7.4.0"
 pylance = "^0.5.9"
 pytest-mock = "^3.11.1"
 pytest-cov = "^4.1.0"
-win11toast = "^0.32"
 tabulate = "^0.9.0"
 paramiko = "^3.3.1"
 
