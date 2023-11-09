@@ -4775,3 +4775,6 @@
 09/11/23 12:21:50| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
 09/11/23 12:22:52| INFO        ref finished [took 51.8981s]
 09/11/23 12:23:00| INFO        atc_mc finished [took 54.6032s]
+09/11/23 12:23:12| INFO        mulmc_sld finished [took 77.3834s]
+09/11/23 12:23:12| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 81.2876s]
+----------------------------------------------------------------------------------------------------
