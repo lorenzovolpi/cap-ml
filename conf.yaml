@@ -230,4 +230,4 @@ main_conf: &main_conf
       - atc_ne
       - doc_feat
 
-exec: *main_conf
+exec: *debug_conf

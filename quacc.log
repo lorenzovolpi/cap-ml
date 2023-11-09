@@ -4669,3 +4669,109 @@
 07/11/23 05:30:45| INFO        mul_sld_gs finished [took 365.9283s]
 07/11/23 05:30:45| INFO     Dataset sample 0.90 of dataset imdb_9prevs finished [took 366.4930s]
 ----------------------------------------------------------------------------------------------------
+08/11/23 20:56:59| INFO     dataset rcv1_CCAT_1prevs
+08/11/23 20:59:19| ERROR    Evaluation over rcv1_CCAT_1prevs failed. Exception: HTTP Error 403: Forbidden
+08/11/23 20:59:19| ERROR    Failed while saving configuration rcv1_CCAT_debug of rcv1_CCAT_1prevs. Exception: cannot access local variable 'dr' where it is not associated with a value
+----------------------------------------------------------------------------------------------------
+08/11/23 21:31:49| INFO     dataset rcv1_CCAT_1prevs
+08/11/23 22:01:21| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+08/11/23 22:02:41| INFO        ref finished [took 68.4653s]
+08/11/23 22:02:47| INFO        atc_mc finished [took 68.0908s]
+08/11/23 22:02:57| INFO        mulmc_sld finished [took 90.6417s]
+08/11/23 22:02:57| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 95.9050s]
+----------------------------------------------------------------------------------------------------
+08/11/23 23:22:01| INFO     dataset rcv1_CCAT_1prevs
+08/11/23 23:22:07| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+08/11/23 23:23:59| INFO        ref finished [took 98.1608s]
+08/11/23 23:24:07| INFO        atc_mc finished [took 97.2017s]
+08/11/23 23:24:18| INFO        mulmc_sld finished [took 122.6902s]
+08/11/23 23:24:18| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 130.7814s]
+----------------------------------------------------------------------------------------------------
+09/11/23 00:13:41| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 00:13:47| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 00:15:21| INFO        ref finished [took 79.7435s]
+09/11/23 00:15:30| INFO        atc_mc finished [took 80.6728s]
+09/11/23 00:15:41| INFO        mulmc_sld finished [took 107.4293s]
+09/11/23 00:15:41| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 113.6376s]
+----------------------------------------------------------------------------------------------------
+09/11/23 00:18:43| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 00:18:49| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 00:20:31| INFO        ref finished [took 87.0388s]
+09/11/23 00:20:39| INFO        atc_mc finished [took 84.1993s]
+09/11/23 00:20:50| INFO        mulmc_sld finished [took 114.1533s]
+09/11/23 00:20:50| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 120.4891s]
+----------------------------------------------------------------------------------------------------
+09/11/23 00:38:26| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 00:38:32| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 00:45:25| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 00:45:31| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 02:02:02| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 02:02:08| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 02:03:31| INFO        ref finished [took 70.0867s]
+09/11/23 02:03:41| INFO        atc_mc finished [took 72.5382s]
+09/11/23 02:03:49| INFO        mulmc_sld finished [took 95.3226s]
+09/11/23 02:03:49| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 101.1888s]
+----------------------------------------------------------------------------------------------------
+09/11/23 03:15:02| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 03:15:08| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 03:16:09| INFO        ref finished [took 51.7905s]
+09/11/23 03:16:17| INFO        atc_mc finished [took 54.5337s]
+09/11/23 03:16:29| INFO        mulmc_sld finished [took 77.7583s]
+09/11/23 03:16:29| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 81.7392s]
+----------------------------------------------------------------------------------------------------
+09/11/23 03:17:34| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 03:17:39| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 03:18:42| INFO        ref finished [took 52.5292s]
+09/11/23 03:18:49| INFO        atc_mc finished [took 54.8090s]
+09/11/23 03:18:59| INFO        mulmc_sld finished [took 75.5262s]
+09/11/23 03:18:59| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 79.5247s]
+----------------------------------------------------------------------------------------------------
+09/11/23 03:20:07| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 03:20:12| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 03:21:15| INFO        ref finished [took 53.0266s]
+09/11/23 03:21:22| INFO        atc_mc finished [took 54.2621s]
+09/11/23 03:21:34| INFO        mulmc_sld finished [took 77.6939s]
+09/11/23 03:21:34| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 81.6421s]
+----------------------------------------------------------------------------------------------------
+09/11/23 03:33:31| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 03:33:36| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 03:34:37| INFO        ref finished [took 52.0023s]
+09/11/23 03:34:45| INFO        atc_mc finished [took 54.5041s]
+09/11/23 03:34:56| INFO        mulmc_sld finished [took 76.1746s]
+09/11/23 03:34:56| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 80.1391s]
+----------------------------------------------------------------------------------------------------
+09/11/23 03:35:42| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 03:35:47| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 03:36:49| INFO        ref finished [took 52.3397s]
+09/11/23 03:36:57| INFO        atc_mc finished [took 54.5340s]
+09/11/23 03:37:09| INFO        mulmc_sld finished [took 77.3609s]
+09/11/23 03:37:09| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 81.7535s]
+----------------------------------------------------------------------------------------------------
+09/11/23 03:41:09| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 03:41:15| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 03:42:55| INFO        ref finished [took 88.9777s]
+09/11/23 03:43:09| INFO        atc_mc finished [took 98.3887s]
+09/11/23 04:15:21| DEBUG       [MultiClassAccuracyEstimator] optimization finished: best params {'quantifier__classifier__C': 10.0, 'quantifier__classifier__class_weight': None, 'quantifier__recalib': 'bcts', 'quantifier__exact_train_prev': True, 'confidence': 'entropy'} (score=0.00775) [took 2038.6779s]
+09/11/23 04:16:31| INFO        mul_sld_gs finished [took 2108.9586s]
+09/11/23 04:38:52| DEBUG       [BinaryQuantifierAccuracyEstimator] optimization finished: best params {'quantifier__classifier__C': 10.0, 'quantifier__classifier__class_weight': None, 'quantifier__recalib': 'bcts', 'quantifier__exact_train_prev': True, 'confidence': 'entropy'} (score=0.00835) [took 3453.3118s]
+09/11/23 04:46:36| INFO        bin_sld_gs finished [took 3917.2486s]
+09/11/23 04:46:36| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 3921.2338s]
+----------------------------------------------------------------------------------------------------
+09/11/23 11:52:14| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 11:52:19| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 11:53:22| INFO        ref finished [took 53.0955s]
+09/11/23 11:53:29| INFO        atc_mc finished [took 55.3922s]
+09/11/23 11:53:43| INFO        mulmc_sld finished [took 79.5846s]
+09/11/23 11:53:43| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 83.5652s]
+----------------------------------------------------------------------------------------------------
+09/11/23 11:55:48| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 11:55:53| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 11:56:54| INFO        ref finished [took 51.3170s]
+09/11/23 11:57:03| INFO        atc_mc finished [took 54.3593s]
+09/11/23 11:57:14| INFO        mulmc_sld finished [took 76.8769s]
+09/11/23 11:57:14| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs finished [took 80.8969s]
+----------------------------------------------------------------------------------------------------
+09/11/23 12:21:45| INFO     dataset rcv1_CCAT_1prevs
+09/11/23 12:21:50| INFO     Dataset sample 0.50 of dataset rcv1_CCAT_1prevs started
+09/11/23 12:22:52| INFO        ref finished [took 51.8981s]
+09/11/23 12:23:00| INFO        atc_mc finished [took 54.6032s]
