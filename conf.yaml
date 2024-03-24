@@ -415,6 +415,26 @@ kde_lr_gs_conf: &kde_lr_gs_conf
       - m3w_kde_lr_gs
     N_JOBS: -2
 
+  confs: 
+    - DATASET_NAME: twitter_gasp
+
+
+multiclass_conf: &multiclass_conf
+  global:
+    METRICS: 
+      - acc
+      - f1
+    OUT_DIR_NAME: output/multiclass
+    DATASET_N_PREVS: 5
+    COMP_ESTIMATORS:
+      - bin_sld_lr_gs
+      - mul_sld_lr_gs
+      - bin_kde_lr_gs
+      - mul_kde_lr_gs
+      - atc_mc
+      - doc
+    N_JOBS: -2
+
   confs: *main_confs
 
 timing_conf: &timing_conf
@@ -461,4 +481,4 @@ timing_gs_conf: &timing_gs_conf
 
   confs: *main_confs
 
-exec: *debug_conf
+exec: *multiclass_conf

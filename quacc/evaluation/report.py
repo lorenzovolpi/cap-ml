@@ -436,6 +436,16 @@ def _cr_data(cr: CompReport, metric=None, estimators=None):
     return cr.data(metric, estimators)
 
 
+def _key_reverse_delta_train(idx):
+    idx = idx.to_numpy()
+    sorted_idx = np.array(
+        sorted(list(idx), key=lambda x: x[-1]), dtype=("float," * len(idx[0]))[:-1]
+    )
+    # get sorting index
+    nparr = np.nonzero(idx[:, None] == sorted_idx)[1]
+    return nparr
+
+
 class DatasetReport:
     _default_dr_modes = [
         "delta_train",
@@ -456,6 +466,16 @@ class DatasetReport:
     def __init__(self, name, crs=None):
         self.name = name
         self.crs: List[CompReport] = [] if crs is None else crs
+
+    def sort_delta_train_index(self, data):
+        # data_ = data.sort_index(axis=0, level=0, ascending=True, sort_remaining=False)
+        data_ = data.sort_index(
+            axis=0,
+            level=0,
+            key=_key_reverse_delta_train,
+        )
+        print(data_.index)
+        return data_
 
     def join(self, other, estimators=None):
         _crs = [
@@ -542,6 +562,7 @@ class DatasetReport:
         _data.index = _idx
 
         _data = _data.sort_index(axis=0, level=0, ascending=False, sort_remaining=False)
+
         return _data
 
     def shift_data(
@@ -633,6 +654,8 @@ class DatasetReport:
             avg_on_train = _data.groupby(level=1, sort=False).mean()
             if avg_on_train.empty:
                 return None
+            # sort index in reverse order
+            avg_on_train = self.sort_delta_train_index(avg_on_train)
             prevs_on_train = avg_on_train.index.unique(0)
             return plot.plot_delta(
                 # base_prevs=np.around(
