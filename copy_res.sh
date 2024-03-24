@@ -5,7 +5,8 @@ DIRS=()
 # DIRS+=("cc_lr")
 # DIRS+=("baselines")
 # DIRS+=("d_sld_rbf")
-DIRS+=("d_sld_lr")
+# DIRS+=("d_sld_lr")
+DIRS+=("debug")
 
 for dir in ${DIRS[@]}; do
 	scp -r andreaesuli@edge-nd1.isti.cnr.it:/home/andreaesuli/raid/lorenzo/output/${dir} ./output/
