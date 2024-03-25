@@ -415,8 +415,7 @@ kde_lr_gs_conf: &kde_lr_gs_conf
       - m3w_kde_lr_gs
     N_JOBS: -2
 
-  confs: 
-    - DATASET_NAME: twitter_gasp
+  confs: *main_confs
 
 
 multiclass_conf: &multiclass_conf
@@ -429,13 +428,14 @@ multiclass_conf: &multiclass_conf
     COMP_ESTIMATORS:
       - bin_sld_lr_gs
       - mul_sld_lr_gs
-      - bin_kde_lr_gs
-      - mul_kde_lr_gs
+      # - bin_kde_lr_gs
+      # - mul_kde_lr_gs
       - atc_mc
       - doc
     N_JOBS: -2
 
-  confs: *main_confs
+  confs: 
+    - DATASET_NAME: twitter_gasp
 
 timing_conf: &timing_conf
   global:
