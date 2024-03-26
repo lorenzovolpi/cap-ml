@@ -77,13 +77,13 @@ test_conf: &test_conf
 main:
   confs: &main_confs
     - DATASET_NAME: rcv1
+      DATASET_TARGET: CCAT
+    - DATASET_NAME: imdb
+    - DATASET_NAME: rcv1
       DATASET_TARGET: GCAT
     - DATASET_NAME: rcv1
       DATASET_TARGET: MCAT
   other_confs:
-    - DATASET_NAME: imdb
-    - DATASET_NAME: rcv1
-      DATASET_TARGET: CCAT
 
 sld_lr_conf: &sld_lr_conf
 
@@ -459,6 +459,7 @@ timing_conf: &timing_conf
       - naive
     N_JOBS: 1
     PROTOCOL_REPEATS: 1
+    # PROTOCOL_N_PREVS: 1
 
   confs: *main_confs
 
@@ -478,7 +479,8 @@ timing_gs_conf: &timing_gs_conf
       - m3w_kde_lr_gs
     N_JOBS: -1
     PROTOCOL_REPEATS: 1
+    # PROTOCOL_N_PREVS: 1
 
   confs: *main_confs
 
-exec: *multiclass_conf
+exec: *timing_conf
