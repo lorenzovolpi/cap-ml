@@ -426,6 +426,8 @@ multiclass_conf: &multiclass_conf
     OUT_DIR_NAME: output/multiclass
     DATASET_N_PREVS: 5
     COMP_ESTIMATORS:
+      - bin_sld_lr_a
+      - mul_sld_lr_a
       - bin_sld_lr_gs
       - mul_sld_lr_gs
       # - bin_kde_lr_gs

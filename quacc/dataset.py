@@ -258,7 +258,10 @@ class Dataset(DatasetProvider):
         dim = self.all_train.n_classes
         lspace = np.linspace(0.0, 1.0, num=self._n_prevs + 1, endpoint=False)[1:]
         mesh = np.array(np.meshgrid(*[lspace for _ in range(dim)])).T.reshape(-1, dim)
-        mesh = mesh[np.where(mesh.sum(axis=1) == 1.0)]
+        mesh = np.around(mesh, decimals=4)
+        mesh[np.where(np.around(mesh.sum(axis=1), decimals=4) == 0.9999), -1] += 0.0001
+        mesh[np.where(np.around(mesh.sum(axis=1), decimals=4) == 1.0001), -1] -= 0.0001
+        mesh = mesh[np.where(np.around(mesh.sum(axis=1), decimals=4) == 1.0)]
         return np.around(np.unique(mesh, axis=0), decimals=4)
 
     def __build_sample(
