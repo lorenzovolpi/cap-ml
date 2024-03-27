@@ -485,4 +485,4 @@ timing_gs_conf: &timing_gs_conf
 
   confs: *main_confs
 
-exec: *timing_conf
+exec: *multiclass_conf
