@@ -6,7 +6,7 @@ quavenv/*
 
 __pycache__/*
 baselines/__pycache__/*
-baselines/densratio/__pycache__/*
+baselines/densratio/__pycache__/
 qcdash/__pycache__/*
 qcpanel/__pycache__/*
 quacc/__pycache__/*
@@ -16,6 +16,19 @@ tests/*/__pycache__/*
 tests/*/*/__pycache__/*
 htmlcov/*
 test*.py
+
+build
+exp
+playground
+qcdash
+
+# links
+syncres
+dlog
+dout
+dash
+deploy
+
 
 *.coverage
 .coverage
@@ -28,3 +41,9 @@ output/*
 
 .python-version
 poetry.lock
+
+*.log
+*.env
+*.sh
+poetry.toml
+TODO.*
