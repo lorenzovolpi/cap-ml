@@ -1,26 +1,59 @@
 *.code-workspace
-quavenv/*
 *.pdf
+*.md
+*.html
+
+# virtualenvs
+quavenv/*
 .venv/*
+
+# vscode config
 .vscode/*
 
-__pycache__/*
-baselines/__pycache__/*
-baselines/densratio/__pycache__/
-qcdash/__pycache__/*
-qcpanel/__pycache__/*
-quacc/__pycache__/*
-quacc/*/__pycache__/*
-tests/__pycache__/*
-tests/*/__pycache__/*
-tests/*/*/__pycache__/*
-htmlcov/*
-test*.py
+# cache
+*__pycache__/*
+.pytest_cache/
+# coverage
+htmlcov
+*.coverage
+.coverage
 
+# private modules
 build
 exp
 playground
 qcdash
+
+# results
+*out
+out/*
+output/*
+results/*
+old_results*/*
+tables/*
+plots/*
+dataset_stats/*
+
+# pyenv
+.python-version
+
+# poetry
+poetry.lock
+poetry.toml
+
+# log files
+*.log
+log
+
+# build files
+*.env
+*.sh
+
+# TODOs
+TODO.*
+
+# requirements
+requirements*.txt
 
 # links
 syncres
@@ -29,21 +62,6 @@ dout
 dash
 deploy
 
-
-*.coverage
-.coverage
-
-scp_sync.py
-
-out/*
-output/*
-# !output/main/
-
-.python-version
-poetry.lock
-
-*.log
-*.env
-*.sh
-poetry.toml
-TODO.*
+# miscellaneous
+var
+*.txt

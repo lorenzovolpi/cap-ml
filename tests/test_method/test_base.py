@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 import scipy.sparse as sp
 
-from quacc.data import ExtendedData, ExtensionPolicy
-from quacc.method.base import MultiClassAccuracyEstimator
+from quacc.deprecated.method.base import MultiClassAccuracyEstimator
+from quacc.legacy.data import ExtendedData, ExtensionPolicy
 
 
 @pytest.mark.mcae

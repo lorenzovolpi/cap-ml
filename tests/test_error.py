@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from quacc import error
-from quacc.data import ExtendedPrev, ExtensionPolicy
+from quacc.legacy.data import ExtendedPrev, ExtensionPolicy
 
 
 @pytest.mark.err

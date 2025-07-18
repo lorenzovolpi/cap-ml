@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import scipy.sparse as sp
 
-from quacc.data import (
+from quacc.legacy.data import (
     ExtBinPrev,
     ExtendedCollection,
     ExtendedData,

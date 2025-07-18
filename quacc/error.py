@@ -1,10 +1,5 @@
-from functools import wraps
-from typing import List
-
 import numpy as np
-import quapy as qp
-
-from quacc.data import ExtendedPrev
+from sklearn.metrics import accuracy_score, f1_score
 
 
 def from_name(err_name):
@@ -13,73 +8,134 @@ def from_name(err_name):
     return callable_error
 
 
-# def f1(prev):
-#     # https://github.com/dice-group/gerbil/wiki/Precision,-Recall-and-F1-measure
-#     if prev[0] == 0 and prev[1] == 0 and prev[2] == 0:
-#         return 1.0
-#     elif prev[0] == 0 and prev[1] > 0 and prev[2] == 0:
-#         return 0.0
-#     elif prev[0] == 0 and prev[1] == 0 and prev[2] > 0:
-#         return float('NaN')
-#     else:
-#         recall = prev[0] / (prev[0] + prev[1])
-#         precision = prev[0] / (prev[0] + prev[2])
-#         return 2 * (precision * recall) / (precision + recall)
-
-
-def nae(prevs: np.ndarray, prevs_hat: np.ndarray) -> np.ndarray:
-    _ae = qp.error.ae(prevs, prevs_hat)
-    # _zae = (2.0 * (1.0 - prevs.min())) / prevs.shape[1]
-    _zae = 2.0 / prevs.shape[1]
-    return _ae / _zae
-
-
-def f1(prev: np.ndarray | ExtendedPrev) -> float:
-    if isinstance(prev, ExtendedPrev):
-        prev = prev.A
-
-    def _score(idx):
-        _tp = prev[idx, idx]
-        _fn = prev[idx, :].sum() - _tp
-        _fp = prev[:, idx].sum() - _tp
-        _den = 2.0 * _tp + _fp + _fn
-        return 0.0 if _den == 0.0 else (2.0 * _tp) / _den
-
-    if prev.shape[0] == 2:
-        return _score(1)
+def is_from_cont_table(param1, param2):
+    if param2 is None and isinstance(param1, np.ndarray) and param1.ndim == 2 and (param1.shape[0] == param1.shape[1]):
+        return True
+    elif isinstance(param1, np.ndarray) and isinstance(param2, np.ndarray) and param1.shape == param2.shape:
+        return False
     else:
-        _idxs = np.arange(prev.shape[0])
-        return np.array([_score(idx) for idx in _idxs]).mean()
+        raise ValueError("parameters for evaluation function not understood")
 
 
-def f1e(prev):
-    return 1 - f1(prev)
+def vanilla_acc(param1, param2=None):
+    if is_from_cont_table(param1, param2):
+        return _vanilla_acc_from_ct(param1)
+    else:
+        return accuracy_score(param1, param2)
 
 
-def acc(prev: np.ndarray | ExtendedPrev) -> float:
-    if isinstance(prev, ExtendedPrev):
-        prev = prev.A
-    return np.diag(prev).sum() / prev.sum()
+def f1(param1, param2=None, average="binary"):
+    _warning = False
+    if is_from_cont_table(param1, param2):
+        if param1.shape[0] > 2 and average == "binary":
+            _warning = True
+            average = "macro"
+        _f1_score = _f1_from_ct(param1, average=average)
+    else:
+        if len(np.unique(np.hstack([param1, param2]))) > 2 and average == "binary":
+            _warning = True
+            average = "macro"
+        _f1_score = f1_score(param1, param2, average=average, zero_division=1.0)
+
+    if _warning:
+        print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
+    return _f1_score
 
 
-def accd(
-    true_prevs: List[np.ndarray | ExtendedPrev],
-    estim_prevs: List[np.ndarray | ExtendedPrev],
-) -> np.ndarray:
-    a_tp = np.array([acc(tp) for tp in true_prevs])
-    a_ep = np.array([acc(ep) for ep in estim_prevs])
-    return np.abs(a_tp - a_ep)
+def f1_macro(param1, param2=None):
+    return f1(param1, param2, average="macro")
 
 
-def maccd(
-    true_prevs: List[np.ndarray | ExtendedPrev],
-    estim_prevs: List[np.ndarray | ExtendedPrev],
-) -> float:
-    return accd(true_prevs, estim_prevs).mean()
+def f1_micro(param1, param2=None):
+    return f1(param1, param2, average="micro")
 
 
-ACCURACY_ERROR = {maccd}
-ACCURACY_ERROR_SINGLE = {accd}
-ACCURACY_ERROR_NAMES = {func.__name__ for func in ACCURACY_ERROR}
-ACCURACY_ERROR_SINGLE_NAMES = {func.__name__ for func in ACCURACY_ERROR_SINGLE}
-ERROR_NAMES = ACCURACY_ERROR_NAMES | ACCURACY_ERROR_SINGLE_NAMES
+def _vanilla_acc_from_ct(cont_table):
+    return np.diag(cont_table).sum() / cont_table.sum()
+
+
+def _f1_from_ct(cont_table, average):
+    n = cont_table.shape[0]
+    if average == "binary":
+        tp = cont_table[1, 1]
+        fp = cont_table[0, 1]
+        fn = cont_table[1, 0]
+        return _f1_bin(tp, fp, fn)
+    elif average == "macro":
+        f1_per_class = []
+        for i in range(n):
+            tp = cont_table[i, i]
+            fp = cont_table[:, i].sum() - tp
+            fn = cont_table[i, :].sum() - tp
+            f1_per_class.append(_f1_bin(tp, fp, fn))
+        return np.mean(f1_per_class)
+    elif average == "micro":
+        tp, fp, fn = 0, 0, 0
+        tp = np.diag(cont_table).sum()
+        fp = fn = cont_table.sum() - tp
+        return _f1_bin(tp, fp, fn)
+    else:
+        raise ValueError(f"Unknown F1 average {average}")
+
+
+def _f1_bin(tp, fp, fn):
+    if 2 * tp + fp + fn == 0:
+        return 1
+    else:
+        return (2 * tp) / (2 * tp + fp + fn)
+
+
+def ae(true_accs, estim_accs):
+    """Computes the absolute error between true and estimated accuracy value pairs.
+
+    :param true_accs: array-like of shape `(n_samples,)` with the true accuracy values
+    :param estim_accs: array-like of shape `(n_samples,)` with the estimated accuracy values
+    :return: absolute error
+    """
+    assert true_accs.shape == estim_accs.shape, f"wrong shape {true_accs.shape} vs. {estim_accs.shape}"
+    return np.abs(true_accs - estim_accs)
+
+
+def mae(true_accs, estim_accs):
+    """Computes the mean absolute error between true and estimated accuracy value pairs.
+
+    :param true_accs: array-like of shape `(n_samples,)` with the true accuracy values
+    :param estim_accs: array-like of shape `(n_samples,)` with the estimated accuracy values
+    :return: mean absolute error
+    """
+    return ae(true_accs, estim_accs).mean()
+
+
+def se(true_accs, estim_accs):
+    """Computes the squared error between true and estimated accuracy value pairs.
+
+    :param true_accs: array-like of shape `(n_samples,)` with the true accuracy values
+    :param estim_accs: array-like of shape `(n_samples,)` with the estimated accuracy values
+    :return: absolute error
+    """
+    return (true_accs - estim_accs) ** 2
+
+
+def mse(true_accs, estim_accs):
+    """Computes the mean squared error between true and estimated accuracy value pairs.
+
+    :param true_accs: array-like of shape `(n_samples,)` with the true accuracy values
+    :param estim_accs: array-like of shape `(n_samples,)` with the estimated accuracy values
+    :return: mean squared error
+    """
+    return se(true_accs, estim_accs).mean()
+
+
+def _reshape_for_error(true_accs, estim_accs):
+    _true_accs = np.array(true_accs).reshape(-1, 1)
+    _estim_accs = np.array(estim_accs).reshape(-1, 1)
+    return _true_accs, _estim_accs
+
+
+ACCURACY_MEASURE = {vanilla_acc, f1}
+ACCURACY_ERROR = {mae, mse}
+ACCURACY_ERROR_SINGLE = {ae, se}
+ACCURACY_MEASURE_NAMES = {acc_fn.__name__ for acc_fn in ACCURACY_MEASURE}
+ACCURACY_ERROR_NAMES = {err.__name__ for err in ACCURACY_ERROR}
+ACCURACY_ERROR_SINGLE_NAMES = {err.__name__ for err in ACCURACY_ERROR_SINGLE}
+ERROR_NAMES = ACCURACY_MEASURE_NAMES | ACCURACY_ERROR_NAMES | ACCURACY_ERROR_SINGLE_NAMES

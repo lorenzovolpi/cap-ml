@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from quacc.evaluation.report import (
+from quacc.legacy.evaluation.report import (
     CompReport,
     DatasetReport,
     EvaluationReport,

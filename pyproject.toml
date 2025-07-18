@@ -1,67 +1,43 @@
 [tool.poetry]
 name = "quacc"
-version = "0.1.0"
+version = "0.1.1.3"
 description = ""
 authors = ["Lorenzo Volpi <lorenzo.volpi@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-quapy = "^0.1.7"
-pandas = "^2.0.3"
-jinja2 = "^3.1.2"
-pyyaml = "^6.0.1"
-logging = "^0.4.9.6"
+seaborn = "^0.13.2"
+certifi = "^2024.2.2"
+torch = "^2.3.0"
+pot = "^0.9.3"
+transformers = {extras = ["torch"], version = "^4.42.3"}
+datasets = "^2.20.0"
 abstention = "^0.1.3.1"
-pytest = "^8.0.0"
-
-[tool.poetry.scripts]
-main = "quacc.main:main"
-run = "run:run"
-pnl = "qcpanel.run:run"
-dash = "qcdash.app:run"
-sync_up = "remote:sync_code"
-sync_down = "remote:sync_output"
-merge_data = "merge_data:run"
-
-[tool.poe]
-poetry_command = ""
-
-[tool.poe.tasks]
-ilona = "ssh volpi@ilona.isti.cnr.it"
-dash = "gunicorn qcdash.app:server -b ilona.isti.cnr.it:33421"
-
-[tool.poe.tasks.logr]
-shell = """
-    scp {$HOST}:~/tesi/quacc.log ~/tesi/remote.log &> /dev/null
-    ssh {$HOST} tail -n 0 -f /home/volpi/tesi/quacc.log >> ~/tesi/remote.log
-"""
-[tool.poe.tasks.logrf]
-shell = """
-    ssh {$HOST} tail -n 500 -f /home/volpi/tesi/quacc.log | bat -P --language=log
-"""
-[tool.poe.tasks.logf]
-shell = """
-    tail -n 500 -f /home/lorev/tesi/quacc.log | bat --paging=never --language log
-"""
-
-interpreter = "fish"
-env = { HOST = "volpi@ilona.isti.cnr.it" }
+joblib = "^1.4.2"
+scikit-learn = "^1.5.1"
+threadpoolctl = "^3.5.0"
+ucimlrepo = "^0.0.7"
+xlrd = "^2.0.1"
+quapy = {git = "https://github.com/lorenzovolpi/QuaPy.git", rev = "accuracy"}
+critdd = {git = "https://github.com/mirkobunse/critdd"}
+lascal = {git = "https://github.com/tpopordanoska/label-shift-calibration.git"}
+cvxpy = "^1.6.6"
 
 [tool.poetry.group.dev.dependencies]
-pylance = "^0.5.9"
+pytest = "^8.0.0"
 pytest-mock = "^3.11.1"
 pytest-cov = "^4.1.0"
-tabulate = "^0.9.0"
-paramiko = "^3.3.1"
-panel = "^1.3.1"
-ipympl = "^0.9.3"
-ipykernel = "^6.26.0"
-ipywidgets-bokeh = "^1.5.0"
-pandas-stubs = "^2.1.1.230928"
+
+[tool.poetry.group.dash.dependencies]
 dash = "^2.14.1"
-dash-bootstrap-components = "^1.5.0"
+tabulate = "^0.9.0"
 gunicorn = "^21.2.0"
+dash-bootstrap-components = "^1.6.0"
+plotly = "^5.22.0"
+
+[tool.poetry.group.lascal.dependencies]
+rich = "^14.0.0"
 
 [tool.pytest.ini_options]
 addopts = "--cov=quacc -rA --cov-report html"
@@ -69,3 +45,7 @@ addopts = "--cov=quacc -rA --cov-report html"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
