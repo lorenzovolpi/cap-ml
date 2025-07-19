@@ -1,1 +1,1 @@
-from . import matplotlib, plotly, seaborn
+from . import matplotlib, seaborn
