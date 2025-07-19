@@ -2,6 +2,8 @@
 *.pdf
 *.md
 *.html
+*.lock
+poetry.toml
 
 # virtualenvs
 quavenv/*
@@ -11,7 +13,8 @@ quavenv/*
 .vscode/*
 
 # cache
-*__pycache__/*
+*__pycache__*
+**/__pycache__/*
 .pytest_cache/
 # coverage
 htmlcov
@@ -36,10 +39,6 @@ dataset_stats/*
 
 # pyenv
 .python-version
-
-# poetry
-poetry.lock
-poetry.toml
 
 # log files
 *.log

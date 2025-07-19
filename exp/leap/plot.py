@@ -72,24 +72,24 @@ def plots():
     oracle_methods = ["O-LEAP(CC-MLP)", "O-LEAP(KDEy-MLP)", "O-LEAP(oracle)"]
 
     configs = [
-        # {
-        #     "name": "all",
-        #     "datasets": get_dataset_names(),
-        #     "methods": main_methods,
-        #     "classifiers": all_classifiers,
-        # },
+        {
+            "name": "all",
+            "datasets": get_dataset_names(),
+            "methods": main_methods,
+            "classifiers": all_classifiers,
+        },
         {
             "name": "4x1",
             "datasets": get_selection_datasets(),
             "methods": main_methods,
             "classifiers": ["LR"],
         },
-        # {
-        #     "name": "all_oracle",
-        #     "datasets": get_dataset_names(),
-        #     "methods": oracle_methods,
-        #     "classifiers": all_classifiers,
-        # },
+        {
+            "name": "all_oracle",
+            "datasets": get_dataset_names(),
+            "methods": oracle_methods,
+            "classifiers": all_classifiers,
+        },
         {
             "name": "4x1_oracle",
             "datasets": get_selection_datasets(),
@@ -117,7 +117,7 @@ def plots():
                 df,
                 col="dataset",
                 col_order=_datasets,
-                col_wrap=len(_datasets),
+                col_wrap=4,
                 hue="method",
                 hue_order=_methods,
                 xlim=(0, 1),
