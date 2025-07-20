@@ -5,7 +5,7 @@ import torch
 from lascal import Calibrator
 from scipy.special import softmax
 
-from quacc.calibration.base import SourceTargetCalibratorFactory
+from cap.calibration.base import SourceTargetCalibratorFactory
 
 
 def np2tensor(scores, probability_to_logit=False):

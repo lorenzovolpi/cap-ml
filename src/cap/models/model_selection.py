@@ -9,8 +9,8 @@ import quapy as qp
 from quapy.protocol import AbstractProtocol, OnLabelledCollectionProtocol
 from quapy.util import timeout
 
-import quacc as qc
-from quacc.models.cont_table import CAPContingencyTable, CAPContingencyTableQ, LabelledCollection
+import cap
+from cap.models.cont_table import CAPContingencyTable, CAPContingencyTableQ, LabelledCollection
 
 
 class Status(Enum):
@@ -46,8 +46,8 @@ class GridSearchCAP(CAPContingencyTable):
         param_grid: dict,
         protocol: AbstractProtocol,
         prot_posteriors,
-        acc_fn: Callable | str = qc.error.vanilla_acc,
-        error: Callable | str = qc.error.mae,
+        acc_fn: Callable | str = cap.error.vanilla_acc,
+        error: Callable | str = cap.error.mae,
         refit=True,
         timeout=-1,
         n_jobs=None,
@@ -60,7 +60,7 @@ class GridSearchCAP(CAPContingencyTable):
         self.prot_posteriors = prot_posteriors
         self.refit = refit
         self.timeout = timeout
-        self.n_jobs = qc.commons.get_njobs(n_jobs)
+        self.n_jobs = cap.commons.get_njobs(n_jobs)
         self.raise_errors = raise_errors
         self.verbose = verbose
         self.__check_acc_fn(acc_fn)
@@ -72,29 +72,29 @@ class GridSearchCAP(CAPContingencyTable):
             print(f"[{self.__class__.__name__}:{self.model.__class__.__name__}]: {msg}")
 
     def __check_acc_fn(self, acc_fn):
-        if acc_fn in qc.error.ACCURACY_MEASURE:
+        if acc_fn in cap.error.ACCURACY_MEASURE:
             self.acc_fn = acc_fn
         elif isinstance(acc_fn, str):
-            self.acc_fn = qc.error.from_name(acc_fn)
+            self.acc_fn = cap.error.from_name(acc_fn)
         elif hasattr(acc_fn, "__call__"):
             self.acc_fn = acc_fn
         else:
             raise ValueError(
                 f"unexpected accuracy function type; must either be a callable function or a str\n"
-                f"representing the name of an error function in {qc.error.ACCURACY_MEASURE_NAMES}"
+                f"representing the name of an error function in {cap.error.ACCURACY_MEASURE_NAMES}"
             )
 
     def __check_error(self, error):
-        if error in qc.error.ACCURACY_ERROR:
+        if error in cap.error.ACCURACY_ERROR:
             self.error = error
-        elif isinstance(error, str) and error in qc.error.ACCURACY_ERROR_NAMES:
-            self.error = qc.error.from_name(error)
+        elif isinstance(error, str) and error in cap.error.ACCURACY_ERROR_NAMES:
+            self.error = cap.error.from_name(error)
         elif hasattr(error, "__call__"):
             self.error = error
         else:
             raise ValueError(
                 f"unexpected error type; must either be a callable function or a str\n"
-                f"representing the name of an error function in {qc.error.ACCURACY_ERROR_NAMES}"
+                f"representing the name of an error function in {cap.error.ACCURACY_ERROR_NAMES}"
             )
 
     def _evaluate(self, model: CAPContingencyTableQ):
@@ -145,7 +145,7 @@ class GridSearchCAP(CAPContingencyTable):
         if self.n_jobs == 0:
             cls_outs = [self._prepare_classifier(cfg) for cfg in cls_configs]
         else:
-            cls_outs = qc.commons.parallel(
+            cls_outs = cap.commons.parallel(
                 self._prepare_classifier,
                 cls_configs,
                 seed=qp.environ.get("_R_SEED", None),
@@ -176,7 +176,7 @@ class GridSearchCAP(CAPContingencyTable):
         if self.n_jobs == 0:
             aggr_outs = [self._prepare_aggregation(args) for args in aggr_configs]
         else:
-            aggr_outs = qc.commons.parallel(
+            aggr_outs = cap.commons.parallel(
                 self._prepare_aggregation,
                 aggr_configs,
                 seed=qp.environ.get("_R_SEED", None),

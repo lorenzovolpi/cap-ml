@@ -1,8 +1,8 @@
 import numpy as np
 import scipy
 
-from quacc.calibration.base import SimpleCalibratorFactory
-from quacc.calibration.util import compute_nll, inverse_softmax, softmax, t_gradients
+from cap.calibration.base import SimpleCalibratorFactory
+from cap.calibration.util import compute_nll, inverse_softmax, softmax, t_gradients
 
 
 def do_tempscale_optimization(labels, preacts, verbose, lbfgs_kwargs, epsilon=5e-2):

@@ -1,10 +1,8 @@
 import itertools as IT
 from abc import ABC, abstractmethod
-from typing import List
 
 from quapy.data.base import LabelledCollection
 from quapy.protocol import AbstractProtocol
-from sklearn.base import BaseEstimator
 
 
 class ClassifierAccuracyPrediction(ABC):

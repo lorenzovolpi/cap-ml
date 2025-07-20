@@ -17,7 +17,7 @@ from sklearn.base import BaseEstimator
 from sklearn.metrics import confusion_matrix
 from tqdm import tqdm
 
-import quacc as qc
+import cap
 
 
 class NaNError(Exception):
@@ -75,7 +75,7 @@ def fmt_line_md(s):
 
 
 def get_quacc_home():
-    home = qc.env["QUACC_DATA"]
+    home = cap.env["QUACC_DATA"]
     os.makedirs(home, exist_ok=True)
     return home
 
@@ -124,7 +124,7 @@ def get_results_path(rootdir, basedir, cls_name, acc_name, dataset_name, method_
 
 def get_plots_path(basedir, problem, cls_name, acc_name, dataset_name, plot_type, ext="svg"):
     return os.path.join(
-        qc.env["OUT_DIR"],
+        cap.env["OUT_DIR"],
         basedir,
         "plots",
         problem,
@@ -133,7 +133,7 @@ def get_plots_path(basedir, problem, cls_name, acc_name, dataset_name, plot_type
 
 
 def get_njobs(n_jobs):
-    return qc.env["N_JOBS"] if n_jobs is None else n_jobs
+    return cap.env["N_JOBS"] if n_jobs is None else n_jobs
 
 
 def true_acc(h: BaseEstimator, acc_fn: Callable, U: LabelledCollection):
@@ -144,7 +144,7 @@ def true_acc(h: BaseEstimator, acc_fn: Callable, U: LabelledCollection):
 
 
 def save_dataset_stats(dataset_name, test_prot, L, V):
-    path = os.path.join(qc.env["OUT_DIR"], "dataset_stats", f"{dataset_name}.json")
+    path = os.path.join(cap.env["OUT_DIR"], "dataset_stats", f"{dataset_name}.json")
     test_prevs = [Ui.prevalence() for Ui in test_prot()]
     shifts = [qp.error.ae(L.prevalence(), Ui_prev) for Ui_prev in test_prevs]
     info = {
@@ -207,11 +207,11 @@ def parallel(
     :param backend: indicates the backend used for handling parallel works
     """
 
-    def func_dec(qp_environ, qc_environ, seed, *args):
+    def func_dec(qp_environ, cap_environ, seed, *args):
         qp.environ = qp_environ.copy()
         qp.environ["N_JOBS"] = 1
-        qc.env = qc_environ.copy()
-        qc.env["N_JOBS"] = 1
+        cap.env = cap_environ.copy()
+        cap.env["N_JOBS"] = 1
         # set a context with a temporal seed to ensure results are reproducibles in parallel
         with ExitStack() as stack:
             if seed is not None:
@@ -220,7 +220,7 @@ def parallel(
 
     _returnas = "list" if return_as == "array" else return_as
     with ExitStack() as stack:
-        stack.enter_context(qc.commons.temp_force_njobs(qc.env["FORCE_NJOBS"]))
+        stack.enter_context(cap.commons.temp_force_njobs(cap.env["FORCE_NJOBS"]))
         out = Parallel(
             n_jobs=n_jobs,
             return_as=_returnas,
@@ -229,7 +229,7 @@ def parallel(
             batch_size=batch_size,
             max_nbytes=max_nbytes,
         )(
-            delayed(func_dec)(qp.environ, qc.env, None if seed is None else seed + i, args_i)
+            delayed(func_dec)(qp.environ, cap.env, None if seed is None else seed + i, args_i)
             for i, args_i in enumerate(args_list)
         )
 

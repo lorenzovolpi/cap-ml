@@ -5,7 +5,7 @@ import tarfile
 import numpy as np
 from sklearn.utils import Bunch
 
-import quacc.utils.commons as commons
+import cap.utils.commons as commons
 
 
 def fetch_cifar10() -> Bunch:

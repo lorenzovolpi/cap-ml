@@ -1,6 +1,5 @@
 import numpy as np
 import quapy as qp
-from datasets import load_dataset
 from quapy.data.base import Dataset, LabelledCollection
 from quapy.data.datasets import fetch_lequa2022
 from quapy.data.datasets import fetch_UCIBinaryDataset as UCIBin
@@ -8,9 +7,9 @@ from quapy.data.datasets import fetch_UCIMulticlassDataset as UCIMulti
 from sklearn.datasets import fetch_20newsgroups, fetch_rcv1
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from quacc.data._cifar import fetch_cifar10, fetch_cifar100
-from quacc.data.util import get_rcv1_class_info, hf_dataset_map, preprocess_hf_dataset, split_train
-from quacc.environment import env
+from cap.data._cifar import fetch_cifar10, fetch_cifar100
+from cap.data.util import get_rcv1_class_info, split_train
+from cap.environment import env
 
 # fmt: off
 RCV1_BINARY_DATASETS = [
@@ -277,19 +276,19 @@ def fetch_T1BLequa2022Dataset(train_val_split=0.5, test_split=0.3):
     return L, V, U
 
 
-def fetch_HFDataset(dataset_name, tokenizer, data_collator, train_length=None):
-    if dataset_name not in hf_dataset_map:
-        raise ValueError(f"HuggingFace dataset {dataset_name} not supported yet")
-
-    text_columns, default_train_length = hf_dataset_map[dataset_name]
-    train_length = default_train_length if train_length is None else train_length
-    dataset = load_dataset(dataset_name)
-
-    train = preprocess_hf_dataset(dataset, "train", tokenizer, data_collator, text_columns, length=train_length)
-    U = preprocess_hf_dataset(dataset, "test", tokenizer, data_collator, text_columns)
-    L, V = train.split_stratified(train_prop=0.5, random_state=qp.environ["_R_SEED"])
-
-    return L, V, U
+# def fetch_HFDataset(dataset_name, tokenizer, data_collator, train_length=None):
+#     if dataset_name not in hf_dataset_map:
+#         raise ValueError(f"HuggingFace dataset {dataset_name} not supported yet")
+#
+#     text_columns, default_train_length = hf_dataset_map[dataset_name]
+#     train_length = default_train_length if train_length is None else train_length
+#     dataset = load_dataset(dataset_name)
+#
+#     train = preprocess_hf_dataset(dataset, "train", tokenizer, data_collator, text_columns, length=train_length)
+#     U = preprocess_hf_dataset(dataset, "test", tokenizer, data_collator, text_columns)
+#     L, V = train.split_stratified(train_prop=0.5, random_state=qp.environ["_R_SEED"])
+#
+#     return L, V, U
 
 
 def sort_datasets_by_size(dataset_names, dataset_fun, descending=True):

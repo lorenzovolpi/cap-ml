@@ -1,9 +1,16 @@
+# miscellaneous
+var
+*.txt
 *.code-workspace
 *.pdf
 *.md
 *.html
 *.lock
 poetry.toml
+py.typed
+
+# build
+**/*.egg-info
 
 # virtualenvs
 quavenv/*
@@ -13,8 +20,7 @@ quavenv/*
 .vscode/*
 
 # cache
-*__pycache__*
-**/__pycache__/*
+**/__pycache__
 .pytest_cache/
 # coverage
 htmlcov
@@ -62,6 +68,3 @@ dout
 dash
 deploy
 
-# miscellaneous
-var
-*.txt

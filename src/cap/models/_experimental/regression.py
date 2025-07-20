@@ -10,12 +10,12 @@ from quapy.protocol import UPP, AbstractProtocol
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 
-import quacc as qc
-from quacc.models.cont_table import LEAP, QuAcc
-from quacc.models.direct import ATC, CAPDirect, DoC
-from quacc.models.model_selection import GridSearchCAP as GSCAP
-from quacc.models.utils import get_posteriors_from_h, max_conf, max_inverse_softmax, neg_entropy
-from quacc.utils.commons import parallel as qc_parallel
+import cap
+from cap.models.cont_table import LEAP, QuAcc
+from cap.models.direct import ATC, CAPDirect, DoC
+from cap.models.model_selection import GridSearchCAP as GSCAP
+from cap.models.utils import get_posteriors_from_h, max_conf, max_inverse_softmax, neg_entropy
+from cap.utils.commons import parallel as cap_parallel
 
 
 class ReQua(CAPDirect):
@@ -40,7 +40,7 @@ class ReQua(CAPDirect):
         self.prot_posteriors = prot_posteriors
         self.clip_vals = clip_vals
         self.add_conf = add_conf
-        self.n_jobs = qc.commons.get_njobs(n_jobs)
+        self.n_jobs = cap.commons.get_njobs(n_jobs)
         self.parallel = self.n_jobs != 0
         self.verbose = verbose
         self.joblib_verbose = 10 if verbose else 0
@@ -87,7 +87,7 @@ class ReQua(CAPDirect):
         # training models
         models_fit_args = [(m, val, posteriors) for m in self.models]
         if self.parallel:
-            outs = qc_parallel(
+            outs = cap_parallel(
                 _fit_model,
                 models_fit_args,
                 n_jobs=self.n_jobs,
@@ -119,7 +119,7 @@ class ReQua(CAPDirect):
         # predicting v2 sample cont. tables for each model
         models_cts_args = [(m, prot, posteriors) for m, _valid in zip(self.models, self.fit_mask) if _valid]
         if self.parallel:
-            v2_ctss = qc_parallel(
+            v2_ctss = cap_parallel(
                 _predict_model_cts,
                 models_cts_args,
                 n_jobs=self.n_jobs,
@@ -253,7 +253,7 @@ class reDAN(CAPDirect):
         self.add_conf = add_conf
         self.val_prop = val_prop
         self.clip_vals = clip_vals
-        self.n_jobs = qc.commons.get_njobs(n_jobs)
+        self.n_jobs = cap.commons.get_njobs(n_jobs)
         self.verbose = verbose
         self.joblib_verbose = 10 if verbose else 0
 

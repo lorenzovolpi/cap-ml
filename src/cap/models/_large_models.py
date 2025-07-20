@@ -19,8 +19,8 @@ from transformers import (
     get_scheduler,
 )
 
-import quacc as qc
-from quacc.data.base import TorchDataset, TorchLabelledCollection
+import cap
+from cap.data.base import TorchDataset, TorchLabelledCollection
 
 
 def softmax(logits: torch.Tensor) -> np.ndarray:
@@ -62,7 +62,7 @@ class LargeModel:
     def predict_proba(self, test) -> np.ndarray: ...
 
     def get_model_path(self, dataset_name):
-        return os.path.join(qc.env["OUT_DIR"], "models", f"{self.name}_on_{dataset_name}")
+        return os.path.join(cap.env["OUT_DIR"], "models", f"{self.name}_on_{dataset_name}")
 
     def predict_from_proba(self, proba: np.ndarray) -> np.ndarray:
         return np.argmax(proba, axis=-1)
@@ -84,7 +84,7 @@ class DistilBert(LargeModel):
         self.data_collator = DataCollatorWithPadding(tokenizer=self.tokenizer, padding="max_length")
 
     def get_model_path(self, dataset_name):
-        return os.path.join(qc.env["OUT_DIR"], "models", f"{self.name}_on_{dataset_name}.tar")
+        return os.path.join(cap.env["OUT_DIR"], "models", f"{self.name}_on_{dataset_name}.tar")
 
     def checkpoint(self, dataset_name):
         path = self.get_model_path(dataset_name)

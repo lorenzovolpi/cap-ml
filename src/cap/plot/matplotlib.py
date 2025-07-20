@@ -6,8 +6,8 @@ import numpy as np
 from cycler import cycler
 from matplotlib.figure import Figure
 
-from quacc.plot.utils import get_ref_limits
-from quacc.utils.commons import get_plots_path
+from cap.plot.utils import get_ref_limits
+from cap.utils.commons import get_plots_path
 
 
 def _get_markers(num: int):

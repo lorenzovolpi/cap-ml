@@ -5,7 +5,7 @@ from collections import defaultdict
 
 import numpy as np
 
-import quacc as qc
+import cap
 
 # fmt: off
 RCV1_HIERARCHY_URL = "http://www.ai.mit.edu/projects/jmlr/papers/volume5/lewis04a/a02-orig-topics-hierarchy/rcv1.topics.hier.orig"
@@ -13,10 +13,10 @@ RCV1_HIERARCHY_URL = "http://www.ai.mit.edu/projects/jmlr/papers/volume5/lewis04
 
 
 def get_rcv1_class_info():
-    json_path = os.path.join(qc.env["QUACC_DATA"], "rcv1_class_info.json")
+    json_path = os.path.join(cap.env["QUACC_DATA"], "rcv1_class_info.json")
     if not os.path.exists(json_path):
         # retrieve hierarchy file and class names
-        hierarchy_tmp_path = os.path.join(qc.env["QUACC_DATA"], "rcv1_hierarchy.tmp")
+        hierarchy_tmp_path = os.path.join(cap.env["QUACC_DATA"], "rcv1_hierarchy.tmp")
         urllib.request.urlretrieve(RCV1_HIERARCHY_URL, filename=hierarchy_tmp_path)
         tree = defaultdict(lambda: [])
         class_names = set()

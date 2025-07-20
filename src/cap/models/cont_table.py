@@ -14,17 +14,17 @@ from sklearn.base import BaseEstimator
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
 
-from quacc.calibration import LasCal
-from quacc.models._leap_opt import (
+from cap.calibration import LasCal
+from cap.models._leap_opt import (
     _optim_Adam,
     _optim_Adam_batched,
     _optim_cvxpy,
     _optim_lsq_linear,
     _optim_minimize,
 )
-from quacc.models.base import ClassifierAccuracyPrediction
-from quacc.models.utils import max_conf, max_inverse_softmax, neg_entropy
-from quacc.utils.commons import SparseMatrixBuilder
+from cap.models.base import ClassifierAccuracyPrediction
+from cap.models.utils import max_conf, max_inverse_softmax, neg_entropy
+from cap.utils.commons import SparseMatrixBuilder
 
 
 class LabelledCollection(LC):
@@ -1034,5 +1034,5 @@ def safehstack(covs):
 
 
 LEAP = NsquaredEquationsCAP
-PHD = ContTableTransferCAP
-OCE = OverConstrainedEquationsCAP
+S_LEAP = ContTableTransferCAP
+O_LEAP = OverConstrainedEquationsCAP
