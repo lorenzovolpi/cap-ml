@@ -1,26 +1,23 @@
 import itertools as IT
 import random
-from copy import deepcopy
-from typing import Callable
+from typing import Callable, Tuple
 
 import numpy as np
 import ot
 import quapy as qp
 import scipy as sp
 from quapy.data.base import LabelledCollection
-from quapy.method.aggregative import AggregativeQuantifier, BaseQuantifier
-from quapy.protocol import UPP, AbstractProtocol
+from quapy.method.aggregative import AggregativeQuantifier
+from quapy.protocol import UPP, AbstractStochasticSeededProtocol
 from scipy.sparse import issparse
-from sklearn.base import BaseEstimator
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import cross_val_score
 
 import cap
 import cap.models.utils as utils
 from cap.error import vanilla_acc
 from cap.models.base import ClassifierAccuracyPrediction
-from cap.models.utils import get_posteriors_from_h, max_conf, neg_entropy
+from cap.models.utils import max_conf, neg_entropy
 
 
 def _one_hot(arr: np.ndarray, num_classes=None):
@@ -57,7 +54,7 @@ class PrediQuant(CAPDirect):
         self,
         acc_fn: Callable,
         quantifier: AggregativeQuantifier,
-        protocol: AbstractProtocol,
+        protocol: AbstractStochasticSeededProtocol,
         prot_posteriors,
         alpha=0.3,
         alpha_rate=1.2,
@@ -247,11 +244,11 @@ class ATC(CAPDirect):
 
 
 class DoC(CAPDirect):
-    def __init__(self, acc_fn: Callable, protocol: AbstractProtocol, prot_posteriors, clip_vals=(0, 1)):
+    def __init__(self, acc_fn: Callable, protocol: AbstractStochasticSeededProtocol, prot_posteriors, clip_vals=(0, 1)):
         super().__init__(acc_fn)
         self.protocol = protocol
         self.prot_posteriors = prot_posteriors
-        self.clip_vals = clip_vals
+        self.clip_vals: Tuple[list, list] = clip_vals
 
     def _get_post_stats(self, X, y, posteriors):
         P = posteriors
@@ -442,7 +439,7 @@ class COT(CAPDirect):
 
 
 class COTT(CAPDirect):
-    def __init__(self, acc_fn: Callable, emd_max_iter=1e8, exact_train_prev=True):
+    def __init__(self, acc_fn: Callable, emd_max_iter=int(1e8), exact_train_prev=True):
         super().__init__(acc_fn)
         self.emd_max_iter = emd_max_iter
         self.exact_train_prev = exact_train_prev
@@ -490,7 +487,7 @@ class COTT(CAPDirect):
 
 
 class Q_COT(CAPDirect):
-    def __init__(self, acc_fn: Callable, q: AggregativeQuantifier, emd_max_iter=1e8, exact_train_prev=True):
+    def __init__(self, acc_fn: Callable, q: AggregativeQuantifier, emd_max_iter=int(1e8), exact_train_prev=True):
         super().__init__(acc_fn)
         self.q = q
         self.emd_max_iter = emd_max_iter

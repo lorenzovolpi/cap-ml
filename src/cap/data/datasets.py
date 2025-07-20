@@ -8,9 +8,9 @@ from quapy.data.datasets import fetch_UCIMulticlassDataset as UCIMulti
 from sklearn.datasets import fetch_20newsgroups, fetch_rcv1
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from quacc.data._cifar import fetch_cifar10, fetch_cifar100
-from quacc.data.util import get_rcv1_class_info, hf_dataset_map, preprocess_hf_dataset, split_train
-from quacc.environment import env
+from cap.data._cifar import fetch_cifar10, fetch_cifar100
+from cap.data.util import get_rcv1_class_info, hf_dataset_map, preprocess_hf_dataset, split_train
+from cap.environment import env
 
 # fmt: off
 RCV1_BINARY_DATASETS = [
