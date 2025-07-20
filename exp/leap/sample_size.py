@@ -14,7 +14,7 @@ import cap
 import exp.leap.env as env
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset, sort_datasets_by_size
 from cap.error import vanilla_acc
-from cap.models.cont_table import OCE
+from cap.models.cont_table import O_LEAP
 from cap.models.direct import DoC
 from cap.utils.commons import get_shift, parallel, true_acc
 from exp.leap.config import DatasetBundle, is_excluded, kdey
@@ -68,7 +68,7 @@ def gen_datasets(only_names=False):
 
 def gen_methods(h: BaseEstimator, D: DatasetBundle):
     _, acc_fn = next(gen_acc_measure())
-    yield "O-LEAP(KDEy-MLP)", OCE(acc_fn, kdey()), D.V, D.V_posteriors
+    yield "O-LEAP(KDEy-MLP)", O_LEAP(acc_fn, kdey()), D.V, D.V_posteriors
     yield "DoC", DoC(acc_fn, D.V2_prot, D.V2_prot_posteriors), D.V1, D.V1_posteriors
 
 

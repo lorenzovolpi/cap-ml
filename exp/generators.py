@@ -30,8 +30,8 @@ from cap.error import f1, f1_macro, vanilla_acc
 from cap.models._large_models import DistilBert
 from cap.models.cont_table import (
     LEAP,
-    OCE,
-    PHD,
+    O_LEAP,
+    S_LEAP,
     CAPContingencyTable,
     NaiveCAP,
     QuAcc1xN2,
@@ -264,24 +264,24 @@ def gen_CAP_cont_table(h, acc_fn, config, model_type) -> [str, CAPContingencyTab
     if _CC["LEAP"] and model_type == "simple":
         yield "LEAP(CC)", LEAP(acc_fn, CC(LR()), reuse_h=h)
     if _CC["OCE"] and model_type == "simple":
-        yield "OCE(CC)", OCE(acc_fn, CC(LR()), reuse_h=h)
+        yield "OCE(CC)", O_LEAP(acc_fn, CC(LR()), reuse_h=h)
     if _CC["PHD"] and model_type == "simple":
-        yield "PHD(CC)", PHD(acc_fn, CC(LR()), reuse_h=h)
+        yield "PHD(CC)", S_LEAP(acc_fn, CC(LR()), reuse_h=h)
     if _ACC["LEAP"] and model_type == "simple":
         yield "LEAP(ACC)", LEAP(acc_fn, ACC(LR()), reuse_h=h)
     if _ACC["OCE"] and model_type == "simple":
-        yield "OCE(ACC)", OCE(acc_fn, ACC(LR()), reuse_h=h)
+        yield "OCE(ACC)", O_LEAP(acc_fn, ACC(LR()), reuse_h=h)
     if _ACC["PHD"] and model_type == "simple":
-        yield "PHD(ACC)", PHD(acc_fn, ACC(LR()), reuse_h=h)
+        yield "PHD(ACC)", S_LEAP(acc_fn, ACC(LR()), reuse_h=h)
     if _SLD["LEAP"]:
         if model_type == "simple":
             yield "LEAP(SLD)", LEAP(acc_fn, sld(), reuse_h=h)
         # yield "LEAP+(SLD)", LEAP(acc_fn, sld())
     if _SLD["OCE"]:
         if model_type == "simple":
-            yield "OCE(SLD)", OCE(acc_fn, sld(), reuse_h=h)
+            yield "OCE(SLD)", O_LEAP(acc_fn, sld(), reuse_h=h)
     if _SLD["PHD"]:
-        yield "PHD(SLD)", PHD(acc_fn, sld(), reuse_h=h)
+        yield "PHD(SLD)", S_LEAP(acc_fn, sld(), reuse_h=h)
     if _KDEy["LEAP"]:
         # yield 'CT-PPS-KDE', ContTableTransferCAP(h, acc_fn, KDEyML(LogisticRegression(class_weight='balanced'), bandwidth=0.01))
         # yield 'CT-PPS-KDE05
@@ -290,9 +290,9 @@ def gen_CAP_cont_table(h, acc_fn, config, model_type) -> [str, CAPContingencyTab
         # yield "LEAP+(KDEy)", LEAP(acc_fn, kdey())
     if _KDEy["OCE"]:
         if model_type == "simple":
-            yield "OCE(KDEy)", OCE(acc_fn, kdey(), reuse_h=h)
+            yield "OCE(KDEy)", O_LEAP(acc_fn, kdey(), reuse_h=h)
     if _KDEy["PHD"]:
-        yield "PHD(KDEy)", PHD(acc_fn, kdey(), reuse_h=h)
+        yield "PHD(KDEy)", S_LEAP(acc_fn, kdey(), reuse_h=h)
 # fmt: on
 
 

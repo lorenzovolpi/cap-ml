@@ -17,7 +17,7 @@ from sklearn.svm import SVC
 
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
 from cap.error import vanilla_acc
-from cap.models.cont_table import LEAP, PHD, CAPContingencyTable, LabelledCollection
+from cap.models.cont_table import LEAP, S_LEAP, CAPContingencyTable, LabelledCollection
 from cap.utils.commons import contingency_table
 from exp.util import get_logger, split_validation
 
@@ -76,9 +76,9 @@ def gen_datasets() -> [str, [LabelledCollection, LabelledCollection, LabelledCol
 def gen_methods(h, V_ps, V1_ps, V2_prot_ps):
     acc_fn = vanilla_acc
     yield "LEAP(SLD)", LEAP(acc_fn, sld(), reuse_h=h), V_ps
-    yield "PHD(SLD)", PHD(acc_fn, sld(), reuse_h=h), V_ps
+    yield "PHD(SLD)", S_LEAP(acc_fn, sld(), reuse_h=h), V_ps
     yield "LEAP(KDEy)", LEAP(acc_fn, kdey(), reuse_h=h), V_ps
-    yield "PHD(KDEy)", PHD(acc_fn, kdey(), reuse_h=h), V_ps
+    yield "PHD(KDEy)", S_LEAP(acc_fn, kdey(), reuse_h=h), V_ps
 
 
 def get_method_names():

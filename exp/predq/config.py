@@ -16,7 +16,7 @@ from sklearn.svm import SVC
 import cap
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset, sort_datasets_by_size
 from cap.error import f1, f1_macro, vanilla_acc
-from cap.models.cont_table import LEAP, OCE, PHD, NaiveCAP
+from cap.models.cont_table import LEAP, O_LEAP, S_LEAP, NaiveCAP
 from cap.models.direct import ATC, DoC, PabloCAP, PrediQuant
 from cap.models.utils import OracleQuantifier
 from cap.utils.commons import contingency_table
@@ -136,8 +136,8 @@ def gen_baselines_vp(acc_fn, D: DatasetBundle):
 
 def gen_CAP_cont_table(h, acc_fn):
     yield "LEAP(KDEy)", LEAP(acc_fn, kdey(), log_true_solve=True)
-    yield "S-LEAP(KDEy)", PHD(acc_fn, kdey())
-    yield "O-LEAP(KDEy)", OCE(acc_fn, kdey(), optim_method="SLSQP")
+    yield "S-LEAP(KDEy)", S_LEAP(acc_fn, kdey())
+    yield "O-LEAP(KDEy)", O_LEAP(acc_fn, kdey(), optim_method="SLSQP")
 
 
 def gen_CAP_direct_vp(h, acc_fn, D: DatasetBundle):
@@ -152,8 +152,8 @@ def gen_CAP_direct(h, acc_fn):
 def gen_methods_with_oracle(h, acc_fn, D: DatasetBundle):
     oracle_q = OracleQuantifier([ui for ui in D.test_prot()])
     yield "LEAP(oracle)", LEAP(acc_fn, oracle_q)
-    yield "S-LEAP(oracle)", PHD(acc_fn, oracle_q)
-    yield "O-LEAP(oracle)", OCE(acc_fn, oracle_q, reuse_h=h, optim_method="SLSQP")
+    yield "S-LEAP(oracle)", S_LEAP(acc_fn, oracle_q)
+    yield "O-LEAP(oracle)", O_LEAP(acc_fn, oracle_q, reuse_h=h, optim_method="SLSQP")
 
 
 def gen_methods(h, D: DatasetBundle, with_oracle=False):

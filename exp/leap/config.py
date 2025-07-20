@@ -28,7 +28,7 @@ from cap.data.datasets import (
 )
 from cap.error import f1, f1_macro, vanilla_acc
 from cap.models._large_models import BaseEstimatorAdapter
-from cap.models.cont_table import CBPE, LEAP, OCE, PHD, NaiveCAP
+from cap.models.cont_table import CBPE, LEAP, O_LEAP, S_LEAP, NaiveCAP
 from cap.models.direct import ATC, COT, Q_COT, DispersionScore, DoC, NuclearNorm
 from cap.models.utils import OracleQuantifier
 from cap.utils.commons import contingency_table
@@ -246,24 +246,24 @@ def gen_CAP_cont_table(h, acc_fn):
     if _toggle["same_h"]:
         if _toggle["cc"]:
             yield "LEAP(CC)", LEAP(acc_fn, cc(), reuse_h=h, log_true_solve=True)
-            yield "S-LEAP(CC)", PHD(acc_fn, cc(), reuse_h=h)
-            yield "O-LEAP(CC)", OCE(acc_fn, cc(), reuse_h=h)
+            yield "S-LEAP(CC)", S_LEAP(acc_fn, cc(), reuse_h=h)
+            yield "O-LEAP(CC)", O_LEAP(acc_fn, cc(), reuse_h=h)
         if _toggle["acc"]:
             yield "LEAP(ACC)", LEAP(acc_fn, acc(), reuse_h=h, log_true_solve=True)
         yield "LEAP(KDEy)", LEAP(acc_fn, kdey(), reuse_h=h, log_true_solve=True)
-        yield "S-LEAP(KDEy)", PHD(acc_fn, kdey(), reuse_h=h)
-        yield "O-LEAP(KDEy)", OCE(acc_fn, kdey(), reuse_h=h)
+        yield "S-LEAP(KDEy)", S_LEAP(acc_fn, kdey(), reuse_h=h)
+        yield "O-LEAP(KDEy)", O_LEAP(acc_fn, kdey(), reuse_h=h)
 
     if _toggle["mlp"]:
         if _toggle["cc"]:
             yield "LEAP(CC-MLP)", LEAP(acc_fn, cc(), log_true_solve=True)
-            yield "S-LEAP(CC-MLP)", PHD(acc_fn, cc())
-            yield "O-LEAP(CC-MLP)", OCE(acc_fn, cc())
+            yield "S-LEAP(CC-MLP)", S_LEAP(acc_fn, cc())
+            yield "O-LEAP(CC-MLP)", O_LEAP(acc_fn, cc())
         if _toggle["acc"]:
             yield "LEAP(ACC-MLP)", LEAP(acc_fn, acc(), log_true_solve=True)
         yield "LEAP(KDEy-MLP)", LEAP(acc_fn, kdey(), log_true_solve=True)
-        yield "S-LEAP(KDEy-MLP)", PHD(acc_fn, kdey())
-        yield "O-LEAP(KDEy-MLP)", OCE(acc_fn, kdey())
+        yield "S-LEAP(KDEy-MLP)", S_LEAP(acc_fn, kdey())
+        yield "O-LEAP(KDEy-MLP)", O_LEAP(acc_fn, kdey())
 
     if _toggle["slsqp"]:
         if _toggle["same_h"]:
@@ -272,7 +272,7 @@ def gen_CAP_cont_table(h, acc_fn):
                     "LEAP(CC)-SLSQP",
                     LEAP(acc_fn, cc(), reuse_h=h, log_true_solve=True, optim_method="SLSQP", sparse_matrix=False),
                 )
-                yield "O-LEAP(CC)-SLSQP", OCE(acc_fn, cc(), reuse_h=h, optim_method="SLSQP", sparse_matrix=False)
+                yield "O-LEAP(CC)-SLSQP", O_LEAP(acc_fn, cc(), reuse_h=h, optim_method="SLSQP", sparse_matrix=False)
             if _toggle["acc"]:
                 yield (
                     "LEAP(ACC)-SLSQP",
@@ -282,7 +282,7 @@ def gen_CAP_cont_table(h, acc_fn):
                 "LEAP(KDEy)-SLSQP",
                 LEAP(acc_fn, kdey(), reuse_h=h, log_true_solve=True, optim_method="SLSQP", sparse_matrix=False),
             )
-            yield "O-LEAP(KDEy)-SLSQP", OCE(acc_fn, kdey(), reuse_h=h, optim_method="SLSQP", sparse_matrix=False)
+            yield "O-LEAP(KDEy)-SLSQP", O_LEAP(acc_fn, kdey(), reuse_h=h, optim_method="SLSQP", sparse_matrix=False)
 
         if _toggle["mlp"]:
             if _toggle["cc"]:
@@ -290,7 +290,7 @@ def gen_CAP_cont_table(h, acc_fn):
                     "LEAP(CC-MLP)-SLSQP",
                     LEAP(acc_fn, cc(), log_true_solve=True, optim_method="SLSQP", sparse_matrix=False),
                 )
-                yield "O-LEAP(CC-MLP)-SLSQP", OCE(acc_fn, cc(), optim_method="SLSQP", sparse_matrix=False)
+                yield "O-LEAP(CC-MLP)-SLSQP", O_LEAP(acc_fn, cc(), optim_method="SLSQP", sparse_matrix=False)
             if _toggle["acc"]:
                 yield (
                     "LEAP(ACC-MLP)-SLSQP",
@@ -300,7 +300,7 @@ def gen_CAP_cont_table(h, acc_fn):
                 "LEAP(KDEy-MLP)-SLSQP",
                 LEAP(acc_fn, kdey(), log_true_solve=True, optim_method="SLSQP", sparse_matrix=False),
             )
-            yield "O-LEAP(KDEy-MLP)-SLSQP", OCE(acc_fn, kdey(), optim_method="SLSQP", sparse_matrix=False)
+            yield "O-LEAP(KDEy-MLP)-SLSQP", O_LEAP(acc_fn, kdey(), optim_method="SLSQP", sparse_matrix=False)
 
 
 def gen_methods_with_oracle(h, acc_fn, D: DatasetBundle):
@@ -310,8 +310,8 @@ def gen_methods_with_oracle(h, acc_fn, D: DatasetBundle):
             "LEAP(oracle)",
             LEAP(acc_fn, oracle_q, reuse_h=h, log_true_solve=True),
         )
-        yield "S-LEAP(oracle)", PHD(acc_fn, oracle_q, reuse_h=h)
-        yield "O-LEAP(oracle)", OCE(acc_fn, oracle_q, reuse_h=h)
+        yield "S-LEAP(oracle)", S_LEAP(acc_fn, oracle_q, reuse_h=h)
+        yield "O-LEAP(oracle)", O_LEAP(acc_fn, oracle_q, reuse_h=h)
     else:
         return
         yield

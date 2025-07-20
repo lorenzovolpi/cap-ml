@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 
 from cap.data.datasets import fetch_UCIBinaryDataset
 from cap.error import ae, vanilla_acc
-from cap.models.cont_table import LEAP, OCE
+from cap.models.cont_table import LEAP, O_LEAP
 from cap.utils.commons import true_acc
 
 qp.environ["_R_SEED"] = 0
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         true_accs = [true_acc(h, acc_fn, Ui) for Ui in test_prot()]
 
         for method_name, method in [
-            ("OCE(KDEy)-L-BFGS-B", OCE(acc_fn, kdey(), reuse_h=h, optim_method="L-BFGS-B").fit(V, V_posteriors))
+            ("OCE(KDEy)-L-BFGS-B", O_LEAP(acc_fn, kdey(), reuse_h=h, optim_method="L-BFGS-B").fit(V, V_posteriors))
         ]:
             estim_accs = []
             for Ui, Ui_post in zip(test_prot(), test_prot_posteriors):
@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
         for method_name, method in [
             ("LEAP", LEAP(acc_fn, kdey(), reuse_h=h)),
-            ("OCE(KDEy)-SLSQP", OCE(acc_fn, kdey(), reuse_h=h, optim_method="SLSQP")),
+            ("OCE(KDEy)-SLSQP", O_LEAP(acc_fn, kdey(), reuse_h=h, optim_method="SLSQP")),
         ]:
             method.fit(V, V_posteriors)
             estim_accs = method.batch_predict(test_prot, test_prot_posteriors)

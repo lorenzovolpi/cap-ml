@@ -11,7 +11,7 @@ import cap
 import exp.leap.env as env
 from cap.data.datasets import fetch_RCV1WholeDataset
 from cap.error import f1_macro, vanilla_acc
-from cap.models.cont_table import CBPE, LEAP, OCE, PHD, NaiveCAP
+from cap.models.cont_table import CBPE, LEAP, O_LEAP, S_LEAP, NaiveCAP
 from cap.models.direct import ATC, Q_COT, DispersionScore, DoC, NuclearNorm
 from cap.utils.commons import get_shift, parallel, true_acc
 from exp.leap.config import (
@@ -59,8 +59,8 @@ def gen_methods(h, D: DatasetBundle):
     yield "Q-COT", Q_COT(acc_fn, kdey()), *_v
     yield "LEAP(ACC)", LEAP(acc_fn, acc(), reuse_h=h, log_true_solve=True), *_v
     yield "LEAP(KDEy-MLP)", LEAP(acc_fn, kdey(), log_true_solve=True), *_v
-    yield "S-LEAP(KDEy-MLP)", PHD(acc_fn, kdey()), *_v
-    yield "O-LEAP(KDEy-MLP)", OCE(acc_fn, kdey()), *_v
+    yield "S-LEAP(KDEy-MLP)", S_LEAP(acc_fn, kdey()), *_v
+    yield "O-LEAP(KDEy-MLP)", O_LEAP(acc_fn, kdey()), *_v
 
 
 def gen_acc_measure():

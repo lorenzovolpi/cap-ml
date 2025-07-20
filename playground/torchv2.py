@@ -12,7 +12,7 @@ from sklearn.base import BaseEstimator
 
 import cap
 from cap.error import vanilla_acc
-from cap.models.cont_table import LEAP, OCE, PHD
+from cap.models.cont_table import LEAP, O_LEAP, S_LEAP
 from cap.models.direct import DoC
 from exp.leap.config import kdey
 from exp.util import get_ct_predictions, split_validation
@@ -92,8 +92,8 @@ if __name__ == "__main__":
 
     methods = [
         ("leap", LEAP(vanilla_acc, kdey(), reuse_h=model)),
-        ("phd", PHD(vanilla_acc, kdey(), reuse_h=model)),
-        ("oce", OCE(vanilla_acc, kdey(), reuse_h=model, optim_method="SLSQP")),
+        ("phd", S_LEAP(vanilla_acc, kdey(), reuse_h=model)),
+        ("oce", O_LEAP(vanilla_acc, kdey(), reuse_h=model, optim_method="SLSQP")),
         ("doc", DoC(vanilla_acc, V2_prot, V2_prot_posteriors)),
     ]
 
