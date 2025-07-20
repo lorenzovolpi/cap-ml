@@ -1,9 +1,9 @@
 # fmt: off
-import quacc.data.datasets as dataset
-import quacc.error as error
-import quacc.plot as plot
-import quacc.utils.commons as commons
-from quacc.environment import env
+import cap.data.datasets as dataset
+import cap.error as error
+import cap.plot as plot
+import cap.utils.commons as commons
+from cap.environment import env
 
 
 def _get_njobs(n_jobs):
