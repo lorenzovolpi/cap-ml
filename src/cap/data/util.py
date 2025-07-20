@@ -3,14 +3,11 @@ import os
 import urllib.request
 from collections import defaultdict
 
-import datasets
 import numpy as np
 import quapy as qp
 from quapy.data.base import LabelledCollection
-from torch.utils.data import DataLoader
 
 import cap
-from cap.data.base import TorchLabelledCollection
 
 # fmt: off
 
@@ -84,18 +81,18 @@ hf_dataset_map = {
 }
 
 
-def preprocess_hf_dataset(
-    dataset: datasets.Dataset, set_name, tokenizer, collator, text_columns: [str], length: int | None = None
-) -> TorchLabelledCollection:
-    def tokenize(datapoint):
-        sentences = [datapoint[c] for c in text_columns]
-        return tokenizer(*sentences, truncation=True)
-
-    d = dataset[set_name].shuffle(seed=qp.environ["_R_SEED"])
-    if length is not None:
-        d = d.select(np.arange(length))
-    d = d.map(tokenize, batched=True)
-
-    d = d.remove_columns(text_columns)
-    ds = next(iter(DataLoader(d, collate_fn=collator, batch_size=len(d))))
-    return TorchLabelledCollection(instances=ds["input_ids"], labels=ds["labels"], attention_mask=ds["attention_mask"])
+# def preprocess_hf_dataset(
+#     dataset: datasets.Dataset, set_name, tokenizer, collator, text_columns: [str], length: int | None = None
+# ) -> TorchLabelledCollection:
+#     def tokenize(datapoint):
+#         sentences = [datapoint[c] for c in text_columns]
+#         return tokenizer(*sentences, truncation=True)
+#
+#     d = dataset[set_name].shuffle(seed=qp.environ["_R_SEED"])
+#     if length is not None:
+#         d = d.select(np.arange(length))
+#     d = d.map(tokenize, batched=True)
+#
+#     d = d.remove_columns(text_columns)
+#     ds = next(iter(DataLoader(d, collate_fn=collator, batch_size=len(d))))
+#     return TorchLabelledCollection(instances=ds["input_ids"], labels=ds["labels"], attention_mask=ds["attention_mask"])
