@@ -1,10 +1,4 @@
 import os
-from glob import glob
-
-from dotenv import load_dotenv
-
-for _env in glob("./*.env"):
-    load_dotenv(_env)
 
 env = {
     "QUACC_DATA": os.path.expanduser("~/quacc_data"),
