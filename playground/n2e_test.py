@@ -11,20 +11,20 @@ from quapy.protocol import UPP
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 
-import quacc as qc
-import quacc.error
-from quacc.data.datasets import RCV1_MULTICLASS_DATASETS, fetch_RCV1BinaryDataset, fetch_RCV1MulticlassDataset
-from quacc.error import vanilla_acc
-from quacc.experiments.util import split_validation
-from quacc.models.cont_table import LEAP, QuAcc1xN2, QuAcc1xNp1, QuAccNxN
-from quacc.utils.commons import true_acc
+import cap
+import cap.error
+from cap.data.datasets import RCV1_MULTICLASS_DATASETS, fetch_RCV1BinaryDataset, fetch_RCV1MulticlassDataset
+from cap.error import vanilla_acc
+from cap.models.cont_table import LEAP, QuAcc1xN2, QuAcc1xNp1, QuAccNxN
+from cap.utils.commons import true_acc
+from exp.util import split_validation
 
 NUM_TEST = 1000
 qp.environ["_R_SEED"] = 0
 
 
 CSV_SEP = ","
-LOCAL_DIR = os.path.join(qc.env["OUT_DIR"], "pg_results", "n2e")
+LOCAL_DIR = os.path.join(cap.env["OUT_DIR"], "pg_results", "n2e")
 CONFIG = "binary"
 VERBOSE = True
 
@@ -127,7 +127,7 @@ def main():
                 estim_accs = method.batch_predict(test_prot)
                 estim_accs = np.asarray(estim_accs)
 
-                ae = quacc.error.ae(true_accs, estim_accs)
+                ae = cap.error.ae(true_accs, estim_accs)
                 t_method = time() - t_init
                 print(f"method {method_name} for {acc_name} took {t_method:.3f}s")
 

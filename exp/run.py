@@ -6,7 +6,8 @@ import numpy as np
 import quapy as qp
 from quapy.protocol import UPP
 
-import quacc as qc
+import cap
+from cap.utils.commons import save_dataset_stats, true_acc
 from exp.generators import (
     gen_acc_measure,
     gen_bin_datasets,
@@ -29,11 +30,10 @@ from exp.util import (
     prevs_from_prot,
     split_validation,
 )
-from quacc.utils.commons import save_dataset_stats, true_acc
 
 PROBLEM = "binary"
 MODEL_TYPE = "simple"
-root_folder = os.path.join(qc.env["OUT_DIR"], "results")
+root_folder = os.path.join(cap.env["OUT_DIR"], "results")
 
 log = get_logger()
 

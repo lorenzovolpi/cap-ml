@@ -10,15 +10,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier as MLP
 from tqdm import tqdm
 
-from quacc.data.datasets import HF_DATASETS
-from quacc.error import vanilla_acc
-from quacc.experiments.generators import gen_bin_lm_datasets
-from quacc.experiments.util import split_validation
-from quacc.models._large_models import DistilBert
-from quacc.models.cont_table import QuAcc1xN2, QuAcc1xNp1, QuAccNxN
-from quacc.models.direct import DoC
-from quacc.models.model_selection import GridSearchCAP
-from quacc.models.regression import ReQua
+from cap.data.datasets import HF_DATASETS
+from cap.error import vanilla_acc
+from cap.models._large_models import DistilBert
+from cap.models.cont_table import QuAcc1xN2, QuAcc1xNp1, QuAccNxN
+from cap.models.direct import DoC
+from cap.models.model_selection import GridSearchCAP
+from cap.models.regression import ReQua
+from exp.generators import gen_bin_lm_datasets
+from exp.util import split_validation
 
 NUM_SAMPLES = 100
 SAMPLE_SIZE = 500

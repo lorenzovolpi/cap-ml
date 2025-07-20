@@ -1,14 +1,7 @@
-import numpy as np
 import quapy as qp
-from quapy.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
-from quapy.functional import uniform_prevalence_sampling, uniform_simplex_sampling
-from quapy.protocol import APP, UPP
-from sklearn.datasets import fetch_rcv1
+from quapy.data.datasets import fetch_UCIMulticlassDataset
 
-import quacc as qc
-from quacc.data.datasets import fetch_RCV1MulticlassDataset
-from quacc.data.util import get_rcv1_class_info
-from quacc.experiments.sampling import get_uniform_prevalences
+from exp.sampling import get_uniform_prevalences
 
 qp.environ["_R_SEED"] = 0
 

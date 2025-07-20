@@ -6,8 +6,9 @@ import numpy as np
 import quapy as qp
 from sklearn.base import clone as skl_clone
 
+import cap
 import exp.leap.env as env
-import quacc as qc
+from cap.utils.commons import get_shift, parallel, true_acc
 from exp.leap.config import (
     EXP,
     DatasetBundle,
@@ -27,7 +28,6 @@ from exp.util import (
     get_plain_prev,
     timestamp,
 )
-from quacc.utils.commons import get_shift, parallel, true_acc
 
 log = get_logger(id=env.PROJECT)
 
@@ -64,7 +64,7 @@ def exp_protocol(args):
             results.append(EXP.ERROR(e, cls_name, dataset_name, acc_name, method_name))
             continue
 
-        ae = qc.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
+        ae = cap.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
 
         df_len = len(estim_accs)
         method_df = gen_method_df(
@@ -122,7 +122,7 @@ def experiments():
     cls_dataset_gen = parallel(
         func=train_cls,
         args_list=cls_train_args,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
     )
     cls_dataset = []
@@ -152,7 +152,7 @@ def experiments():
     results_gen = parallel(
         func=exp_protocol,
         args_list=exp_prot_args_list,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
         max_nbytes=None,
     )

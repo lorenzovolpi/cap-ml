@@ -15,11 +15,11 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.neural_network import MLPClassifier as MLP
 from sklearn.svm import SVC
 
+from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
+from cap.error import vanilla_acc
+from cap.models.cont_table import LEAP, PHD, CAPContingencyTable, LabelledCollection
+from cap.utils.commons import contingency_table
 from exp.util import get_logger, split_validation
-from quacc.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
-from quacc.error import vanilla_acc
-from quacc.models.cont_table import LEAP, PHD, CAPContingencyTable, LabelledCollection
-from quacc.utils.commons import contingency_table
 
 TRUE_CTS_NAME = "true_cts"
 PROBLEM = "binary"

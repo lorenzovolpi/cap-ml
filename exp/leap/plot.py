@@ -11,9 +11,9 @@ import seaborn as sns
 from matplotlib.ticker import LogLocator, MultipleLocator
 
 import exp.leap.env as env
+from cap.plot.utils import get_binned_values, save_figure
 from exp.leap.config import get_acc_names, get_classifier_names, get_dataset_names
 from exp.leap.util import load_results, rename_datasets, rename_methods
-from quacc.plot.utils import get_binned_values, save_figure
 
 method_map = {
     # "Naive": 'Na\\"ive',

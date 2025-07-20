@@ -8,7 +8,7 @@ from quapy.protocol import UPP
 from scipy.special import softmax
 from sklearn.linear_model import LogisticRegression
 
-from quacc.data.datasets import fetch_UCIBinaryDataset
+from cap.data.datasets import fetch_UCIBinaryDataset
 
 qp.environ["_R_SEED"] = 0
 

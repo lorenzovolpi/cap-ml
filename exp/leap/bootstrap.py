@@ -4,6 +4,7 @@ from traceback import print_exception
 from typing import override
 
 import numpy as np
+import pandas as pd
 import quapy as qp
 from quapy.data import LabelledCollection
 from quapy.protocol import UPP
@@ -12,8 +13,12 @@ from sklearn.base import clone as skl_clone
 from sklearn.linear_model import LogisticRegression
 from sklearn.utils import resample
 
+import cap
 import exp.leap.env as env
-import quacc as qc
+from cap.error import vanilla_acc
+from cap.models.cont_table import OCE
+from cap.models.direct import DoC
+from cap.utils.commons import get_shift, parallel, true_acc
 from exp.leap.config import (
     EXP,
     DatasetBundle,
@@ -29,10 +34,6 @@ from exp.util import (
     get_plain_prev,
     timestamp,
 )
-from quacc.error import vanilla_acc
-from quacc.models.cont_table import OCE
-from quacc.models.direct import DoC
-from quacc.utils.commons import get_shift, parallel, true_acc
 
 SUBPROJECT = "bootstrap"
 NUM_REPEATS = 500
@@ -136,19 +137,7 @@ def get_method_names():
     return [m for m, _, _, _ in gen_methods(mock_h, mock_D)]
 
 
-# def compute_confidence_intervals(df):
-#     for _id in df["sample_distrib_id"].unique():
-#         _size = len(df.loc[df["sample_distrib_id"] == _id, :])
-#         _estim_accs = df.loc[df["sample_distrib_id"] == _id, "estim_accs"].to_numpy()
-#         _true_accs = df.loc[df["sample_distrib_id"] == _id, "true_accs"].to_numpy()
-#         ci_low, ci_high = np.percentile(_estim_accs, [2.5, 97.5])
-#         ci_delta = ci_high - ci_low
-#         coverage = np.logical_and(_true_accs >= ci_low, _true_accs <= ci_high)
-#         df.loc[df["sample_distrib_id"] == _id, "ci_delta"] = [ci_delta] * _size
-#         df.loc[df["sample_distrib_id"] == _id, "coverage"] = coverage
-
-
-def compute_confidence_intervals(df):
+def compute_confidence_intervals(df: pd.DataFrame):
     for _id in df["sample_distrib_id"].unique():
         _size = len(df.loc[df["sample_distrib_id"] == _id, :])
         _estim_accs = df.loc[df["sample_distrib_id"] == _id, "estim_accs"].to_numpy()[1:]
@@ -193,7 +182,7 @@ def exp_protocol(args):
             results.append(EXP.ERROR(e, cls_name, dataset_name, acc_name, method_name))
             continue
 
-        ae = qc.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
+        ae = cap.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
 
         df_len = len(estim_accs)
         method_df = gen_method_df(
@@ -254,7 +243,7 @@ def experiments():
     cls_dataset_gen = parallel(
         func=train_cls,
         args_list=cls_train_args,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
     )
     cls_dataset = []
@@ -275,7 +264,7 @@ def experiments():
     results_gen = parallel(
         func=exp_protocol,
         args_list=exp_prot_args_list,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
         max_nbytes=None,
     )

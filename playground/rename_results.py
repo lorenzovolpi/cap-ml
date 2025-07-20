@@ -2,7 +2,7 @@ import os
 from argparse import ArgumentParser as AP
 from glob import glob
 
-import quacc as qc
+import cap
 
 BASEDIR = "results"
 
@@ -14,7 +14,7 @@ replacements = {
 
 
 def get_path(w_path):
-    return os.path.join(qc.env["OUT_DIR"], BASEDIR, w_path)
+    return os.path.join(cap.env["OUT_DIR"], BASEDIR, w_path)
 
 
 def parse_args():

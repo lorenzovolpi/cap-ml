@@ -1,13 +1,11 @@
-import itertools as IT
 import os
-from hmac import new
 
 import pandas as pd
 
+from cap.table import Format, Table
 from exp.trd.config import PROBLEM, get_acc_names, get_dataset_names, root_dir
 from exp.trd.model_selection import model_selection
 from exp.trd.util import decorate_datasets, load_results, rename_datasets, rename_methods
-from quacc.table import Format, Table
 
 method_map = {
     "Naive": 'Na\\"ive',

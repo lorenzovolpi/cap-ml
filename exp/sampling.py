@@ -1,7 +1,6 @@
 import glob
 import itertools as IT
 import os
-from collections import defaultdict
 from contextlib import ExitStack
 from traceback import print_exception
 
@@ -14,30 +13,30 @@ from quapy.protocol import APP, UPP
 from scipy import stats
 from sklearn.linear_model import LogisticRegression
 
-import quacc as qc
+import cap
+from cap.data.datasets import (
+    RCV1_MULTICLASS_DATASETS,
+    fetch_IMDBDataset,
+    fetch_RCV1BinaryDataset,
+    fetch_RCV1MulticlassDataset,
+)
+from cap.error import f1, f1_macro, vanilla_acc
+from cap.models.cont_table import LEAP, NaiveCAP, QuAcc1xN2, QuAcc1xNp1, QuAccNxN
+from cap.models.direct import ATC, DoC
+from cap.models.model_selection import GridSearchCAP as GSCAP
+from cap.plot.seaborn import plot_diagonal, plot_shift
+from cap.table import Format, Table
+from cap.utils.commons import get_shift, true_acc
 from exp.util import (
     fit_or_switch,
     get_logger,
     get_predictions,
     split_validation,
 )
-from quacc.data.datasets import (
-    RCV1_MULTICLASS_DATASETS,
-    fetch_IMDBDataset,
-    fetch_RCV1BinaryDataset,
-    fetch_RCV1MulticlassDataset,
-)
-from quacc.error import f1, f1_macro, vanilla_acc
-from quacc.models.cont_table import LEAP, NaiveCAP, QuAcc1xN2, QuAcc1xNp1, QuAccNxN
-from quacc.models.direct import ATC, DoC
-from quacc.models.model_selection import GridSearchCAP as GSCAP
-from quacc.plot.seaborn import plot_diagonal, plot_shift
-from quacc.table import Format, Table
-from quacc.utils.commons import get_shift, true_acc
 
 PROJECT = "sampling"
 
-root_dir = os.path.join(qc.env["OUT_DIR"], PROJECT)
+root_dir = os.path.join(cap.env["OUT_DIR"], PROJECT)
 qp.environ["SAMPLE_SIZE"] = 1000
 NUM_TEST = 100
 N_PREVS = 21
@@ -354,7 +353,7 @@ def experiments():
                         log.warning(f"{method_name}[{prev_str(L)}]: {acc_name} gave error '{e}' - skipping")
                         continue
 
-                    ae = qc.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs))
+                    ae = cap.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs))
                     method_df = pd.DataFrame(
                         np.vstack([test_shift, true_accs[acc_name], estim_accs, ae]).T,
                         columns=["shifts", "true_accs", "estim_accs", "acc_err"],

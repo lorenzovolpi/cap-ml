@@ -1,6 +1,5 @@
 import json
 import os
-import pdb
 from dataclasses import dataclass
 from itertools import batched
 
@@ -15,9 +14,9 @@ from transformers import (
     TrainingArguments,
 )
 
-import quacc as qc
+import cap
 
-base_dir = os.path.join(qc.env["OUT_DIR"], "transformers")
+base_dir = os.path.join(cap.env["OUT_DIR"], "transformers")
 
 
 def get_tr_outdir(args):

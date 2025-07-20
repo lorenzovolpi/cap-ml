@@ -6,9 +6,10 @@ import numpy as np
 import pandas as pd
 import quapy as qp
 
-import exp.leap.config as cfg
+import cap
 import exp.leap.env as env
-import quacc as qc
+from cap.models.cont_table import LEAP
+from cap.utils.commons import get_shift, true_acc
 from exp.leap.config import (
     DatasetBundle,
     gen_acc_measure,
@@ -26,8 +27,6 @@ from exp.util import (
     get_plain_prev,
     timestamp,
 )
-from quacc.models.cont_table import LEAP
-from quacc.utils.commons import get_shift, true_acc
 
 log = get_logger(id=env.PROJECT)
 qp.environ["SAMPLE_SIZE"] = 100
@@ -102,7 +101,7 @@ def exp_protocol(cls_name, dataset_name, h, D):
                 log.warning(f"{method_name}: {acc_name} gave error '{e}' - skipping")
                 continue
 
-            ae = qc.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
+            ae = cap.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
 
             df_len = len(estim_accs)
             method_df = gen_method_df(

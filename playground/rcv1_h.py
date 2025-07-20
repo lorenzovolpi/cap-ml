@@ -4,13 +4,13 @@ import numpy as np
 from quapy.data.base import LabelledCollection
 from sklearn.datasets import fetch_rcv1
 
-import quacc as qc
-from quacc.utils.dataset import get_rcv1_class_info
+import cap
+from cap.utils.dataset import get_rcv1_class_info
 
 class_names, tree, index = get_rcv1_class_info()
 
-training = fetch_rcv1(subset="train", data_home=qc.env["SKLEARN_DATA"])
-test = fetch_rcv1(subset="test", data_home=qc.env["SKLEARN_DATA"])
+training = fetch_rcv1(subset="train", data_home=cap.env["SKLEARN_DATA"])
+test = fetch_rcv1(subset="test", data_home=cap.env["SKLEARN_DATA"])
 
 tr_len = training.target.shape[0]
 te_len = test.target.shape[0]

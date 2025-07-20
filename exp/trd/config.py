@@ -1,7 +1,6 @@
 import itertools as IT
 import os
 from dataclasses import dataclass
-from unicodedata import decimal
 
 import numpy as np
 import quapy as qp
@@ -16,16 +15,16 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.neural_network import MLPClassifier as MLP
 from sklearn.svm import SVC
 
-import quacc as qc
+import cap
+from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset, sort_datasets_by_size
+from cap.error import f1, f1_macro, vanilla_acc
+from cap.models.cont_table import LEAP, NaiveCAP
+from cap.models.utils import OracleQuantifier
+from cap.utils.commons import contingency_table
 from exp.util import split_validation
-from quacc.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset, sort_datasets_by_size
-from quacc.error import f1, f1_macro, vanilla_acc
-from quacc.models.cont_table import LEAP, OCE, NaiveCAP
-from quacc.models.utils import OracleQuantifier
-from quacc.utils.commons import contingency_table
 
 PROJECT = "trd"
-root_dir = os.path.join(qc.env["OUT_DIR"], PROJECT)
+root_dir = os.path.join(cap.env["OUT_DIR"], PROJECT)
 NUM_TEST = 1000
 qp.environ["_R_SEED"] = 0
 

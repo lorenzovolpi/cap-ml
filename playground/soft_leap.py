@@ -1,19 +1,15 @@
-import pdb
-
 import numpy as np
 import pandas as pd
 import quapy as qp
 from quapy.data.datasets import UCI_BINARY_DATASETS
 from quapy.method.aggregative import KDEyML
 from quapy.protocol import UPP
-from scipy.special import softmax
 from sklearn.linear_model import LogisticRegression
 
-from exp.util import get_predictions, split_validation
-from quacc.data.datasets import fetch_UCIBinaryDataset
-from quacc.error import ae, vanilla_acc
-from quacc.models.cont_table import LEAP, OCE
-from quacc.utils.commons import true_acc
+from cap.data.datasets import fetch_UCIBinaryDataset
+from cap.error import ae, vanilla_acc
+from cap.models.cont_table import LEAP, OCE
+from cap.utils.commons import true_acc
 
 qp.environ["_R_SEED"] = 0
 qp.environ["SAMPLE_SIZE"] = 100

@@ -7,11 +7,11 @@ from quapy.method.aggregative import PACC
 from sklearn.base import BaseEstimator
 from sklearn.linear_model import LogisticRegression
 
-from quacc.data.datasets import fetch_UCIMulticlassDataset
-from quacc.error import f1_macro
-from quacc.experiments.util import split_validation
-from quacc.models.cont_table import QuAcc1xN2
-from quacc.models.model_selection import GridSearchCAP
+from cap.data.datasets import fetch_UCIMulticlassDataset
+from cap.error import f1_macro
+from cap.models.cont_table import QuAcc1xN2
+from cap.models.model_selection import GridSearchCAP
+from exp.util import split_validation
 
 qp.environ["_R_SEED"] = 0
 qp.environ["SAMPLE_SIZE"] = 250

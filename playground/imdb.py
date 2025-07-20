@@ -1,6 +1,5 @@
 import os
 from collections import defaultdict
-from contextlib import redirect_stderr, redirect_stdout
 from glob import glob
 from time import time
 
@@ -8,21 +7,20 @@ import numpy as np
 import pandas as pd
 import quapy as qp
 from quapy.data.base import LabelledCollection
-from quapy.method.aggregative import EMQ, PACC, KDEyML
+from quapy.method.aggregative import EMQ, KDEyML
 from quapy.protocol import APP, UPP
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GridSearchCV
 
-import quacc as qc
-import quacc.error
-from quacc.dataset import DatasetProvider as DP
-from quacc.error import f1_macro, vanilla_acc
-from quacc.experiments.util import split_validation
-from quacc.models.cont_table import LEAP, QuAcc1xN2, QuAcc1xNp1, QuAccNxN
-from quacc.models.direct import ATC, DoC
-from quacc.models.model_selection import GridSearchCAP as GSCAP
-from quacc.plot.seaborn import plot_shift
-from quacc.utils.commons import get_shift, true_acc
+import cap
+import cap.error
+from cap.dataset import DatasetProvider as DP
+from cap.error import f1_macro, vanilla_acc
+from cap.models.cont_table import QuAcc1xN2, QuAcc1xNp1, QuAccNxN
+from cap.models.direct import ATC, DoC
+from cap.models.model_selection import GridSearchCAP as GSCAP
+from cap.plot.seaborn import plot_shift
+from cap.utils.commons import get_shift, true_acc
+from exp.util import split_validation
 
 qp.environ["SAMPLE_SIZE"] = 1000
 NUM_TEST = 100
@@ -46,7 +44,7 @@ kde_lr_params = pacc_lr_params | {"q_class__bandwidth": np.linspace(0.01, 0.2, 5
 
 def get_imdbs():
     train, U = qp.datasets.fetch_reviews(
-        "imdb", tfidf=True, min_df=10, pickle=True, data_home=qc.env["QUAPY_DATA"]
+        "imdb", tfidf=True, min_df=10, pickle=True, data_home=cap.env["QUAPY_DATA"]
     ).train_test
 
     train_prevs = np.linspace(0.1, 1, 9, endpoint=False)
@@ -57,7 +55,7 @@ def get_imdbs():
 
 
 def local_path(method_name, acc_name, L: LabelledCollection):
-    return os.path.join(qc.env["OUT_DIR"], "pg_imdb", f"{method_name}_{acc_name}_{round(L.prevalence()[1] * 100)}.csv")
+    return os.path.join(cap.env["OUT_DIR"], "pg_imdb", f"{method_name}_{acc_name}_{round(L.prevalence()[1] * 100)}.csv")
 
 
 def gen_quants():
@@ -133,7 +131,7 @@ def experiments():
                 test_shift = get_shift(np.array([Ui.prevalence() for Ui in test_prot()]), L.prevalence())
                 true_accs = np.array([true_acc(h, acc_fn, Ui) for Ui in test_prot()])
                 estim_accs = np.array([method.predict(Ui.X) for Ui in test_prot()])
-                ae = quacc.error.ae(true_accs, estim_accs)
+                ae = cap.error.ae(true_accs, estim_accs)
                 t_method = time() - t_init
                 print(f"\t{method_name} took {t_method:.3f}s")
                 method_df = pd.DataFrame(
@@ -193,7 +191,7 @@ def plot_results(results):
 
 
 def remove_method(method_name):
-    glob_path = os.path.join(qc.env["OUT_DIR"], "pg_imdb", f"{method_name}*.csv")
+    glob_path = os.path.join(cap.env["OUT_DIR"], "pg_imdb", f"{method_name}*.csv")
     for f in glob(glob_path):
         os.remove(f)
 

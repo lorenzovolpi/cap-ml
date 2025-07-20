@@ -6,8 +6,8 @@ from pathlib import Path
 import pandas as pd
 
 import exp.leap.env as env
+from cap.models.cont_table import LEAP
 from exp.leap.config import gen_acc_measure, get_method_names, is_excluded
-from quacc.models.cont_table import LEAP
 
 
 def local_path(dataset_name, cls_name, method_name, acc_name, subproject=None):

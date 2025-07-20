@@ -6,11 +6,11 @@ from traceback import print_exception
 import numpy as np
 import pandas as pd
 import quapy as qp
-from sklearn.base import clone as skl_clone
 
-import quacc as qc
+import cap
+from cap.models.cont_table import LEAP
+from cap.utils.commons import get_shift, parallel, true_acc
 from exp.trd.config import (
-    PROBLEM,
     PROJECT,
     DatasetBundle,
     gen_acc_measure,
@@ -18,19 +18,15 @@ from exp.trd.config import (
     gen_classifiers,
     gen_datasets,
     get_CAP_method_names,
-    root_dir,
 )
 from exp.trd.util import local_path
 from exp.util import (
     fit_or_switch,
-    gen_model_dataset,
     get_ct_predictions,
     get_logger,
     get_plain_prev,
     timestamp,
 )
-from quacc.models.cont_table import LEAP
-from quacc.utils.commons import get_shift, parallel, true_acc
 
 log = get_logger(id=PROJECT)
 
@@ -133,7 +129,7 @@ def exp_protocol(args):
             results.append(EXP.ERROR(e, clsf.name, dataset_name, acc_name, method_name))
             continue
 
-        ae = qc.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
+        ae = cap.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
 
         df_len = len(estim_accs)
         method_df = gen_method_df(
@@ -198,7 +194,7 @@ def experiments():
     cls_dataset_gen = parallel(
         func=train_cls,
         args_list=cls_train_args,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
     )
     cls_dataset = []
@@ -209,26 +205,6 @@ def experiments():
             log.info(f"Trained {clsf.name} over {dataset_name}")
             cls_dataset.append((clsf, dataset_name, D, true_accs))
 
-    # for orig_clsf, (dataset_name, (L, V, U)) in gen_model_dataset(gen_classifiers, gen_datasets):
-    #     # check if all results for current combination already exist
-    #     # if so, skip the combination
-    #     if all_exist_pre_check(dataset_name, orig_clsf.name):
-    #         log.info(f"All results for {orig_clsf.name} over {dataset_name} exist, skipping")
-    #     else:
-    #         # clone model from the original one
-    #         clsf = orig_clsf.clone()
-    #         # fit model
-    #         clsf.h.fit(*L.Xy)
-    #         log.info(f"Trained {clsf.name} over {dataset_name}")
-    #         # create dataset bundle
-    #         D = DatasetBundle(L.prevalence(), V, U).create_bundle(clsf.h)
-    #         # compute true accs for h on dataset
-    #         true_accs = {}
-    #         for acc_name, acc_fn in gen_acc_measure():
-    #             true_accs[acc_name] = [true_acc(clsf.h, acc_fn, Ui) for Ui in D.test_prot()]
-    #         # store h-dataset combination
-    #         cls_dataset.append((clsf, dataset_name, D, true_accs))
-
     exp_prot_args_list = []
     for clsf, dataset_name, D, true_accs in cls_dataset:
         for method_name, method, val, val_posteriors in gen_CAP_methods(clsf.h, D):
@@ -237,7 +213,7 @@ def experiments():
     results_gen = parallel(
         func=exp_protocol,
         args_list=exp_prot_args_list,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
         max_nbytes=None,
     )

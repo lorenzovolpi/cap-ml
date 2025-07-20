@@ -15,7 +15,7 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.neural_network import MLPClassifier as MLP
 from sklearn.svm import SVC
 
-from quacc.data.datasets import (
+from cap.data.datasets import (
     HF_DATASETS,
     RCV1_BINARY_DATASETS,
     RCV1_MULTICLASS_DATASETS,
@@ -26,9 +26,9 @@ from quacc.data.datasets import (
     fetch_UCIBinaryDataset,
     fetch_UCIMulticlassDataset,
 )
-from quacc.error import f1, f1_macro, vanilla_acc
-from quacc.models._large_models import DistilBert
-from quacc.models.cont_table import (
+from cap.error import f1, f1_macro, vanilla_acc
+from cap.models._large_models import DistilBert
+from cap.models.cont_table import (
     LEAP,
     OCE,
     PHD,
@@ -38,10 +38,10 @@ from quacc.models.cont_table import (
     QuAcc1xNp1,
     QuAccNxN,
 )
-from quacc.models.direct import ATC, CAPDirect, DoC, PrediQuant
-from quacc.models.model_selection import GridSearchCAP as GSCAP
-from quacc.models.regression import ReQua
-from quacc.utils.commons import get_results_path
+from cap.models.direct import ATC, CAPDirect, DoC, PrediQuant
+from cap.models.model_selection import GridSearchCAP as GSCAP
+from cap.models.regression import ReQua
+from cap.utils.commons import get_results_path
 
 _CC = defaultdict(lambda: False)
 _CC |= dict(

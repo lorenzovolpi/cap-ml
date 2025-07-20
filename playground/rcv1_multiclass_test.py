@@ -8,14 +8,14 @@ from quapy.protocol import UPP
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 
-import quacc as qc
-import quacc.error
-from quacc.data.datasets import fetch_RCV1MulticlassDataset
-from quacc.error import f1_macro, vanilla_acc
-from quacc.experiments.util import split_validation
-from quacc.models.cont_table import LEAP, QuAcc1xN2, QuAccNxN
-from quacc.models.model_selection import GridSearchCAP as GSCAP
-from quacc.utils.commons import true_acc
+import cap
+import cap.error
+from cap.data.datasets import fetch_RCV1MulticlassDataset
+from cap.error import f1_macro, vanilla_acc
+from cap.models.cont_table import LEAP, QuAcc1xN2, QuAccNxN
+from cap.models.model_selection import GridSearchCAP as GSCAP
+from cap.utils.commons import true_acc
+from exp.util import split_validation
 
 qp.environ["SAMPLE_SIZE"] = 250
 NUM_TEST = 1000
@@ -73,7 +73,7 @@ def main():
                 method.fit(V)
                 true_accs = np.array([true_acc(h, acc_fn, Ui) for Ui in test_prot()])
                 estim_accs = np.array([method.predict(Ui.X) for Ui in test_prot()])
-                mae = quacc.error.mae(true_accs, estim_accs)
+                mae = cap.error.mae(true_accs, estim_accs)
                 t_method = time() - t_init
                 results.append((method_name, acc_name, mae, t_method))
     for method_name, acc_name, mae, t_method in results:
@@ -81,6 +81,6 @@ def main():
 
 
 if __name__ == "__main__":
-    with open(f"{qc.env['OUT_DIR']}/pg_rcv1.out", "w") as f:
+    with open(f"{cap.env['OUT_DIR']}/pg_rcv1.out", "w") as f:
         with redirect_stdout(f):
             main()

@@ -6,14 +6,14 @@ from pathlib import Path
 
 import pandas as pd
 
-import quacc as qc
+import cap
+from cap.table import Format, Table
 from exp.generators import gen_acc_measure, gen_bin_datasets
 from exp.report import Report
-from quacc.table import Format, Table
 
 PROBLEM = "binary"
-ERROR = qc.error.ae
-root_folder = os.path.join(qc.env["OUT_DIR"], "results")
+ERROR = cap.error.ae
+root_folder = os.path.join(cap.env["OUT_DIR"], "results")
 
 if PROBLEM == "binary":
     gen_datasets = gen_bin_datasets

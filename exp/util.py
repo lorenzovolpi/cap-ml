@@ -6,10 +6,10 @@ import numpy as np
 import quapy as qp
 from quapy.protocol import UPP
 
-import quacc as qc
-from quacc.models.base import ClassifierAccuracyPrediction
-from quacc.models.cont_table import CAPContingencyTable, LabelledCollection
-from quacc.models.model_selection import GridSearchCAP
+import cap
+from cap.models.base import ClassifierAccuracyPrediction
+from cap.models.cont_table import CAPContingencyTable, LabelledCollection
+from cap.models.model_selection import GridSearchCAP
 
 
 def method_can_switch(method):
@@ -76,7 +76,7 @@ def split_validation(V: LabelledCollection, ratio=0.6, repeats=100, sample_size=
 
 def get_logger(id="quacc"):
     _name = f"{id}_log"
-    _path = os.path.join(qc.env["OUT_DIR"], f"{id}.log")
+    _path = os.path.join(cap.env["OUT_DIR"], f"{id}.log")
     logger = logging.getLogger(_name)
     logger.setLevel(logging.DEBUG)
     if len(logger.handlers) == 0:

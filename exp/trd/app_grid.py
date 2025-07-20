@@ -8,10 +8,9 @@ import scipy.special as sp
 from quapy.data.datasets import UCI_MULTICLASS_DATASETS
 from quapy.functional import get_nprevpoints_approximation, num_prevalence_combinations
 from quapy.protocol import APP
-from sklearn import base
 
+from cap.data.datasets import fetch_UCIMulticlassDataset
 from exp.trd.config import root_dir
-from quacc.data.datasets import fetch_UCIMulticlassDataset
 
 qp.environ["_R_SEED"] = 0
 qp.environ["SAMPLE_SIZE"] = 100

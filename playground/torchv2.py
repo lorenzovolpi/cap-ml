@@ -1,28 +1,26 @@
 import os
 from collections import defaultdict
-from time import time
 
 import numpy as np
 import pandas as pd
 import quapy as qp
 import torch
 from quapy.data import LabelledCollection
-from quapy.method.aggregative import KDEyML
 from quapy.protocol import UPP
 from scipy.special import softmax
 from sklearn.base import BaseEstimator
 
-import quacc as qc
+import cap
+from cap.error import vanilla_acc
+from cap.models.cont_table import LEAP, OCE, PHD
+from cap.models.direct import DoC
 from exp.leap.config import kdey
 from exp.util import get_ct_predictions, split_validation
-from quacc.error import vanilla_acc
-from quacc.models.cont_table import LEAP, OCE, PHD
-from quacc.models.direct import DoC
 
 qp.environ["_R_SEED"] = 0
 qp.environ["SAMPLE_SIZE"] = 1000
 
-base_dir = os.path.join(qc.env["OUT_DIR"], "transformers", "embeds")
+base_dir = os.path.join(cap.env["OUT_DIR"], "transformers", "embeds")
 
 
 class BaseEstimatorAdapter(BaseEstimator):
@@ -106,7 +104,7 @@ if __name__ == "__main__":
         else:
             method.fit(V1, V1_posteriors)
         estim_accs, estim_cts, t_test_ave = get_ct_predictions(method, test_prot, test_prot_posteriors)
-        ae = qc.error.ae(np.array(true_accs), np.array(estim_accs))
+        ae = cap.error.ae(np.array(true_accs), np.array(estim_accs))
         method_df = pd.DataFrame(
             np.vstack([true_accs, estim_accs, ae]).T, columns=["true_accs", "estim_accs", "acc_err"]
         )

@@ -4,13 +4,13 @@ from quapy.method.aggregative import EMQ
 from quapy.protocol import UPP
 from sklearn.linear_model import LogisticRegression as LR
 
-from quacc.data.datasets import fetch_RCV1BinaryDataset, fetch_RCV1MulticlassDataset
-from quacc.error import vanilla_acc
-from quacc.experiments.generators import gen_acc_measure
-from quacc.experiments.util import fit_or_switch, get_predictions, prevs_from_prot, split_validation
-from quacc.models.cont_table import QuAcc1xN2, QuAccNxN
-from quacc.models.model_selection import GridSearchCAP as GSCAP
-from quacc.utils.commons import true_acc
+from cap.data.datasets import fetch_RCV1MulticlassDataset
+from cap.error import vanilla_acc
+from cap.models.cont_table import QuAcc1xN2
+from cap.models.model_selection import GridSearchCAP as GSCAP
+from cap.utils.commons import true_acc
+from exp.generators import gen_acc_measure
+from exp.util import fit_or_switch, get_predictions, split_validation
 
 
 def sld():

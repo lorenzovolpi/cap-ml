@@ -1,4 +1,3 @@
-import itertools as IT
 import os
 from dataclasses import dataclass
 from traceback import print_exception
@@ -11,9 +10,13 @@ from sklearn.base import BaseEstimator
 from sklearn.base import clone as skl_clone
 from sklearn.linear_model import LogisticRegression
 
-import exp.leap.config as cfg
+import cap
 import exp.leap.env as env
-import quacc as qc
+from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset, sort_datasets_by_size
+from cap.error import vanilla_acc
+from cap.models.cont_table import OCE
+from cap.models.direct import DoC
+from cap.utils.commons import get_shift, parallel, true_acc
 from exp.leap.config import DatasetBundle, is_excluded, kdey
 from exp.leap.util import all_exist_pre_check, gen_method_df, get_extra_from_method, local_path
 from exp.util import (
@@ -23,11 +26,6 @@ from exp.util import (
     get_plain_prev,
     timestamp,
 )
-from quacc.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset, sort_datasets_by_size
-from quacc.error import vanilla_acc
-from quacc.models.cont_table import OCE
-from quacc.models.direct import DoC
-from quacc.utils.commons import get_shift, parallel, true_acc
 
 SUBPROJECT = "sample_size"
 
@@ -171,7 +169,7 @@ def exp_protocol(args):
             results.append(EXP_ss.ERROR(e, cls_name, dataset_name, sample_size, acc_name, method_name))
             continue
 
-        ae = qc.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
+        ae = cap.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs)).tolist()
 
         df_len = len(estim_accs)
         method_df = gen_method_df(
@@ -242,7 +240,7 @@ def experiments():
     cls_dataset_gen = parallel(
         func=train_cls,
         args_list=cls_train_args,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
     )
     cls_dataset = []
@@ -263,7 +261,7 @@ def experiments():
     results_gen = parallel(
         func=exp_protocol,
         args_list=exp_prot_args_list,
-        n_jobs=qc.env["N_JOBS"],
+        n_jobs=cap.env["N_JOBS"],
         return_as="generator_unordered",
         max_nbytes=None,
     )

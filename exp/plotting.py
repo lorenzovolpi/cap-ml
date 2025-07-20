@@ -4,14 +4,14 @@ import os
 import numpy as np
 import pandas as pd
 
-import quacc as qc
-from quacc.exp.generators import gen_acc_measure, gen_bin_datasets
-from quacc.exp.report import Report
+import cap
+from exp.generators import gen_acc_measure, gen_bin_datasets
+from exp.report import Report
 
 PROBLEM = "binary"
 basedir = PROBLEM
 plots_basedir = PROBLEM
-root_folder = os.path.join(qc.env["OUT_DIR"], "results")
+root_folder = os.path.join(cap.env["OUT_DIR"], "results")
 
 if PROBLEM == "binary":
     gen_datasets = gen_bin_datasets
@@ -29,7 +29,7 @@ def plot_grid_of_diagonals(methods, dataset_names, classifiers, filename=None, n
         )
         df = rep.table_data(mean=False)
         rename_methods(df, methods)
-        qc.plot.seaborn.plot_diagonal_grid(
+        cap.plot.seaborn.plot_diagonal_grid(
             df,
             cls_name,
             acc_name,

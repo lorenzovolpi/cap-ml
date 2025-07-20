@@ -8,12 +8,12 @@ from quapy.protocol import UPP
 from sklearn.linear_model import LogisticRegression
 
 # from abstention.calibration import TempScaling
-from quacc.calibration import TS
-from quacc.calibration.bcts import BCTS
-from quacc.calibration.error import calibration_error
-from quacc.data.datasets import fetch_UCIBinaryDataset
-from quacc.error import vanilla_acc
-from quacc.models.cont_table import QuAcc1xN2
+from cap.calibration import TS
+from cap.calibration.bcts import BCTS
+from cap.calibration.error import calibration_error
+from cap.data.datasets import fetch_UCIBinaryDataset
+from cap.error import vanilla_acc
+from cap.models.cont_table import QuAcc1xN2
 
 dataset_name = "haberman"
 

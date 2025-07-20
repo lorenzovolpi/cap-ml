@@ -14,19 +14,19 @@ from sklearn.kernel_ridge import KernelRidge as KRR
 from sklearn.linear_model import LinearRegression as LinReg
 from sklearn.linear_model import LogisticRegression, Ridge
 
-import quacc as qc
-import quacc.error
-from quacc.data.datasets import (
+import cap
+import cap.error
+from cap.data.datasets import (
     RCV1_MULTICLASS_DATASETS,
     fetch_RCV1BinaryDataset,
     fetch_RCV1MulticlassDataset,
     fetch_UCIBinaryDataset,
 )
-from quacc.error import vanilla_acc
-from quacc.experiments.util import fit_or_switch, get_logger, get_predictions, split_validation
-from quacc.models.cont_table import QuAcc1xN2, QuAcc1xNp1, QuAccNxN
-from quacc.models.regression import ReQua
-from quacc.utils.commons import true_acc
+from cap.error import vanilla_acc
+from cap.models.cont_table import QuAcc1xN2, QuAcc1xNp1, QuAccNxN
+from cap.models.regression import ReQua
+from cap.utils.commons import true_acc
+from exp.util import fit_or_switch, get_logger, get_predictions, split_validation
 
 NUM_TEST = 1000
 qp.environ["_R_SEED"] = 0
@@ -133,7 +133,7 @@ def gen_accs():
 
 
 def get_local_path(cls_name, acc_name, dataset, method_name):
-    parent_dir = os.path.join(qc.env["OUT_DIR"], "requa_test", basedir, cls_name, acc_name, dataset)
+    parent_dir = os.path.join(cap.env["OUT_DIR"], "requa_test", basedir, cls_name, acc_name, dataset)
     os.makedirs(parent_dir, exist_ok=True)
     return os.path.join(parent_dir, f"{method_name}.csv")
 
@@ -211,7 +211,7 @@ def experiments():
                         log.warning(f"{method_name}: {acc_name} gave error '{e}' - skipping")
                         continue
 
-                    ae = quacc.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs))
+                    ae = cap.error.ae(np.array(true_accs[acc_name]), np.array(estim_accs))
 
                     method_df = pd.DataFrame(
                         np.vstack([true_accs[acc_name], estim_accs, ae]).T,

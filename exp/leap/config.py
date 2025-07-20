@@ -1,6 +1,8 @@
 import json
 import os
+from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import Callable
 
 import numpy as np
 import pandas as pd
@@ -8,7 +10,7 @@ import quapy as qp
 import torch
 from quapy.data import LabelledCollection
 from quapy.data.datasets import UCI_BINARY_DATASETS, UCI_MULTICLASS_DATASETS
-from quapy.method.aggregative import ACC, CC, EMQ, DistributionMatchingY, KDEyML
+from quapy.method.aggregative import ACC, CC, KDEyML
 from quapy.protocol import UPP, AbstractStochasticSeededProtocol
 from sklearn.base import BaseEstimator
 from sklearn.ensemble import RandomForestClassifier as RFC
@@ -17,21 +19,20 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.neural_network import MLPClassifier as MLP
 from sklearn.svm import SVC
 
+import cap
 import exp.leap.env as env
-import quacc as qc
-from exp.util import split_validation
-from quacc.data.datasets import (
-    fetch_RCV1WholeDataset,
+from cap.data.datasets import (
     fetch_UCIBinaryDataset,
     fetch_UCIMulticlassDataset,
     sort_datasets_by_size,
 )
-from quacc.error import f1, f1_macro, f1_micro, vanilla_acc
-from quacc.models._large_models import BaseEstimatorAdapter
-from quacc.models.cont_table import CBPE, LEAP, OCE, PHD, NaiveCAP
-from quacc.models.direct import ATC, COT, Q_COT, DispersionScore, DoC, NuclearNorm
-from quacc.models.utils import OracleQuantifier
-from quacc.utils.commons import contingency_table
+from cap.error import f1, f1_macro, vanilla_acc
+from cap.models._large_models import BaseEstimatorAdapter
+from cap.models.cont_table import CBPE, LEAP, OCE, PHD, NaiveCAP
+from cap.models.direct import ATC, COT, Q_COT, DispersionScore, DoC, NuclearNorm
+from cap.models.utils import OracleQuantifier
+from cap.utils.commons import contingency_table
+from exp.util import split_validation
 
 _toggle = {
     "mlp": True,
@@ -52,22 +53,22 @@ class EXP:
     dataset_name: str
     acc_name: str
     method_name: str
-    df: pd.DataFrame = None
-    t_train: float = None
-    t_test_ave: float = None
-    err: Exception = None
+    df: pd.DataFrame | None = None
+    t_train: float | None = None
+    t_test_ave: float | None = None
+    err: Exception | None = None
 
     @classmethod
-    def SUCCESS(cls, *args, **kwargs):
-        return EXP(200, *args, **kwargs)
+    def SUCCESS(cls, cls_name, dataset_name, acc_name, method_name, **kwargs):
+        return EXP(200, cls_name, dataset_name, acc_name, method_name, **kwargs)
 
     @classmethod
-    def EXISTS(cls, *args, **kwargs):
-        return EXP(300, *args, **kwargs)
+    def EXISTS(cls, cls_name, dataset_name, acc_name, method_name, **kwargs):
+        return EXP(300, cls_name, dataset_name, acc_name, method_name, **kwargs)
 
     @classmethod
-    def ERROR(cls, e, *args, **kwargs):
-        return EXP(400, *args, err=e, **kwargs)
+    def ERROR(cls, e, cls_name, dataset_name, acc_name, method_name, **kwargs):
+        return EXP(400, cls_name, dataset_name, acc_name, method_name, err=e, **kwargs)
 
     @property
     def ok(self):
@@ -83,18 +84,18 @@ class EXP:
 
 @dataclass
 class DatasetBundle:
-    L_prevalence: np.ndarray
-    V: LabelledCollection
-    U: LabelledCollection
-    V1: LabelledCollection = None
-    V2_prot: AbstractStochasticSeededProtocol = None
-    test_prot: AbstractStochasticSeededProtocol = None
-    V_posteriors: np.ndarray = None
-    V1_posteriors: np.ndarray = None
-    V2_prot_posteriors: np.ndarray = None
-    test_prot_posteriors: np.ndarray = None
-    test_prot_y_hat: np.ndarray = None
-    test_prot_true_cts: np.ndarray = None
+    L_prevalence: np.ndarray | None
+    V: LabelledCollection | None
+    U: LabelledCollection | None
+    V1: LabelledCollection | None = None
+    V2_prot: AbstractStochasticSeededProtocol | None = None
+    test_prot: Callable[[], Iterable] = lambda: []
+    V_posteriors: np.ndarray | None = None
+    V1_posteriors: np.ndarray | None = None
+    V2_prot_posteriors: np.ndarray | None = None
+    test_prot_posteriors: np.ndarray | None = None
+    test_prot_y_hat: np.ndarray | None = None
+    test_prot_true_cts: np.ndarray | None = None
 
     def get_test_prot(self, sample_size=None):
         return UPP(
@@ -106,6 +107,10 @@ class DatasetBundle:
         )
 
     def create_bundle(self, h: BaseEstimator, sample_size=None):
+        assert hasattr(h, "predict_proba") and type(getattr(h, "predict_proba")) is Callable, (
+            f"Classifier {h} has no method 'predict_proba'"
+        )
+
         # generate test protocol
         self.test_prot = self.get_test_prot(sample_size=sample_size)
         # split validation set
@@ -183,7 +188,7 @@ def gen_transformer_model_dataset(only_dataset_names=False, only_model_names=Fal
         return [m for _, m in dataset_model]
 
     for dataset_name, model_name in dataset_model:
-        parent_dir = os.path.join(qc.env["OUT_DIR"], "trainsformers", "embeds", dataset_name, model_name)
+        parent_dir = os.path.join(cap.env["OUT_DIR"], "trainsformers", "embeds", dataset_name, model_name)
 
         V_X = torch.load(os.path.join(parent_dir, "hidden_states.validation.pt")).numpy()
         V_logits = torch.load(os.path.join(parent_dir, "logits.validation.pt")).numpy()
@@ -205,7 +210,6 @@ def gen_transformer_model_dataset(only_dataset_names=False, only_model_names=Fal
 
 
 def gen_acc_measure():
-    multiclass = env.PROBLEM == "multiclass"
     if _toggle["vanilla"]:
         yield "vanilla_accuracy", vanilla_acc
     if _toggle["f1"]:

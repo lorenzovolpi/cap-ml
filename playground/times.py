@@ -1,13 +1,13 @@
 import os
 
-import quacc as qc
-from quacc.experiments.generators import gen_classifiers
-from quacc.experiments.report import Report
+import cap
+from exp.generators import gen_classifiers
+from exp.report import Report
 
 PROBLEM = "binary"
 
 if __name__ == "__main__":
-    root_folder = os.path.join(qc.env["OUT_DIR"], "results")
+    root_folder = os.path.join(cap.env["OUT_DIR"], "results")
     dir_path = "playground/times"
     os.makedirs(dir_path, exist_ok=True)
 

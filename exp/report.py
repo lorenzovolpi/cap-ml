@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import zscore
 
-import quacc as qc
-from quacc.utils.commons import get_results_path, get_shift, load_json_file, save_json_file
+import cap
+from cap.utils.commons import get_results_path, get_shift, load_json_file, save_json_file
 
 
 class TestReport:
@@ -143,8 +143,8 @@ class Report:
         all_df = pd.concat(dfs, axis=0, ignore_index=True)
         return all_df
 
-    def table_data(self, mean=True, error=qc.error.ae):
-        assert error in qc.error.ACCURACY_ERROR_SINGLE, "Unknown error function"
+    def table_data(self, mean=True, error=cap.error.ae):
+        assert error in cap.error.ACCURACY_ERROR_SINGLE, "Unknown error function"
         dfs = []
         for _method, _results in self.results.items():
             _dataset_map = defaultdict(lambda: [])
@@ -188,28 +188,8 @@ class Report:
 
         return pd.concat(dfs, axis=0, ignore_index=True)
 
-    # def delta_plot_data(self):
-    #     dfs = []
-    #     for _method, _results in self.results.items():
-    #         if isinstance(_results[0].test_prevs[0], float):
-    #             _prev = np.hstack([_r.test_prevs for _r in _results])
-    #         else:
-    #             _prev = np.vstack([_r.test_prevs for _r in _results])
-    #             _prev = np.fromiter((tuple(tp) for tp in _prev), dtype="object")
-
-    #         _true_accs = np.hstack([_r.true_accs for _r in _results])
-    #         _estim_accs = np.hstack([_r.estim_accs for _r in _results])
-    #         _acc_err = np.abs(_true_accs - _estim_accs)
-    #         method_df = pd.DataFrame(
-    #             np.vstack([_prev, _acc_err]).T, columns=["prevs", "acc_err"]
-    #         )
-    #         method_df.loc[:, "method"] = np.tile(_method, (len(method_df),))
-    #         dfs.append(method_df.sort_values(by="prevs"))
-
-    #     return pd.concat(dfs, axis=0, ignore_index=True)
-
-    def shift_plot_data(self, error=qc.error.ae):
-        assert error in qc.error.ACCURACY_ERROR_SINGLE, "Unknown error function"
+    def shift_plot_data(self, error=cap.error.ae):
+        assert error in cap.error.ACCURACY_ERROR_SINGLE, "Unknown error function"
 
         dfs = []
         for _method, _results in self.results.items():
