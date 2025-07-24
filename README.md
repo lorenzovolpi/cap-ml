@@ -1,8 +1,12 @@
 # cap-ml
 
-version: `0.1.1.4`
+version: `0.1.1.5`
 
 ## Changelog
+
+### v0.1.1.5
+
+- `cap.table` module removed
 
 ### v0.1.1.4
 
