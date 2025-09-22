@@ -6,7 +6,7 @@ version: `0.1.1.6`
 
 ### v0.1.1.6
 
-- 
+- added balanced accuracy measure
 
 ### v0.1.1.5
 
