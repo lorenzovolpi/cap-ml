@@ -1,8 +1,12 @@
 # cap-ml
 
-version: `0.1.1.5`
+version: `0.1.1.6`
 
 ## Changelog
+
+### v0.1.1.6
+
+- added balanced accuracy measure
 
 ### v0.1.1.5
 

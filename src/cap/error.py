@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
 
 
 def from_name(err_name):
@@ -50,6 +50,15 @@ def f1_micro(param1, param2=None):
     return f1(param1, param2, average="micro")
 
 
+def balanced_acc(param1, param2=None):
+    if is_from_cont_table(param1, param2):
+        _balanced_acc = _balanced_acc_from_ct(param1)
+    else:
+        _balanced_acc = balanced_accuracy_score(param1, param2)
+
+    return _balanced_acc
+
+
 def _vanilla_acc_from_ct(cont_table):
     return np.diag(cont_table).sum() / cont_table.sum()
 
@@ -83,6 +92,23 @@ def _f1_bin(tp, fp, fn):
         return 1
     else:
         return (2 * tp) / (2 * tp + fp + fn)
+
+
+def _balanced_acc_from_ct(cont_table):
+    n = cont_table.shape[0]
+    b_acc_sum, factor = 0, n
+    for i in range(n):
+        tp = cont_table[i, i]
+        fn = cont_table[i, :].sum() - tp
+        if (tp + fn) == 0:
+            factor -= 1
+        else:
+            b_acc_sum += tp / (tp + fn)
+
+    if factor == 0:
+        return 1.0
+
+    return b_acc_sum / factor
 
 
 def ae(true_accs, estim_accs):
