@@ -4,6 +4,10 @@ version: `0.1.1.6`
 
 ## Changelog
 
+### v0.1.1.7
+
+- 
+
 ### v0.1.1.6
 
 - added balanced accuracy measure
