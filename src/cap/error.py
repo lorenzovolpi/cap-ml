@@ -75,6 +75,18 @@ def kappa_acc(m=None):
     return _kappa
 
 
+def smooth(func, eps=1e-5):
+    def _smoothing(param1, param2=None):
+        if not is_from_cont_table(param1, param2):
+            raise ValueError("Smoothing only available for contingency table parameters")
+
+        s_param1 = param1 + eps
+        s_param1 = s_param1 / np.sum(s_param1)
+        return func(s_param1, param2)
+
+    return _smoothing
+
+
 def _vanilla_acc_from_ct(cont_table):
     return np.diag(cont_table).sum() / cont_table.sum()
 
