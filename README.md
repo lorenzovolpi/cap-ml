@@ -1,6 +1,6 @@
 # cap-ml
 
-version: `0.1.1.6`
+version: `0.1.1.8`
 
 ## Changelog
 
