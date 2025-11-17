@@ -1,3 +1,5 @@
+from typing import Literal
+
 import numpy as np
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, cohen_kappa_score, f1_score
 
@@ -24,21 +26,19 @@ def vanilla_acc(param1, param2=None):
         return accuracy_score(param1, param2)
 
 
-def f1(param1, param2=None, average="binary"):
+def f1(param1, param2=None, average: Literal["binary", "macro", "micro"] = "binary"):
     _warning = False
     if is_from_cont_table(param1, param2):
         if param1.shape[0] > 2 and average == "binary":
-            _warning = True
+            print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
             average = "macro"
         _f1_score = _f1_from_ct(param1, average=average)
     else:
         if len(np.unique(np.hstack([param1, param2]))) > 2 and average == "binary":
-            _warning = True
+            print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
             average = "macro"
         _f1_score = f1_score(param1, param2, average=average, zero_division=1.0)
 
-    if _warning:
-        print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
     return _f1_score
 
 
@@ -73,6 +73,29 @@ def cohen_kappa(m=None):
         return _kappa_acc
 
     return _kappa
+
+
+def K(param1, param2=None, average: Literal["binary", "macro", "micro"] = "binary"):
+    if not is_from_cont_table(param1, param2):
+        raise ValueError("K accuracy only available for contingency table parameters")
+
+    if param1.shape[0] > 2 and average == "binary":
+        print("Warning: 'binary' average is not available for multiclass K. Defaulting to 'macro' K.")
+        average = "macro"
+
+    return _K_from_ct(param1, average=average)
+
+
+def K_bin(param1, param2=None):
+    return K(param1, param2, average="binary")
+
+
+def K_macro(param1, param2=None):
+    return K(param1, param2, average="macro")
+
+
+def K_micro(param1, param2=None):
+    return K(param1, param2, average="micro")
 
 
 def smooth(func, eps=1e-5):
@@ -151,6 +174,57 @@ def _cohen_kappa_from_ct(cont_table, m=1):
 
     _kappa = (p_0 - p_e) / (1 - p_e) if (1 - p_e) != 0 else 1.0
     return _kappa
+
+
+def _K_from_ct(cont_table, average):
+    n = cont_table.shape[0]
+    if average == "binary":
+        tp = cont_table[1, 1]
+        tn = cont_table[0, 0]
+        fp = cont_table[0, 1]
+        fn = cont_table[1, 0]
+        return _K_bin(tp, tn, fp, fn)
+    elif average == "macro":
+        _K_sum = 0.0
+        for i in range(n):
+            tp = cont_table[i, i]
+            fp = np.sum(cont_table[:, i]) - tp
+            fn = np.sum(cont_table[i, :]) - tp
+            tn = 1.0 - tp - fp - fn
+            _K_sum += _K_bin(tp, tn, fp, fn)
+        return _K_sum / n
+    elif average == "micro":
+        ct_all = np.zeros(4)
+        for i in range(n):
+            ct = np.zeros(4)
+            ct[0] = cont_table[i, i]  # tp
+            ct[2] = np.sum(cont_table[:, i]) - tp  # fp
+            ct[3] = np.sum(cont_table[i, :]) - tp  # fn
+            ct[1] = 1.0 - ct[0] - ct[2] - ct[3]  # tn
+            ct_all += ct
+        ct_all /= ct_all.sum()
+        return _K_bin(ct_all[0], ct_all[1], ct_all[2], ct_all[3])
+    else:
+        raise ValueError(f"Unknown K average {average}")
+
+
+def _K_bin(tp, tn, fp, fn):
+    specificity, recall = 0.0, 0.0
+
+    AN = tn + fp
+    if AN != 0:
+        specificity = tn * 1.0 / AN
+
+    AP = tp + fn
+    if AP != 0:
+        recall = tp * 1.0 / AP
+
+    if AP == 0:
+        return 2.0 * specificity - 1.0
+    elif AN == 0:
+        return 2.0 * recall - 1.0
+    else:
+        return specificity + recall - 1.0
 
 
 def ae(true_accs, estim_accs):
