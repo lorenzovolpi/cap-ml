@@ -7,7 +7,8 @@ version: `0.1.1.7`
 ### v0.1.1.7
 
 - added smoothing function for errors based con contingency table 
-- added kappa accuracy measure
+- added cohen's kappa accuracy measure
+- added K accuracy measure
 
 ### v0.1.1.6
 
