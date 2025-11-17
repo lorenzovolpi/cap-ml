@@ -59,13 +59,13 @@ def balanced_acc(param1, param2=None):
     return _balanced_acc
 
 
-def kappa_acc(m=None):
+def cohen_kappa_acc(m=None):
     if m is None:
         raise ValueError("Number of samples 'm' cannot be None")
 
     def _kappa(param1, param2=None):
         if is_from_cont_table(param1, param2):
-            _kappa_acc = _kappa_acc_from_ct(param1, m=m)
+            _kappa_acc = _cohen_kappa_acc_from_ct(param1, m=m)
         else:
             _kappa_acc = cohen_kappa_score(param1, param2)
 
@@ -139,7 +139,7 @@ def _balanced_acc_from_ct(cont_table):
     return b_acc_sum / factor
 
 
-def _kappa_acc_from_ct(cont_table, m=1):
+def _cohen_kappa_acc_from_ct(cont_table, m=1):
     n = cont_table.shape[0]
     p_0, p_e = 0, 0
     for i in range(n):
