@@ -198,8 +198,8 @@ def _K_from_ct(cont_table, average):
         for i in range(n):
             ct = np.zeros(4)
             ct[0] = cont_table[i, i]  # tp
-            ct[2] = np.sum(cont_table[:, i]) - tp  # fp
-            ct[3] = np.sum(cont_table[i, :]) - tp  # fn
+            ct[2] = np.sum(cont_table[:, i]) - ct[0]  # fp
+            ct[3] = np.sum(cont_table[i, :]) - ct[0]  # fn
             ct[1] = 1.0 - ct[0] - ct[2] - ct[3]  # tn
             ct_all += ct
         ct_all /= ct_all.sum()
