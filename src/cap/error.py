@@ -75,7 +75,7 @@ def cohen_kappa(m=None):
     return _kappa
 
 
-def K(param1, param2=None, average: Literal["binary", "macro", "micro"] = "binary"):
+def k(param1, param2=None, average: Literal["binary", "macro", "micro"] = "binary"):
     if not is_from_cont_table(param1, param2):
         raise ValueError("K accuracy only available for contingency table parameters")
 
@@ -83,19 +83,19 @@ def K(param1, param2=None, average: Literal["binary", "macro", "micro"] = "binar
         print("Warning: 'binary' average is not available for multiclass K. Defaulting to 'macro' K.")
         average = "macro"
 
-    return _K_from_ct(param1, average=average)
+    return _k_from_ct(param1, average=average)
 
 
-def K_bin(param1, param2=None):
-    return K(param1, param2, average="binary")
+def k_bin(param1, param2=None):
+    return k(param1, param2, average="binary")
 
 
-def K_macro(param1, param2=None):
-    return K(param1, param2, average="macro")
+def k_macro(param1, param2=None):
+    return k(param1, param2, average="macro")
 
 
-def K_micro(param1, param2=None):
-    return K(param1, param2, average="micro")
+def k_micro(param1, param2=None):
+    return k(param1, param2, average="micro")
 
 
 def smooth(func, eps=1e-5):
@@ -176,14 +176,14 @@ def _cohen_kappa_from_ct(cont_table, m=1):
     return _kappa
 
 
-def _K_from_ct(cont_table, average):
+def _k_from_ct(cont_table, average):
     n = cont_table.shape[0]
     if average == "binary":
         tp = cont_table[1, 1]
         tn = cont_table[0, 0]
         fp = cont_table[0, 1]
         fn = cont_table[1, 0]
-        return _K_bin(tp, tn, fp, fn)
+        return _k_bin(tp, tn, fp, fn)
     elif average == "macro":
         _K_sum = 0.0
         for i in range(n):
@@ -191,7 +191,7 @@ def _K_from_ct(cont_table, average):
             fp = np.sum(cont_table[:, i]) - tp
             fn = np.sum(cont_table[i, :]) - tp
             tn = 1.0 - tp - fp - fn
-            _K_sum += _K_bin(tp, tn, fp, fn)
+            _K_sum += _k_bin(tp, tn, fp, fn)
         return _K_sum / n
     elif average == "micro":
         ct_all = np.zeros(4)
@@ -203,12 +203,12 @@ def _K_from_ct(cont_table, average):
             ct[1] = 1.0 - ct[0] - ct[2] - ct[3]  # tn
             ct_all += ct
         ct_all /= ct_all.sum()
-        return _K_bin(ct_all[0], ct_all[1], ct_all[2], ct_all[3])
+        return _k_bin(ct_all[0], ct_all[1], ct_all[2], ct_all[3])
     else:
         raise ValueError(f"Unknown K average {average}")
 
 
-def _K_bin(tp, tn, fp, fn):
+def _k_bin(tp, tn, fp, fn):
     specificity, recall = 0.0, 0.0
 
     AN = tn + fp
