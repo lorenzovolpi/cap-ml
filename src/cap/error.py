@@ -42,6 +42,10 @@ def f1(param1, param2=None, average: Literal["binary", "macro", "micro"] = "bina
     return _f1_score
 
 
+def f1_bin(param1, param2=None):
+    return f1(param1, param2, average="binary")
+
+
 def f1_macro(param1, param2=None):
     return f1(param1, param2, average="macro")
 
