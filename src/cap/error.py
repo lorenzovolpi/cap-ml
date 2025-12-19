@@ -1,7 +1,7 @@
 from typing import Literal
 
 import numpy as np
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, cohen_kappa_score, f1_score
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
 
 
 def from_name(err_name):
@@ -61,22 +61,6 @@ def balanced_acc(param1, param2=None):
         _balanced_acc = balanced_accuracy_score(param1, param2)
 
     return _balanced_acc
-
-
-def cohen_kappa(m=None):
-    if m is None:
-        raise ValueError("Number of samples 'm' cannot be None")
-
-    def _kappa(param1, param2=None):
-        if is_from_cont_table(param1, param2):
-            _kappa_acc = _cohen_kappa_from_ct(param1, m=m)
-        else:
-            _kappa_acc = cohen_kappa_score(param1, param2)
-
-        _kappa_acc = (_kappa_acc + 1) / 2
-        return _kappa_acc
-
-    return _kappa
 
 
 def k(param1, param2=None, average: Literal["binary", "macro", "micro"] = "binary"):
@@ -164,20 +148,6 @@ def _balanced_acc_from_ct(cont_table):
         return 1.0
 
     return b_acc_sum / factor
-
-
-def _cohen_kappa_from_ct(cont_table, m=1):
-    n = cont_table.shape[0]
-    p_0, p_e = 0, 0
-    for i in range(n):
-        p_0 += cont_table[i, i]
-        p_e += cont_table[i, :].sum() * cont_table[:, i].sum()
-
-    p_0 /= m
-    p_e /= m * m
-
-    _kappa = (p_0 - p_e) / (1 - p_e) if (1 - p_e) != 0 else 1.0
-    return _kappa
 
 
 def _k_from_ct(cont_table, average):
