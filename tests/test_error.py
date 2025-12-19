@@ -72,7 +72,7 @@ def k_macro_fix(request):
     yield ct, bacc
 
 
-class TestError:
+class TestMeasureK:
     def test_k_bin(self, k_bin_fix):
         ct, result = k_bin_fix
         kres = k_bin(ct)
