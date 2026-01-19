@@ -3,6 +3,8 @@ from typing import Literal
 import numpy as np
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
 
+from cap.utils.commons import contingency_table
+
 
 def from_name(err_name):
     assert err_name in ERROR_NAMES, f"unknown error {err_name}"
@@ -89,11 +91,13 @@ def k_micro(param1, param2=None):
 def smooth(func, eps=1e-5):
     def _smoothing(param1, param2=None):
         if not is_from_cont_table(param1, param2):
-            raise ValueError("Smoothing only available for contingency table parameters")
+            ct = contingency_table(param1, param2)
+        else:
+            ct = param1
 
-        s_param1 = param1 + eps
-        s_param1 = s_param1 / np.sum(s_param1)
-        return func(s_param1, param2)
+        s_ct = ct + eps
+        s_ct = s_ct / np.sum(s_ct)
+        return func(s_ct)
 
     return _smoothing
 
