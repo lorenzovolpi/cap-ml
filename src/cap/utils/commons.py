@@ -256,7 +256,8 @@ def get_shift(test_prevs: np.ndarray, train_prev: np.ndarray | float, decimals=2
     return np.around(_shift, decimals=decimals)
 
 
-def contingency_table(y, y_hat, n_classes):
+def contingency_table(y, y_hat, n_classes=None):
+    n_classes = n_classes if n_classes is not None else np.unique(np.hstack([y, y_hat])).shape[0]
     ct = np.zeros((n_classes, n_classes))
     for _c in range(n_classes):
         _idx = y == _c
