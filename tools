@@ -1,0 +1,141 @@
+#!/usr/bin/env -S uv run --script
+# vim: set filetype=python :
+
+import subprocess as sb
+from argparse import ArgumentParser, Namespace
+
+PROJECT = "cap"
+
+_valid_hosts = ["bcuda", "barracuda", "dgx", "nity", "trinity"]
+host_info = {
+    "bcuda": {
+        "addr": "volpi@barracuda.isti.cnr.it",
+        "workdir": PROJECT,
+    },
+    "barracuda": {
+        "addr": "volpi@barracuda.isti.cnr.it",
+        "workdir": PROJECT,
+    },
+    "dgx": {
+        "addr": "lorenzovolpi@edge-nd1.isti.cnr.it",
+        "workdir": f"raid/{PROJECT}",
+    },
+    "nity": {
+        "addr": "lorenzo.volpi@trinity.isti.cnr.it",
+        "workdir": PROJECT,
+    },
+    "trinity": {
+        "addr": "lorenzo.volpi@trinity.isti.cnr.it",
+        "workdir": PROJECT,
+    },
+}
+assert all([_vh in host_info for _vh in _valid_hosts]), "Missing some hosts' infos. Check tools.py configuration."
+
+
+def run_deploy(args: Namespace):
+    _info = host_info[args.host]
+    _dest = f"{_info['addr']}:{_info['workdir']}"
+    commands = [
+        f"rsync -ai src tests {_dest}",
+        f"rsync -i README.md pyproject.toml {_dest}",
+    ]
+
+    for _c in commands:
+        sb.run(_c, shell=True)
+
+
+def run_log(args: Namespace):
+    _workdir = host_info[args.host]["workdir"]
+    _module = args.module if args.module else PROJECT
+    if args.less:
+        command = f"{args.host} cat {_workdir}/output/{_module}.log | bat -l syslog"
+    else:
+        command = f"{args.host} tail -f -n +0 {_workdir}/output/{_module}.log | bat -P -l syslog"
+
+    try:
+        sb.run(command, shell=True)
+    except KeyboardInterrupt:
+        print("\n\nLog closed")
+        exit
+
+
+def run_out(args: Namespace):
+    _workdir = host_info[args.host]["workdir"]
+    _module = args.module if args.module else PROJECT
+    if args.tail:
+        command = f"{args.host} tail -f -n +0 {_workdir}/output/{_module}.out | bat -P"
+    else:
+        command = f"{args.host} cat {_workdir}/output/{_module}.out | bat"
+
+    try:
+        sb.run(command, shell=True)
+    except KeyboardInterrupt:
+        print("\n\nOutput file closed")
+        exit
+
+
+def run_syncres(args: Namespace):
+    _addr = host_info[args.host]["addr"]
+    _workdir = host_info[args.host]["workdir"]
+    command = f"rsync --info=progress2 -a {_addr}:{_workdir}/output/{PROJECT} output"
+    try:
+        sb.run(command, shell=True)
+    except KeyboardInterrupt:
+        print("\n\nSyncing interrupted")
+        exit
+
+
+if __name__ == "__main__":
+    parser = ArgumentParser()
+    subparsers = parser.add_subparsers(
+        title="Available commands",
+        dest="command",
+        metavar="command",
+        help="description",
+        required=True,
+    )
+
+    parsers_args = {
+        "deploy": dict(help="Deploy code to selected host.", func=run_deploy),
+        "log": dict(help="Log code execution on selected host.", func=run_log),
+        "out": dict(help="Show output of code execution on selected host.", func=run_out),
+        "syncres": dict(help="Sync the results from the host to the local folder", func=run_syncres),
+    }
+
+    _parsers = {}
+    for name, p_args in parsers_args.items():
+        _parsers[name] = subparsers.add_parser(name, help=p_args["help"])
+        _parsers[name].set_defaults(func=p_args["func"])
+        _parsers[name].add_argument(
+            "-s",
+            "--host",
+            action="store",
+            default="bcuda",
+            help=f"The target host. Valid hosts are:\n{_valid_hosts}",
+        )
+
+    # deploy args
+    #
+
+    # log args
+    #
+    _parsers["log"].add_argument("-m", "--module", action="store", help="Module for which the log will be shown.")
+    _parsers["log"].add_argument(
+        "-l", "--less", action="store_true", help="Whether to show the output file in less mode."
+    )
+
+    # out args
+    #
+    _parsers["out"].add_argument(
+        "-t", "--tail", action="store_true", help="Whether to show the output file in tail mode."
+    )
+    _parsers["out"].add_argument("-m", "--module", action="store", help="Module for which the log will be shown.")
+
+    # syncres args
+    #
+
+    args = parser.parse_args()
+
+    assert args.host in _valid_hosts, f"Invalid host {args.host}. Valid hosts are:\n{_valid_hosts}"
+
+    args.func(args)
