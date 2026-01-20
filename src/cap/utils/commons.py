@@ -143,6 +143,13 @@ def true_acc(h: BaseEstimator, acc_fn: Callable, U: LabelledCollection):
     return acc_fn(conf_table)
 
 
+def true_acc_from_posteriors(acc_fn: Callable, U: LabelledCollection, P: np.ndarray):
+    y_pred = P.argmax(axis=1)
+    y_true = U.y
+    conf_table = confusion_matrix(y_true, y_pred=y_pred, labels=U.classes_)
+    return acc_fn(conf_table)
+
+
 def save_dataset_stats(dataset_name, test_prot, L, V):
     path = os.path.join(cap.env["OUT_DIR"], "dataset_stats", f"{dataset_name}.json")
     test_prevs = [Ui.prevalence() for Ui in test_prot()]
