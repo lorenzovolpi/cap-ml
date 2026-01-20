@@ -1,31 +1,32 @@
 import itertools as IT
-from typing import Callable
+from typing import Callable, Iterable, Literal
 
 import numpy as np
 import quapy as qp
 from quapy.data.base import LabelledCollection
 from quapy.method.aggregative import AggregativeQuantifier
-from quapy.protocol import AbstractStochasticSeededProtocol
+from quapy.protocol import AbstractProtocol, AbstractStochasticSeededProtocol
 from sklearn.metrics import confusion_matrix
 
 import cap
 import cap.models.utils as utils
 from cap.models.direct import CAPDirect
+from cap.utils.commons import contingency_table
 
 
 class PrediQuant(CAPDirect):
     def __init__(
         self,
-        acc_fn: Callable,
+        acc: Callable,
         quantifier: AggregativeQuantifier,
         protocol: AbstractStochasticSeededProtocol,
-        prot_posteriors,
+        prot_posteriors: np.ndarray,
         alpha=0.3,
         alpha_rate=1.2,
         error: str | Callable = cap.error.mae,
         predict_train_prev=True,
     ):
-        super().__init__(acc_fn)
+        super().__init__(acc)
         self.q = quantifier
         self.protocol = protocol
         self.prot_posteriors = prot_posteriors
@@ -49,8 +50,6 @@ class PrediQuant(CAPDirect):
             )
 
     def fit(self, val: LabelledCollection, posteriors):
-        # v2, v1 = val.split_stratified(train_prop=0.5)
-        # self.q.fit(v1, fit_classifier=False, val_split=v1)
         self.q.fit(val, fit_classifier=False, val_split=val)
 
         # precompute classifier predictions on samples
@@ -66,11 +65,8 @@ class PrediQuant(CAPDirect):
 
         return self
 
-    def predict(self, X, posteriors, oracle_prev=None):
-        if oracle_prev is None:
-            test_pred_prev = self.q.quantify(X)
-        else:
-            test_pred_prev = oracle_prev
+    def predict(self, X, posteriors):
+        test_pred_prev = self.q.quantify(X)
 
         if self.alpha > 0:
             # select samples from V2 with predicted prevalence close to the predicted prevalence for U
@@ -101,45 +97,52 @@ class PrediQuant(CAPDirect):
             return moving_mean / accum_weight
 
 
-class PabloCAP(CAPDirect):
+class RQBS(CAPDirect):
+    """
+    Reverse Quantification-Based Sampling
+    a.k.a. PabloCAP
+    """
+
     def __init__(
         self,
-        acc_fn: Callable,
+        acc: Callable,
         quantifier: AggregativeQuantifier,
-        n_val_samples=100,
-        aggr="mean",
+        n_vsamples: int = 100,
+        sample_size: int = None,
+        aggr: Literal["mean", "median"] = "median",
     ):
-        super().__init__(acc_fn)
+        super().__init__(acc)
         self.q = quantifier
-        self.n_val_samples = n_val_samples
+        self.n_vsamples = n_vsamples
+        self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
         self.aggr = aggr
-        assert aggr in [
-            "mean",
-            "median",
-        ], "unknown aggregation function, use mean or median"
+        if self.sample_size is None:
+            raise ValueError(
+                'sample_size cannot be None; it must be specified directly or by setting qp.environ["SAMPLE_SIZE"]'
+            )
+        if aggr not in ["mean", "median"]:
+            raise ValueError(f"Unknown aggregation function {aggr}, use mean or median")
+
+    def aggr_fun(self, accs: Iterable):
+        if self.aggr == "mean":
+            return np.mean(accs)
+        elif self.aggr == "median":
+            return np.median(accs)
 
     def fit(self, val: LabelledCollection, posteriors):
         self.q.fit(val)
-        label_predictions = np.argmax(posteriors, axis=-1)
-        self.pre_classified = LabelledCollection(instances=label_predictions, labels=val.labels)
+        self.val_post = LabelledCollection(instances=posteriors, labels=val.y, classes=val.classes_)
         return self
 
-    def predict(self, X, posteriors, oracle_prev=None):
-        if oracle_prev is None:
-            pred_prev = utils.smooth(self.q.quantify(X))
-        else:
-            pred_prev = oracle_prev
-        X_size = X.shape[0]
-        acc_estim = []
-        for _ in range(self.n_val_samples):
-            sigma_i = self.pre_classified.sampling(X_size, *pred_prev[:-1])
-            y_pred, y_true = sigma_i.Xy
-            conf_table = confusion_matrix(y_true, y_pred=y_pred, labels=sigma_i.classes_)
-            acc_i = self.acc(conf_table)
-            acc_estim.append(acc_i)
-        if self.aggr == "mean":
-            return np.mean(acc_estim)
-        elif self.aggr == "median":
-            return np.median(acc_estim)
-        else:
-            raise ValueError("unknown aggregation function")
+    def predict(self, X, posteriors):
+        q_hat = utils.smooth(self.q.quantify(X))
+        val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for _ in range(self.n_vsamples)]
+
+        val_sample_true_accs = []
+        for idx in val_samples_idx:
+            vali_yhat = self.val_post.X[idx, :].argmax(axis=1)
+            vali_y = self.val_post.y[idx]
+            vali_ct = contingency_table(vali_y, vali_yhat, self.val_post.n_classes)
+            val_sample_true_accs.append(self.acc(vali_ct))
+
+        return self.aggr_fun(val_sample_true_accs)
