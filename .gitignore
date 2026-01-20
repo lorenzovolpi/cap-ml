@@ -54,6 +54,7 @@ log
 # build files
 *.env
 *.sh
+tools
 
 # TODOs
 TODO.*
