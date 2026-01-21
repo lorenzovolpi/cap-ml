@@ -36,3 +36,7 @@ def get_plain_prev(prev: np.ndarray):
 def gen_method_df(df_len, **data):
     data = data | {k: [v] * df_len for k, v in data.items() if not isinstance(v, list)}
     return pd.DataFrame.from_dict(data, orient="columns")
+
+
+def get_exp_name(method, classifier, dataset, acc_name, problem):
+    return f"{method}@[{classifier}-{dataset}-{acc_name}]_{problem}"
