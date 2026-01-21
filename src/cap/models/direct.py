@@ -393,6 +393,7 @@ class PrediQuant(CAPDirect):
         prot_posteriors: np.ndarray,
         alpha=0.3,
         alpha_rate=1.2,
+        sample_size: int = None,
         error: str | Callable = cap.error.mae,
         predict_train_prev=True,
     ):
@@ -402,7 +403,7 @@ class PrediQuant(CAPDirect):
         self.prot_posteriors = prot_posteriors
         self.alpha = alpha
         self.alpha_rate = alpha_rate
-        self.sample_size = qp.environ["SAMPLE_SIZE"]
+        self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
         self.__check_error(error)
         self.predict_train_prev = predict_train_prev
 
