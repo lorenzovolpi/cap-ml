@@ -1,8 +1,13 @@
 # cap-ml
 
-version: `0.1.1.7`
+version: `0.1.1.8`
 
 ## Changelog
+
+### v0.1.1.8
+
+- Added PrediQuant direct method
+- Added RQBS direct method
 
 ### v0.1.1.7
 
