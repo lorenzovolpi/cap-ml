@@ -3,9 +3,11 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
+import quapy as qp
 
 import cap
 import exp.direct_ours.env as env
+from cap.utils.commons import parallel
 from exp.direct_ours.data import Clsf, DatasetBundle
 from exp.direct_ours.generators import gen_acc_measures, gen_classifiers, gen_datasets, gen_methods
 from exp.direct_ours.util import gen_method_df, get_exp_name, get_plain_prev
@@ -18,6 +20,34 @@ def train_predict(clsf_name, h, dataset_name, L, V, U):
     return cl, D
 
 
+def exp_protocol(args):
+    cl, D, acc_name, method_name, method, val, val_posteriors = args
+    method_df = None
+    exp_name = get_exp_name(method_name, cl.name, D.name, acc_name, env.PROBLEM)
+    exp_path = os.path.join(env.BASEDIR, f"{exp_name}.json")
+    if not os.path.exists(exp_path):
+        val_prev = get_plain_prev(val.prevalence())
+        method.fit(val, val_posteriors)
+        estim_accs = method.batch_predict(D.test_prot, D.test_prot_posteriors)
+        true_accs = D.true_accs[acc_name]
+        aes = cap.error.ae(np.array(true_accs), np.array(estim_accs)).tolist()
+
+        df_len = D.test_prot.total()
+        method_df = gen_method_df(
+            df_len,
+            estim_accs=estim_accs,
+            true_accs=D.true_accs[acc_name],
+            aes=aes,
+            classifier=cl.name,
+            method=method_name,
+            dataset=D.name,
+            acc_name=acc_name,
+            train_prev=[D.L_prevalence] * df_len,
+            val_prev=[val_prev] * df_len,
+        )
+    return exp_name, method_df
+
+
 if __name__ == "__main__":
     os.makedirs(env.BASEDIR, exist_ok=True)
     cld: list[Tuple[Clsf, DatasetBundle]] = []
@@ -26,42 +56,33 @@ if __name__ == "__main__":
             cld.append(train_predict(clsf_name, h, dataset_name, L, V, U))
             print(f"{clsf_name}@{dataset_name} trained")
 
-    dfs = []
+    exp_list = []
     for cl, D in cld:
         for acc_name, acc_fn in gen_acc_measures():
             for method_name, method, val, val_posteriors in gen_methods(acc_fn, cl, D):
-                exp_name = get_exp_name(method_name, cl.name, D.name, acc_name, env.PROBLEM)
-                exp_path = os.path.join(env.BASEDIR, f"{exp_name}.json")
+                exp_list.append((cl, D, acc_name, method_name, method, val, val_posteriors))
 
-                if not os.path.exists(exp_path):
-                    val_prev = get_plain_prev(val.prevalence())
-                    method.fit(val, val_posteriors)
-                    estim_accs = method.batch_predict(D.test_prot, D.test_prot_posteriors)
-                    true_accs = D.true_accs[acc_name]
-                    aes = cap.error.ae(np.array(true_accs), np.array(estim_accs)).tolist()
+    results_gen = parallel(
+        exp_protocol,
+        exp_list,
+        n_jobs=16,
+        seed=qp.environ["_R_SEED"],
+        return_as="generator_unordered",
+        max_nbytes=None,
+    )
 
-                    df_len = D.test_prot.total()
-                    method_df = gen_method_df(
-                        df_len,
-                        estim_accs=estim_accs,
-                        true_accs=D.true_accs[acc_name],
-                        aes=aes,
-                        classifier=cl.name,
-                        method=method_name,
-                        dataset=D.name,
-                        acc_name=acc_name,
-                        train_prev=[D.L_prevalence] * df_len,
-                        val_prev=[val_prev] * df_len,
-                    )
-                    method_df.to_json(exp_path)
+    dfs = []
+    for exp_name, method_df in results_gen:
+        exp_path = os.path.join(env.BASEDIR, f"{exp_name}.json")
+        if method_df is not None:
+            method_df.to_json(os.path.join(env.BASEDIR, f"{exp_name}.json"))
 
-                method_df = pd.read_json(exp_path)
-                dfs.append(method_df)
-                print(f"{method_name}@[{cl.name}-{D.name}-{acc_name}] done.")
+        method_df = pd.read_json(exp_path)
+        dfs.append(method_df)
+        print(f"{method_name}@[{cl.name}-{D.name}-{acc_name}] done.")
 
     df = pd.concat(dfs, ignore_index=True, axis=0)
 
-    df = pd.read_json(env.JSON_PATH)
     for acc_name, _ in gen_acc_measures():
         for c_name, h in gen_classifiers():
             sub_df = df[(df["classifier"] == c_name) & (df["acc_name"] == acc_name)]
