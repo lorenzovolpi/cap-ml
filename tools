@@ -36,7 +36,7 @@ def run_deploy(args: Namespace):
     _info = host_info[args.host]
     _dest = f"{_info['addr']}:{_info['workdir']}"
     commands = [
-        f"rsync -ai src tests {_dest}",
+        f"rsync -ai src tests exp {_dest}",
         f"rsync -i README.md pyproject.toml {_dest}",
     ]
 
