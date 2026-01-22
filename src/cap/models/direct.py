@@ -119,11 +119,12 @@ class DoC(CAPDirect):
         self.prot_posteriors = prot_posteriors
         self.clip_vals: Tuple[list, list] = clip_vals
 
-    def _get_post_stats(self, X, y, posteriors):
+    def _get_post_stats(self, sample: LabelledCollection, posteriors):
         P = posteriors
         mc = max_conf(P)
         pred_labels = np.argmax(P, axis=-1)
-        acc = self.acc(y, pred_labels)
+        ct = contingency_table(sample.y, pred_labels, sample.n_classes)
+        acc = self.acc(ct)
         return mc, acc
 
     def _doc(self, mc1, mc2):
@@ -143,10 +144,10 @@ class DoC(CAPDirect):
         return self.val_acc - pred_acc
 
     def fit(self, val: LabelledCollection, posteriors):
-        self.val_mc, self.val_acc = self._get_post_stats(*val.Xy, posteriors)
+        self.val_mc, self.val_acc = self._get_post_stats(val, posteriors)
 
         prot_stats = [
-            self._get_post_stats(*sample.Xy, P) for sample, P in IT.zip_longest(self.protocol(), self.prot_posteriors)
+            self._get_post_stats(sample, P) for sample, P in IT.zip_longest(self.protocol(), self.prot_posteriors)
         ]
         prot_mcs, prot_accs = list(zip(*prot_stats))
 
