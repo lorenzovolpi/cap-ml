@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
         method_df = pd.read_json(exp_path)
         dfs.append(method_df)
-        print(f"{method_name}@[{cl.name}-{D.name}-{acc_name}] done.")
+        print(f"{exp_name} done.")
 
     df = pd.concat(dfs, ignore_index=True, axis=0)
 
