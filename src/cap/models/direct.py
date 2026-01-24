@@ -1,5 +1,6 @@
 import itertools as IT
 import random
+from copy import deepcopy
 from typing import Callable, Iterable, Literal, Tuple
 
 import numpy as np
@@ -10,6 +11,7 @@ from quapy.data.base import LabelledCollection
 from quapy.method.aggregative import AggregativeQuantifier
 from quapy.protocol import UPP, AbstractStochasticSeededProtocol
 from scipy.sparse import issparse
+from sklearn.base import BaseEstimator
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import confusion_matrix
 
@@ -396,6 +398,7 @@ class PrediQuant(CAPDirect):
         alpha_rate=1.2,
         sample_size: int = None,
         error: str | Callable = cap.error.mae,
+        reuse_h: BaseEstimator | None = None,
         predict_train_prev=True,
     ):
         super().__init__(acc)
@@ -406,6 +409,7 @@ class PrediQuant(CAPDirect):
         self.alpha_rate = alpha_rate
         self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
         self.__check_error(error)
+        self.reuse_h = reuse_h
         self.predict_train_prev = predict_train_prev
 
     def __check_error(self, error):
@@ -422,7 +426,12 @@ class PrediQuant(CAPDirect):
             )
 
     def fit(self, val: LabelledCollection, posteriors):
-        self.q.fit(val, fit_classifier=False, val_split=val)
+        if self.reuse_h is not None:
+            self.q = deepcopy(self.q)
+            self.q.set_params(classifier=self.reuse_h)
+            self.q.fit(val, fit_classifier=False, val_split=val)
+        else:
+            self.q.fit(val)
 
         # precompute classifier predictions on samples
         self.sigma_ct = [
