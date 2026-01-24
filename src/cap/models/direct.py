@@ -514,16 +514,20 @@ class RQBS(CAPDirect):
         self.val_post = LabelledCollection(instances=posteriors, labels=val.y, classes=val.classes_)
         return self
 
-    def predict(self, X, posteriors):
+    def _predict_val_sample_cts(self, X):
         q_hat = utils.smooth(self.q.quantify(X))
         val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for _ in range(self.n_vsamples)]
 
-        val_sample_true_accs = []
+        val_sample_cts = []
         for idx in val_samples_idx:
             vali_yhat = self.val_post.X[idx, :].argmax(axis=1)
             vali_y = self.val_post.y[idx]
             vali_ct = contingency_table(vali_y, vali_yhat, self.val_post.n_classes)
-            val_sample_true_accs.append(self.acc(vali_ct))
+            val_sample_cts.append(vali_ct)
+
+    def predict(self, X, posteriors):
+        val_sample_cts = self._predict_val_sample_cts(X)
+        val_sample_true_accs = [self.acc(ct) for ct in val_sample_cts]
 
         return self.aggr_fun(val_sample_true_accs)
 
