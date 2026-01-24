@@ -425,6 +425,14 @@ class PrediQuant(CAPDirect):
                 f"representing the name of an error function in {cap.error.ACCURACY_ERROR_NAMES}"
             )
 
+    def __check_posteriors(self, n_classes: int, P: np.ndarray):
+        if P.ndim == 1:
+            P = P.reshape(-1, 1)
+        if P.shape[1] != n_classes:
+            P = np.hstack([P, 1.0 - P.sum(axis=1, keepdims=True)])
+
+        return P
+
     def fit(self, val: LabelledCollection, posteriors):
         if self.reuse_h is not None:
             self.q = deepcopy(self.q)
@@ -434,6 +442,7 @@ class PrediQuant(CAPDirect):
             self.q.fit(val)
 
         # precompute classifier predictions on samples
+        self.prot_posteriors = [self.__check_posteriors(val.n_classes, P) for P in self.prot_posteriors]
         self.sigma_ct = [
             contingency_table(sigma_i.y, np.argmax(P, axis=-1), sigma_i.n_classes)
             for sigma_i, P in IT.zip_longest(self.protocol(), self.prot_posteriors)
