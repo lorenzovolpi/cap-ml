@@ -525,6 +525,8 @@ class RQBS(CAPDirect):
             vali_ct = contingency_table(vali_y, vali_yhat, self.val_post.n_classes)
             val_sample_cts.append(vali_ct)
 
+        return val_sample_cts
+
     def predict(self, X, posteriors):
         val_sample_cts = self._predict_val_sample_cts(X)
         val_sample_true_accs = [self.acc(ct) for ct in val_sample_cts]
