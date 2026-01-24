@@ -444,8 +444,7 @@ class PrediQuant(CAPDirect):
     def _predict_test_priors(self, X):
         return self.q.quantify(X)
 
-    def predict(self, X, posteriors):
-        test_pred_prev = self._predict_test_priors(X)
+    def _predict_from_test_priors(self, test_priors):
         sigma_acc = [self.acc(ct) for ct in self.sigma_ct]
 
         if self.alpha > 0:
@@ -456,7 +455,7 @@ class PrediQuant(CAPDirect):
             while _first or len(selected_accuracies) == 0:
                 _first = False
                 for pred_prev_i, acc_i in zip(self.sigma_pred_prevs, sigma_acc):
-                    max_discrepancy = np.max(self.error(pred_prev_i, test_pred_prev))
+                    max_discrepancy = np.max(self.error(pred_prev_i, test_priors))
                     if max_discrepancy < _alpha:
                         selected_accuracies.append(acc_i)
                 _alpha *= self.alpha_rate
@@ -468,13 +467,17 @@ class PrediQuant(CAPDirect):
             epsilon = 10e-4
             moving_mean = 0
             for pred_prev_i, acc_i in zip(self.sigma_pred_prevs, sigma_acc):
-                max_discrepancy = np.max(self.error(pred_prev_i, test_pred_prev))
+                max_discrepancy = np.max(self.error(pred_prev_i, test_priors))
                 weight = -np.log(max_discrepancy + epsilon)
                 accum_weight += weight
                 moving_mean += weight * acc_i
 
             # print("prediquant_check", moving_mean, accum_weight, moving_mean / accum_weight)
             return moving_mean / accum_weight
+
+    def predict(self, X, posteriors):
+        test_pred_prev = self._predict_test_priors(X)
+        return self._predict_from_test_priors(test_pred_prev)
 
 
 class RQBS(CAPDirect):
@@ -527,11 +530,13 @@ class RQBS(CAPDirect):
 
         return val_sample_cts
 
+    def _predict_from_val_cts(self, cts):
+        val_sample_true_accs = [self.acc(ct) for ct in cts]
+        return self.aggr_fun(val_sample_true_accs)
+
     def predict(self, X, posteriors):
         val_sample_cts = self._predict_val_sample_cts(X)
-        val_sample_true_accs = [self.acc(ct) for ct in val_sample_cts]
-
-        return self.aggr_fun(val_sample_true_accs)
+        return self._predict_from_val_cts(val_sample_cts)
 
 
 def safe_mean(X, axis=None):
