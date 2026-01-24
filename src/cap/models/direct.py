@@ -441,8 +441,11 @@ class PrediQuant(CAPDirect):
 
         return self
 
+    def _predict_test_priors(self, X):
+        return self.q.quantify(X)
+
     def predict(self, X, posteriors):
-        test_pred_prev = self.q.quantify(X)
+        test_pred_prev = self._predict_test_priors(X)
         sigma_acc = [self.acc(ct) for ct in self.sigma_ct]
 
         if self.alpha > 0:
