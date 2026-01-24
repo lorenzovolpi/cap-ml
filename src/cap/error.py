@@ -32,13 +32,16 @@ def f1(param1, param2=None, average: Literal["binary", "macro", "micro"] = "bina
     _warning = False
     if is_from_cont_table(param1, param2):
         if param1.shape[0] > 2 and average == "binary":
-            print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
-            average = "macro"
+            # print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
+            # average = "macro"
+            raise ValueError("'binary' average is not available for multiclass F1. Use 'macro' or 'micro' instead.")
+
         _f1_score = _f1_from_ct(param1, average=average)
     else:
         if len(np.unique(np.hstack([param1, param2]))) > 2 and average == "binary":
-            print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
-            average = "macro"
+            # print("Warning: 'binary' average is not available for multiclass F1. Defaulting to 'macro' F1.")
+            # average = "macro"
+            raise ValueError("'binary' average is not available for multiclass F1. Use 'macro' or 'micro' instead.")
         _f1_score = f1_score(param1, param2, average=average, zero_division=1.0)
 
     return _f1_score
@@ -70,8 +73,9 @@ def k(param1, param2=None, average: Literal["binary", "macro", "micro"] = "binar
         raise ValueError("K accuracy only available for contingency table parameters")
 
     if param1.shape[0] > 2 and average == "binary":
-        print("Warning: 'binary' average is not available for multiclass K. Defaulting to 'macro' K.")
-        average = "macro"
+        # print("Warning: 'binary' average is not available for multiclass K. Defaulting to 'macro' K.")
+        # average = "macro"
+        raise ValueError("'binary' average is not available for multiclass K. Use 'macro' or 'micro' instead.")
 
     return _k_from_ct(param1, average=average)
 
