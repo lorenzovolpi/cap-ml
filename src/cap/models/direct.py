@@ -521,7 +521,7 @@ class RQBS(CAPDirect):
         self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
         self.aggr = aggr
         self.bootstrap = bootstrap
-        self.random_state = qp.envireon["_R_SEED"] if random_state is None else random_state
+        self.random_state = qp.environ["_R_SEED"] if random_state is None else random_state
         if self.sample_size is None:
             raise ValueError(
                 'sample_size cannot be None; it must be specified directly or by setting qp.environ["SAMPLE_SIZE"]'
