@@ -14,6 +14,7 @@ from scipy.sparse import issparse
 from sklearn.base import BaseEstimator
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import confusion_matrix
+from sklearn.utils import resample
 
 import cap
 import cap.models.utils as utils
@@ -511,12 +512,16 @@ class RQBS(CAPDirect):
         n_vsamples: int = 100,
         sample_size: int = None,
         aggr: Literal["mean", "median"] = "median",
+        bootstrap=False,
+        random_state=None,
     ):
         super().__init__(acc)
         self.q = quantifier
         self.n_vsamples = n_vsamples
         self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
         self.aggr = aggr
+        self.bootstrap = bootstrap
+        self.random_state = qp.envireon["_R_SEED"] if random_state is None else random_state
         if self.sample_size is None:
             raise ValueError(
                 'sample_size cannot be None; it must be specified directly or by setting qp.environ["SAMPLE_SIZE"]'
@@ -536,8 +541,21 @@ class RQBS(CAPDirect):
         return self
 
     def _predict_val_sample_cts(self, X):
-        q_hat = utils.smooth(self.q.quantify(X))
-        val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for _ in range(self.n_vsamples)]
+        if self.bootstrap:
+            pass
+            classif_predictions = self.q.classify(X)
+            n_samples = classif_predictions.shape[0]
+            prevs = []
+            with qp.util.temp_seed(self.random_state):
+                for quantifier in self.quantifiers:
+                    for _ in range(self.n_vsamples):
+                        sample_i = resample(classif_predictions, n_samples=n_samples)
+                        prev_i = quantifier.aggregate(sample_i)
+                        prevs.append(prev_i)
+            val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for q_hat in prevs]
+        else:
+            q_hat = utils.smooth(self.q.quantify(X))
+            val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for _ in range(self.n_vsamples)]
 
         val_sample_cts = []
         for idx in val_samples_idx:
