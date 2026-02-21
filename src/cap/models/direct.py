@@ -547,11 +547,10 @@ class RQBS(CAPDirect):
             n_samples = classif_predictions.shape[0]
             prevs = []
             with qp.util.temp_seed(self.random_state):
-                for quantifier in self.quantifiers:
-                    for _ in range(self.n_vsamples):
-                        sample_i = resample(classif_predictions, n_samples=n_samples)
-                        prev_i = quantifier.aggregate(sample_i)
-                        prevs.append(prev_i)
+                for _ in range(self.n_vsamples):
+                    sample_i = resample(classif_predictions, n_samples=n_samples)
+                    prev_i = self.q.aggregate(sample_i)
+                    prevs.append(prev_i)
             val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for q_hat in prevs]
         else:
             q_hat = utils.smooth(self.q.quantify(X))
