@@ -1,7 +1,7 @@
 import itertools as IT
 import random
 from copy import deepcopy
-from typing import Callable, Iterable, Literal, Tuple
+from typing import Callable, Literal, Tuple
 
 import numpy as np
 import ot
@@ -120,7 +120,7 @@ class DoC(CAPDirect):
         super().__init__(acc_fn)
         self.protocol = protocol
         self.prot_posteriors = prot_posteriors
-        self.clip_vals: Tuple[list, list] = clip_vals
+        self.clip_vals: Tuple[int, int] = clip_vals
 
     def _get_post_stats(self, sample: LabelledCollection, posteriors):
         P = posteriors
@@ -529,7 +529,7 @@ class RQBS(CAPDirect):
         if aggr not in ["mean", "median"]:
             raise ValueError(f"Unknown aggregation function {aggr}, use mean or median")
 
-    def aggr_fun(self, accs: Iterable):
+    def aggr_fun(self, accs: list | np.ndarray):
         if self.aggr == "mean":
             return np.mean(accs)
         elif self.aggr == "median":

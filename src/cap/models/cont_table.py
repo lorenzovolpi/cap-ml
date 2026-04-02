@@ -99,12 +99,14 @@ class CAPContingencyTable(ClassifierAccuracyPrediction):
         cont_table = self.predict_ct(X, posteriors)
         return self.acc_fn(cont_table)
 
-    def _batch_predict_ct(self, prot: AbstractProtocol, posteriors):
+    def _batch_predict_ct(self, prot: AbstractProtocol, posteriors) -> list[np.ndarray]:
         estim_cts = [self.predict_ct(Ui.X, posteriors=P) for Ui, P in IT.zip_longest(prot(), posteriors)]
         return estim_cts
 
     @override
-    def batch_predict(self, prot: AbstractProtocol, posteriors, get_estim_cts=False) -> list[float]:
+    def batch_predict(
+        self, prot: AbstractProtocol, posteriors, get_estim_cts=False
+    ) -> list[float] | tuple[list[float], list[np.ndarray]]:
         estim_cts = self._batch_predict_ct(prot, posteriors)
         estim_accs = [self.acc_fn(ct) for ct in estim_cts]
         return (estim_accs, estim_cts) if get_estim_cts else estim_accs
@@ -176,7 +178,7 @@ class CAPContingencyTableQ(CAPContingencyTable, BaseEstimator):
         self.reuse_h = reuse_h
         self.q_class = q_class
 
-    def preprocess_data(self, data: LabelledCollection, posteriors):
+    def preprocess_data(self, data: LabelledCollection, posteriors: np.ndarray) -> LabelledCollection:
         return data
 
     def prepare_quantifier(self):
@@ -189,7 +191,7 @@ class CAPContingencyTableQ(CAPContingencyTable, BaseEstimator):
         else:
             self.q = self.q_class
 
-    def quant_classifier_fit_predict(self, data: LabelledCollection):
+    def quant_classifier_fit_predict(self, data: LabelledCollection) -> LabelledCollection:
         if self.reuse_h is not None:
             return self.q.classifier_fit_predict(data, fit_classifier=False, predict_on=data)
         else:
@@ -209,7 +211,7 @@ class CAPContingencyTableQ(CAPContingencyTable, BaseEstimator):
         y_pred = np.argmax(posteriors, axis=-1)
         y_true = sample.y
         conf_table = confusion_matrix(y_true, y_pred=y_pred, labels=sample.classes_)
-        acc_fn = self.acc if acc_fn is None else acc_fn
+        acc_fn = self.acc_fn if acc_fn is None else acc_fn
         return acc_fn(conf_table)
 
 
@@ -450,7 +452,7 @@ class NsquaredEquationsCAP(CAPContingencyTableQ):
                 x = _optim_minimize(loss, n_classes=n_classes, method="SLSQP")
             elif self.optim_method == "cvxpy":
                 x = _optim_cvxpy(A, b)
-            elif self.otpim_method == "lsq_linear":
+            elif self.optim_method == "lsq_linear":
                 x = _optim_lsq_linear(A, b)
             elif self.optim_method == "Adam":
                 x = _optim_Adam(A, b)
@@ -490,7 +492,7 @@ class NsquaredEquationsCAP(CAPContingencyTableQ):
             A = self.A
             bs = np.stack(bs, axis=0)
 
-            xs = _optim_Adam_batched(A, bs, bounds=(0, 1))
+            xs = _optim_Adam_batched(A, bs)
 
             cts_test = [x.reshape(n, n) for x in xs]
             return cts_test
@@ -694,7 +696,7 @@ class OverConstrainedEquationsCAP(CAPContingencyTableQ):
             x = _optim_minimize(loss, n_classes=n_classes, method=self.optim_method)
         elif self.optim_method == "cvxpy":
             x = _optim_cvxpy(A, b)
-        elif self.otpim_method == "lsq_linear":
+        elif self.optim_method == "lsq_linear":
             x = _optim_lsq_linear(A, b)
         elif self.optim_method == "Adam":
             x = _optim_Adam(A, b)
@@ -727,7 +729,7 @@ class OverConstrainedEquationsCAP(CAPContingencyTableQ):
             A = self.A
             bs = np.stack(bs, axis=0)
 
-            xs = _optim_Adam_batched(A, bs, bounds=(0, 1))
+            xs = _optim_Adam_batched(A, bs)
 
             cts_test = [x.reshape(n, n) for x in xs]
             return cts_test
@@ -934,7 +936,7 @@ class QuAccNxN(QuAcc):
     def _num_non_empty_classes(self):
         return [len(old_class_idx_i) for old_class_idx_i in self.q_old_class_idx]
 
-    def _safe_q_classifier_fit_predict(self, compact_data: LabelledCollection):
+    def _safe_q_classifier_fit_predict(self, compact_data: list[LabelledCollection]):
         classif_predictions = []
         for q_i, data_i, num_nec_i in zip(self.q, compact_data, self._num_non_empty_classes()):
             if num_nec_i <= 1:
@@ -975,10 +977,10 @@ class QuAccNxN(QuAcc):
 
         return classif_predictions
 
-    def quant_aggregation_fit(self, classif_predictions: LabelledCollection, data: LabelledCollection):
+    def quant_aggregation_fit(self, classif_predictions: LabelledCollection, data: list[LabelledCollection]):
         compact_data, _ = tuple(map(list, zip(*[data_i.compact_classes() for data_i in data])))
         for q_i, cp_i, compact_data_i, num_nec_i in zip(
-            self.q, classif_predictions, compact_data, self._num_non_empty_classes()
+            self.q, classif_predictions.X, compact_data, self._num_non_empty_classes()
         ):
             if num_nec_i > 1:
                 q_i.aggregation_fit(cp_i, compact_data_i)

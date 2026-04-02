@@ -240,7 +240,7 @@ def fetch_cifar100Dataset(target, train_val_split=0.5):
 
 
 def fetch_twitterDataset(dataset_name, data_home=env["QUAPY_DATA"], train_val_split=0.5):
-    train, U = qp.datasets.fetch_twitter(dataset_name, min_df=3, pickle=True, data_home=data_home)
+    train, U = qp.datasets.fetch_twitter(dataset_name, min_df=3, pickle=True, data_home=data_home).train_test
     T, V = split_train(train, train_val_split)
     return T, V, U
 
