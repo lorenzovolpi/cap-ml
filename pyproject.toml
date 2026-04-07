@@ -21,6 +21,8 @@ dependencies = [
     "pot>=0.9.5",
     "torch>=2.7.1",
     "cvxpy>=1.7.0",
+    "torchvision>=0.24.1",
+    "numba>=0.65.0",
 ]
 
 [dependency-groups]
@@ -35,6 +37,7 @@ dev = [
 
 [tool.setuptools.package-dir]
 cap = "src/cap"
+cap_exp = "src/cap_exp"
 
 [tool.setuptools.packages.find]
 where = ["src"]
