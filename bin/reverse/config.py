@@ -1,38 +1,21 @@
-import functools
-import itertools as IT
 from collections import defaultdict
 from typing import Callable, Iterable, Literal, Tuple
 
 import numpy as np
-from quapy.data import LabelledCollection
-from quapy.data.datasets import UCI_BINARY_DATASETS, UCI_MULTICLASS_DATASETS
 from quapy.method.aggregative import KDEyML
-from sklearn.base import BaseEstimator, clone
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.neural_network import MLPClassifier as MLP
-from sklearn.svm import SVC
 
-from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
 from cap.error import f1, f1_macro, k_bin, k_macro, smooth, vanilla_acc
 from cap.models.base import CAP
 from cap.models.cont_table import O_LEAP
 from cap.models.direct import DoC
-from cap_exp.data import ClassifierInfo, DatasetBundle, PretainInfo, load_info_paths
-from cap_exp.pretrain.dataset import load_dataset
+from cap_exp.pretrain.data import DatasetBundle, PretainInfo, load_info_paths
+from cap_exp.pretrain.dataset import sort_datasets_by_size
 from cap_exp.util import all_results_exist
 
 
 def kdey():
     return KDEyML(MLP())
-
-
-# def get_cls_name(base_name: str, params: dict, is_default: bool):
-#     if is_default:
-#         return base_name
-#
-#     params_str = ";".join([f"{k}={v}" for k, v in params.items()])
-#     return f"{base_name}_[{params_str}]"
 
 
 def get_acc_names():
