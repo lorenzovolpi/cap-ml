@@ -20,7 +20,7 @@ from transformers import (
 from transformers.trainer_callback import EarlyStoppingCallback
 from transformers.trainer_utils import get_last_checkpoint
 
-from cap_exp.data import ClassifierInfo, DatasetInfo, PretrainInfo
+from cap_exp.pretrain.data import ClassifierInfo, DatasetInfo, PretrainInfo, get_model_outdir
 from cap_exp.pretrain.dataset import get_hf_dataset, get_local_hf_dataset, save_dataset
 
 EXPERIMENT = "pretrain"
@@ -209,12 +209,6 @@ class SentimentArgs:
         return SentimentArgs(**(self.params | params))
 
 
-def get_tr_outdir(p_info: PretrainInfo):
-    outdir = os.path.join("output", "tms", "models", p_info.h_info.full_name, p_info.d_info.name)
-    os.makedirs(outdir, exist_ok=True)
-    return outdir
-
-
 def get_embed_outdir(args):
     model_name = args.model_name.split("/")[-1]
     dataset_name = args.dataset_name.split("/")[-1]
@@ -306,7 +300,7 @@ def compute_clf_metrics(preds):
 
 
 def train_model(args: SentimentArgs, p_info: PretrainInfo, model, dataset, parser_args):
-    training_outdir = get_tr_outdir(p_info)
+    training_outdir = get_model_outdir(p_info)
 
     trainer_args = TrainingArguments(
         output_dir=training_outdir,
@@ -461,12 +455,10 @@ def pretrain(d_info: DatasetInfo, h_info: ClassifierInfo, parser_args):
     train_prev = np.sum(classes.reshape(-1, 1) == train_labels, axis=-1) / train_labels.shape[0]
 
     save_dataset(DOMAIN, d_info.name, h_info.full_name, classes, train_prev, embedddings, labels)
-    # log.info(f"[{h_info.name}@{d_info.name}] embeddings saved")
     p_info.dump(logits=dict(V=logits["validation"], U=logits["test"]))
-    # log.info(f"[{h_info.name}@{d_info.name}] logits saved")
 
 
-if __name__ == "__main__":
+def main():
     if (
         "CUDA_VISIBLE_DEVICES" not in os.environ
         or "TOKENIZERS_PARALLELISM" not in os.environ
@@ -480,11 +472,8 @@ if __name__ == "__main__":
     parser.add_argument("--dry-run", action="store_true", help="Train the model without saving outputs")
     parser_args = parser.parse_args()
 
-    # log.info("-" * 31 + "  start  " + "-" * 31)
     for d_info, h_info in gen_config():
         try:
             pretrain(d_info, h_info, parser_args)
         except Exception as e:
-            # log.error(e)
             print_exception(e)
-    # log.info("-" * 32 + "  end  " + "-" * 32)

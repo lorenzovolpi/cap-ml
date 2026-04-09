@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from dataclasses import dataclass
+from typing import Literal
 
 import numpy as np
 import quapy as qp
@@ -8,12 +9,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from data import NotPretrainedError, PretrainInfo, load_info_paths
-from env import PROJECT
 from sklearn.calibration import calibration_curve
 from sklearn.model_selection import KFold
 from tqdm import tqdm
 from util import get_logger
+
+from cap_exp.pretrain.data import NotPretrainedError, PretrainInfo, load_info_paths
 
 EXPERIMENT = "calibrate"
 
@@ -205,32 +206,17 @@ def calibrate(p: PretrainInfo, recalib=False):
     return Calibrated(p=p, posteriors=posteriors, logits=logits, ece_pre=v_ece_pre, ece_post=v_ece_post)
 
 
-def main(log, pargs):
-    info_paths = load_info_paths(pargs.domain)
+def main(recalib: bool = False, domain: Literal["text", "image", "classic"] = None):
+    if domain is None:
+        raise ValueError("Please specify a domain.")
+
+    info_paths = load_info_paths(domain)
     p_infos = [PretrainInfo.load(p, fast=True) for p in info_paths]
 
     for p in tqdm(p_infos, desc="Calibration"):
-        c = calibrate(p, recalib=pargs.recalib)
+        c = calibrate(p, recalib=recalib)
         if c.exists:
-            log.info(f"[{c.p.h_info.name}@{c.p.d_info.name}] already calibrated, skipping.")
+            print(f"[{c.p.h_info.name}@{c.p.d_info.name}] already calibrated, skipping.")
         else:
             c.p.dump(posteriors=c.posteriors, logits=c.logits)
-            log.info(f"[{c.p.h_info.name}@{c.p.d_info.name}] calibrated: {c.ece_pre} -> {c.ece_post}")
-
-
-if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("--recalib", action="store_true", help="Recalibrate existing posteriors")
-    parser.add_argument("--text", action="store_const", dest="domain", const="text")
-    parser.add_argument("--image", action="store_const", dest="domain", const="image")
-    parser.add_argument("--classic", action="store_const", dest="domain", const="classic")
-    pargs = parser.parse_args()
-
-    if pargs.domain is None:
-        raise ValueError("Please specify a domain.")
-
-    log = get_logger(id=f"{PROJECT}.{EXPERIMENT}.{pargs.domain}")
-
-    log.info("-" * 31 + "  start  " + "-" * 31)
-    main(log, pargs)
-    log.info("-" * 32 + "  end  " + "-" * 32)
+            print(f"[{c.p.h_info.name}@{c.p.d_info.name}] calibrated: {c.ece_pre} -> {c.ece_post}")

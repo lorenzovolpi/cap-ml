@@ -4,8 +4,6 @@ from traceback import print_exception
 from typing import Iterable, Literal, Tuple
 
 import numpy as np
-from data import ClassifierInfo, DatasetInfo, PretrainInfo
-from env import PROJECT
 from quapy.data import LabelledCollection
 from quapy.data.datasets import UCI_BINARY_DATASETS, UCI_MULTICLASS_DATASETS
 from sklearn.base import BaseEstimator
@@ -13,16 +11,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
-from util import get_logger
 
 import cap
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
 from cap.utils.commons import parallel
+from cap_exp.pretrain.data import ClassifierInfo, DatasetInfo, PretrainInfo
 from cap_exp.pretrain.dataset import sort_datasets_by_size
 
 EXPERIMENT = "pretrain"
 DOMAIN = "classic"
-log = get_logger(id=f"{PROJECT}.{EXPERIMENT}.{DOMAIN}")
 
 NUM_TESTS = 1000
 BATCH_SIZE = 8
@@ -151,7 +148,7 @@ def pretrain():
         for clsf in gen_classifiers(n_classes):
             _, h_info = clsf
             if PretrainInfo(DOMAIN, d_info, h_info).exists:
-                log.info(f"Already exists: {h_info.name} on {d_info.name}, skipping.")
+                print(f"Already exists: {h_info.name} on {d_info.name}, skipping.")
                 continue
             if i % 8 == 0:
                 clsf_batches.append([])
@@ -169,15 +166,12 @@ def pretrain():
 
     for results in results_gen:
         for p_info, post in results:
-            log.info(f"Pretrained {p_info.h_info.name} on {p_info.d_info.name}.")
+            print(f"Pretrained {p_info.h_info.name} on {p_info.d_info.name}.")
             p_info.dump(posteriors=post.asdict())
 
 
-if __name__ == "__main__":
+def main():
     try:
-        log.info("-" * 31 + "  start  " + "-" * 31)
         pretrain()
-        log.info("-" * 32 + "  end  " + "-" * 32)
     except Exception as e:
-        log.error(e)
         print_exception(e)

@@ -13,12 +13,12 @@ from quapy.data import LabelledCollection
 from quapy.protocol import UPP
 from sklearn.base import BaseEstimator, ClassifierMixin
 
+import cap.environment as capenv
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
 from cap.utils.commons import contingency_table
 from cap_exp.util import split_validation
 
-# FIX: REMOVE FROM HERE!!
-BASEDIR = os.path.join("output", "tms", "pretrain")
+# BASEDIR = os.path.join("output", "tms", "pretrain")
 
 
 class NotPretrainedError(Exception):
@@ -208,12 +208,14 @@ class PretrainInfo:
     @property
     def info_path(self):
         stem = self._get_stem()
-        return os.path.join(BASEDIR, self.domain, f"{stem}_info.pkl")
+        basedir = pretrain_basedir()
+        return os.path.join(basedir, self.domain, f"{stem}_info.pkl")
 
     @property
     def posteriors_path(self):
         stem = self._get_stem()
-        return os.path.join(BASEDIR, self.domain, f"{stem}_post.npz")
+        basedir = pretrain_basedir()
+        return os.path.join(basedir, self.domain, f"{stem}_post.npz")
 
     @property
     def exists(self) -> bool:
@@ -296,7 +298,8 @@ def load_from_collection(p_info: PretrainInfo):
         raise ValueError(f"Unknown dataset collection: {dataset_collection}")
 
 
-def load_info_paths(basedir: str, domain: str):
+def load_info_paths(domain: str):
+    basedir = pretrain_basedir()
     _dir = os.path.join(basedir, domain)
     paths = glob(os.path.join(_dir, "*_info.pkl"))
 
@@ -321,3 +324,20 @@ class ClassifierDatasetBundle:
     def load(cls, path: str) -> Self:
         with open(path, "rb") as f:
             return pickle.load(f)
+
+
+def pretrain_basedir():
+    return os.path.join(capenv["CAP_DATA"], "pretrain")
+
+
+def get_dataset_path(domain: str, dataset_name: str, model_name: str | None):
+    basedir = os.path.join(capenv["CAP_DATA"], "datasets")
+    if model_name is None or model_name == "*":
+        return glob(os.path.join(basedir, f"{domain}_{dataset_name}_*.npz"))[0]
+    return os.path.join(basedir, f"{domain}_{dataset_name}_{model_name}.npz")
+
+
+def get_model_outdir(p_info: PretrainInfo):
+    outdir = os.path.join(capenv["CAP_DATA"], "models", p_info.h_info.full_name, p_info.d_info.name)
+    os.makedirs(outdir, exist_ok=True)
+    return outdir

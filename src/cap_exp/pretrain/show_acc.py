@@ -2,8 +2,9 @@ from collections import defaultdict
 
 import numpy as np
 import pandas as pd
-from data import PretrainInfo, load_from_collection, load_info_paths
 from sklearn.metrics import accuracy_score
+
+from cap_exp.pretrain.data import PretrainInfo, load_from_collection, load_info_paths
 
 DOMAIN = "text"
 

@@ -17,15 +17,9 @@ from quapy.data.datasets import UCI_BINARY_DATASETS, UCI_MULTICLASS_DATASETS
 from tqdm import tqdm
 from util import temp_np_seed
 
+import cap.environment as capenv
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
-
-BASEDIR = os.path.join("output", "tms", "datasets")
-
-
-def get_dataset_path(domain: str, dataset_name: str, model_name: str | None):
-    if model_name is None or model_name == "*":
-        return glob(os.path.join(BASEDIR, f"{domain}_{dataset_name}_*.npz"))[0]
-    return os.path.join(BASEDIR, f"{domain}_{dataset_name}_{model_name}.npz")
+from cap_exp.pretrain.data import get_dataset_path
 
 
 def save_dataset(domain, dataset_name, model_name, classes, train_prev, embeds, labels):
@@ -53,18 +47,20 @@ def load_dataset(domain, dataset_name, model_name=None):
 
 
 def local_dataset_dir():
-    return os.path.join("data", "datasets")
+    cap_dir = capenv["CAP_DATA"]
+    return os.path.join(cap_dir, "raw")
 
 
 def download_imagenet_split(name):
     urls = {}
-    with open(os.path.join("data", "imagenet_urls.txt"), "r") as f:
+    basedir = local_dataset_dir()
+    with open(os.path.join(basedir, "imagenet_urls.txt"), "r") as f:
         for line in f.readlines():
             _split, _url = tuple(map(lambda s: s.strip(), line.strip().split(" ", maxsplit=1)))
             urls[_split] = _url
     url = urls[name]
 
-    dest_dir = os.path.join(local_dataset_dir(), "imagenet-1k")
+    dest_dir = os.path.join(basedir, "imagenet-1k")
     os.makedirs(dest_dir, exist_ok=True)
 
     filename = url.split("/")[-1]
@@ -197,7 +193,7 @@ def extract_imagenet_val():
         return
     os.makedirs(split_dir, exist_ok=True)
 
-    lt_tes_path = os.path.join("data", "ImageNet_LT_test.txt")
+    lt_tes_path = os.path.join(local_dataset_dir(), "ImageNet_LT_test.txt")
     class_map = {}
     with open(lt_tes_path, "r") as f:
         for line in f.readlines():
@@ -227,7 +223,7 @@ def get_imagenet():
 
 def build_imagenet_lt():
     def load_set(split) -> tuple[np.ndarray, np.ndarray]:
-        path = os.path.join("data", f"ImageNet_LT_{split}.txt")
+        path = os.path.join(local_dataset_dir(), f"ImageNet_LT_{split}.txt")
         X, y = [], []
         with open(path, "r") as f:
             for line in f.readlines():
