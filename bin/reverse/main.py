@@ -66,6 +66,7 @@ class EXP:
 
 
 def fit_or_switch(method: CAP, V, V_posteriors, acc_fn, is_fit):
+    # TODO: add base class to better manage switch and switch_and_fit
     if hasattr(method, "switch"):
         method, t_train = method.switch(acc_fn), None
         if not is_fit:
