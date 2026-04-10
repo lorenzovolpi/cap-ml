@@ -1,16 +1,16 @@
-import itertools as IT
 import logging
 import os
 from contextlib import contextmanager
+from glob import glob
 from time import time
 
-import env
 import numpy as np
 import quapy as qp
 from quapy.data import LabelledCollection
 from quapy.protocol import UPP
 
 import cap
+from cap import env as capenv
 from cap.models.base import ClassifierAccuracyPrediction
 from cap.models.cont_table import CAPContingencyTable
 
@@ -121,3 +121,20 @@ def temp_np_seed(seed):
         yield
     finally:
         np.random.set_state(state)
+
+
+def pretrain_basedir():
+    return os.path.join(capenv["CAP_DATA"], "pretrain")
+
+
+def get_dataset_path(domain: str, dataset_name: str, model_name: str | None):
+    basedir = os.path.join(capenv["CAP_DATA"], "datasets")
+    if model_name is None or model_name == "*":
+        return glob(os.path.join(basedir, f"{domain}_{dataset_name}_*.npz"))[0]
+    return os.path.join(basedir, f"{domain}_{dataset_name}_{model_name}.npz")
+
+
+def get_model_outdir(h_name: str, d_name: str):
+    outdir = os.path.join(capenv["CAP_DATA"], "models", h_name, d_name)
+    os.makedirs(outdir, exist_ok=True)
+    return outdir

@@ -6,7 +6,6 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Callable, Iterable, List, Literal, Self, TypeAlias
 
-import env
 import numpy as np
 import pandas as pd
 
@@ -56,7 +55,7 @@ class Results(ABC):
     @classmethod
     def load(
         cls,
-        base_dir=env.root_dir,
+        base_dir,
         acc_name="*",
         dataset="*",
         domain="*",

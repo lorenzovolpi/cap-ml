@@ -8,15 +8,14 @@ from typing import Any, Dict, Self, Tuple
 import numpy as np
 import quapy as qp
 from numba import njit
-from pretrain.dataset import load_dataset
 from quapy.data import LabelledCollection
 from quapy.protocol import UPP
 from sklearn.base import BaseEstimator, ClassifierMixin
 
-import cap.environment as capenv
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
 from cap.utils.commons import contingency_table
-from cap_exp.util import split_validation
+from cap_exp.pretrain.dataset import load_dataset
+from cap_exp.util import pretrain_basedir, split_validation
 
 # BASEDIR = os.path.join("output", "tms", "pretrain")
 
@@ -298,8 +297,8 @@ def load_from_collection(p_info: PretrainInfo):
         raise ValueError(f"Unknown dataset collection: {dataset_collection}")
 
 
-def load_info_paths(domain: str):
-    basedir = pretrain_basedir()
+def load_info_paths(domain: str, basedir=None):
+    basedir = pretrain_basedir() if basedir is None else basedir
     _dir = os.path.join(basedir, domain)
     paths = glob(os.path.join(_dir, "*_info.pkl"))
 
@@ -324,20 +323,3 @@ class ClassifierDatasetBundle:
     def load(cls, path: str) -> Self:
         with open(path, "rb") as f:
             return pickle.load(f)
-
-
-def pretrain_basedir():
-    return os.path.join(capenv["CAP_DATA"], "pretrain")
-
-
-def get_dataset_path(domain: str, dataset_name: str, model_name: str | None):
-    basedir = os.path.join(capenv["CAP_DATA"], "datasets")
-    if model_name is None or model_name == "*":
-        return glob(os.path.join(basedir, f"{domain}_{dataset_name}_*.npz"))[0]
-    return os.path.join(basedir, f"{domain}_{dataset_name}_{model_name}.npz")
-
-
-def get_model_outdir(p_info: PretrainInfo):
-    outdir = os.path.join(capenv["CAP_DATA"], "models", p_info.h_info.full_name, p_info.d_info.name)
-    os.makedirs(outdir, exist_ok=True)
-    return outdir

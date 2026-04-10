@@ -1,4 +1,3 @@
-from argparse import ArgumentParser
 from dataclasses import dataclass
 from typing import Literal
 
@@ -12,7 +11,6 @@ import torch.optim as optim
 from sklearn.calibration import calibration_curve
 from sklearn.model_selection import KFold
 from tqdm import tqdm
-from util import get_logger
 
 from cap_exp.pretrain.data import NotPretrainedError, PretrainInfo, load_info_paths
 

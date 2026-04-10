@@ -20,8 +20,9 @@ from transformers import (
 from transformers.trainer_callback import EarlyStoppingCallback
 from transformers.trainer_utils import get_last_checkpoint
 
-from cap_exp.pretrain.data import ClassifierInfo, DatasetInfo, PretrainInfo, get_model_outdir
+from cap_exp.pretrain.data import ClassifierInfo, DatasetInfo, PretrainInfo
 from cap_exp.pretrain.dataset import get_hf_dataset, get_local_hf_dataset, save_dataset
+from cap_exp.util import get_model_outdir
 
 EXPERIMENT = "pretrain"
 DOMAIN = "text"
@@ -300,7 +301,7 @@ def compute_clf_metrics(preds):
 
 
 def train_model(args: SentimentArgs, p_info: PretrainInfo, model, dataset, parser_args):
-    training_outdir = get_model_outdir(p_info)
+    training_outdir = get_model_outdir(p_info.h_info.full_name, p_info.d_info.name)
 
     trainer_args = TrainingArguments(
         output_dir=training_outdir,

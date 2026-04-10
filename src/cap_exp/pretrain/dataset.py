@@ -15,11 +15,10 @@ from datasets import Dataset, DatasetDict, Image, concatenate_datasets
 from quapy.data import LabelledCollection
 from quapy.data.datasets import UCI_BINARY_DATASETS, UCI_MULTICLASS_DATASETS
 from tqdm import tqdm
-from util import temp_np_seed
 
 import cap.environment as capenv
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
-from cap_exp.pretrain.data import get_dataset_path
+from cap_exp.util import get_dataset_path, temp_np_seed
 
 
 def save_dataset(domain, dataset_name, model_name, classes, train_prev, embeds, labels):

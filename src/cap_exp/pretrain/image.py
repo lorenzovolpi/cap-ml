@@ -31,8 +31,9 @@ from transformers import (
 )
 from transformers.trainer_utils import get_last_checkpoint
 
-from cap_exp.pretrain.data import ClassifierInfo, DatasetInfo, PretainInfo, get_model_outdir
+from cap_exp.pretrain.data import ClassifierInfo, DatasetInfo, PretrainInfo
 from cap_exp.pretrain.dataset import get_hf_dataset, get_local_hf_dataset, save_dataset
+from cap_exp.util import get_model_outdir
 
 EXPERIMENT = "pretrain"
 DOMAIN = "image"
@@ -52,7 +53,7 @@ hf_model_map = {}
 #         ["loss", "learning_rate", "eval_loss", "eval_acc", "eval_runtime", "train_runtime", "train_loss"]
 #     )
 #
-#     def __init__(self, p: PretainInfo) -> None:
+#     def __init__(self, p: PretrainInfo) -> None:
 #         self.p = p
 #
 #     def get_logs_str(self, logs: dict):
@@ -336,8 +337,8 @@ def compute_clf_metrics(preds):
     return {"acc": acc, "f1": f1}
 
 
-def train_model(args: VisionArgs, p_info: PretainInfo, model, dataset, parser_args):
-    training_outdir = get_model_outdir(p_info)
+def train_model(args: VisionArgs, p_info: PretrainInfo, model, dataset, parser_args):
+    training_outdir = get_model_outdir(p_info.h_info.full_name, p_info.d_info.name)
 
     training_args = TrainingArguments(
         output_dir=training_outdir,
@@ -453,7 +454,7 @@ def embed(model, data, selection_strategy: Callable, args: VisionArgs):
 
 
 def pretrain(d_info: DatasetInfo, h_info: ClassifierInfo, parser_args):
-    p_info = PretainInfo(domain=DOMAIN, d_info=d_info, h_info=h_info)
+    p_info = PretrainInfo(domain=DOMAIN, d_info=d_info, h_info=h_info)
     if p_info.exists and not parser_args.ignore_exist:
         # log.info(f"[{h_info.name}@{d_info.name}] already exists, skipping.")
         return

@@ -145,7 +145,7 @@ def pretrain():
         d_info = DatasetInfo(dataset_name, dataset_coll, n_classes)
         i = 0
         clsf_batches = []
-        for clsf in gen_classifiers(n_classes):
+        for clsf in gen_classifiers():
             _, h_info = clsf
             if PretrainInfo(DOMAIN, d_info, h_info).exists:
                 print(f"Already exists: {h_info.name} on {d_info.name}, skipping.")
