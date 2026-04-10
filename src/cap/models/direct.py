@@ -19,7 +19,7 @@ from sklearn.utils import resample
 import cap
 import cap.models.utils as utils
 from cap.error import vanilla_acc
-from cap.models.base import ClassifierAccuracyPrediction
+from cap.models.base import ClassifierAccuracyPrediction, NeedsValidationProtocol
 from cap.models.utils import max_conf, neg_entropy
 from cap.utils.commons import contingency_table
 
@@ -115,11 +115,9 @@ class ATC(CAPDirect):
         return np.mean(scores >= thres)
 
 
-class DoC(CAPDirect):
-    def __init__(self, acc_fn: Callable, protocol: AbstractStochasticSeededProtocol, prot_posteriors, clip_vals=(0, 1)):
+class DoC(CAPDirect, NeedsValidationProtocol):
+    def __init__(self, acc_fn: Callable, clip_vals=(0, 1)):
         super().__init__(acc_fn)
-        self.protocol = protocol
-        self.prot_posteriors = prot_posteriors
         self.clip_vals: Tuple[int, int] = clip_vals
 
     def _get_post_stats(self, sample: LabelledCollection, posteriors):
@@ -147,6 +145,8 @@ class DoC(CAPDirect):
         return self.val_acc - pred_acc
 
     def fit(self, val: LabelledCollection, posteriors):
+        self.assert_val_prot()
+
         self.val_mc, self.val_acc = self._get_post_stats(val, posteriors)
 
         prot_stats = [
@@ -388,13 +388,11 @@ class Q_COT(CAPDirect):
         return 1 - costs.mean()
 
 
-class PrediQuant(CAPDirect):
+class PrediQuant(CAPDirect, NeedsValidationProtocol):
     def __init__(
         self,
         acc: Callable,
         quantifier: AggregativeQuantifier,
-        protocol: AbstractStochasticSeededProtocol,
-        prot_posteriors: np.ndarray,
         alpha=0.3,
         alpha_rate=1.2,
         sample_size: int = None,
@@ -404,8 +402,6 @@ class PrediQuant(CAPDirect):
     ):
         super().__init__(acc)
         self.q = quantifier
-        self.protocol = protocol
-        self.prot_posteriors = prot_posteriors
         self.alpha = alpha
         self.alpha_rate = alpha_rate
         self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
@@ -435,6 +431,8 @@ class PrediQuant(CAPDirect):
         return P
 
     def fit(self, val: LabelledCollection, posteriors):
+        self.assert_val_prot()
+
         if self.reuse_h is not None:
             self.q = deepcopy(self.q)
             self.q.set_params(classifier=self.reuse_h)
@@ -542,7 +540,6 @@ class RQBS(CAPDirect):
 
     def _predict_val_sample_cts(self, X):
         if self.bootstrap:
-            pass
             classif_predictions = self.q.classify(X)
             n_samples = classif_predictions.shape[0]
             prevs = []
