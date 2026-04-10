@@ -5,13 +5,13 @@ import numpy as np
 from quapy.method.aggregative import KDEyML
 from sklearn.neural_network import MLPClassifier as MLP
 
+from bin.reverse.util import all_results_exist
 from cap.error import f1, f1_macro, k_bin, k_macro, smooth, vanilla_acc
 from cap.models.base import CAP
 from cap.models.cont_table import O_LEAP
 from cap.models.direct import DoC
-from cap_exp.pretrain.data import DatasetBundle, PretainInfo, load_info_paths
+from cap_exp.pretrain.data import DatasetBundle, PretrainInfo, load_info_paths
 from cap_exp.pretrain.dataset import sort_datasets_by_size
-from cap_exp.util import all_results_exist
 
 
 def kdey():
@@ -51,17 +51,17 @@ def gen_acc_measure(is_multiclass: bool):
         yield acc, get_selection_acc(acc, is_multiclass)
 
 
-def gen_methods(d: DatasetBundle) -> Iterable[Tuple[str, CAP]]:
+def gen_methods() -> Iterable[Tuple[str, CAP]]:
     _, acc = next(gen_acc_measure(True))
     yield "O-LEAP", O_LEAP(acc, kdey())
-    yield "DoC", DoC(acc, d.V2_prot, d.V2_prot_posteriors)
+    yield "DoC", DoC(acc)
 
 
 def get_existing_dataset_names(experiment: str, domain: str, sort=True):
     info_paths = load_info_paths(domain=domain)
     dataset_h_map = defaultdict(lambda: True)
     for path in info_paths:
-        p = PretainInfo.load(path, fast=True)
+        p = PretrainInfo.load(path, fast=True)
         d_info, h_info = p.d_info, p.h_info
         # if not dataset_h_map[D.name]:
         #     continue
