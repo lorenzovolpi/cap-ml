@@ -23,6 +23,8 @@ dependencies = [
     "cvxpy>=1.7.0",
     "torchvision>=0.24.1",
     "numba>=0.65.0",
+    "jax>=0.10.0",
+    "numpyro>=0.20.1",
 ]
 
 [dependency-groups]
