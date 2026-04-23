@@ -3,6 +3,9 @@ import jax.numpy as jnp
 import numpy as np
 import numpyro
 import numpyro.distributions as dist
+from sklearn.neural_network import MLPClassifier
+
+from cap.data.datasets import fetch_UCIBinaryDataset
 
 P_TEST_Y: str = "P_test(Y)"
 P_TEST_C: str = "P_test(C)"
@@ -43,8 +46,30 @@ def sample_posterior(
     return mcmc.get_samples()
 
 
+def get_ct_samples(
+    posterior_count: np.ndarray, train_ct: np.ndarray, seed: int = 0
+) -> tuple[np.ndarray, float, float, float]:
+    samples = sample_posterior(posterior_count, train_ct, num_warmup=500, num_samples=1000, seed=seed)
+
+    # compute P(Y,C) for all samples from P(Y) and P(C|Y)
+    p_y_and_c_test = jnp.einsum("sy,syc->syc", samples[P_TEST_Y], samples[P_C_COND_Y])
+
+    ct_mean = jnp.mean(p_y_and_c_test, axis=0)
+    ct_lb = jnp.percentile(p_y_and_c_test, 5, axis=0)
+    ct_ub = jnp.percentile(p_y_and_c_test, 95, axis=0)
+
+    return p_y_and_c_test, ct_mean, ct_lb, ct_ub
+
+
 def main():
-    pass
+    L, V, U = fetch_UCIBinaryDataset("spambase")
+
+    h = MLPClassifier().fit(*L.Xy)
+
+    V_P = h.predict_proba(V.X)
+    # TODO: build ct for validation
+
+    U_P = h.predict_proba(U.X)
 
 
 if __name__ == "__main__":
