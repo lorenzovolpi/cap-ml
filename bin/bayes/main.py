@@ -3,9 +3,15 @@ import jax.numpy as jnp
 import numpy as np
 import numpyro
 import numpyro.distributions as dist
+import quapy as qp
+import quapy.functional as F
+from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.neural_network import MLPClassifier
 
+import cap
 from cap.data.datasets import fetch_UCIBinaryDataset
+
+qp.environ["_R_SEED"] = 0
 
 P_TEST_Y: str = "P_test(Y)"
 P_TEST_C: str = "P_test(C)"
@@ -54,9 +60,9 @@ def get_ct_samples(
     # compute P(Y,C) for all samples from P(Y) and P(C|Y)
     p_y_and_c_test = jnp.einsum("sy,syc->syc", samples[P_TEST_Y], samples[P_C_COND_Y])
 
-    ct_mean = jnp.mean(p_y_and_c_test, axis=0)
-    ct_lb = jnp.percentile(p_y_and_c_test, 5, axis=0)
-    ct_ub = jnp.percentile(p_y_and_c_test, 95, axis=0)
+    ct_mean = np.array(jax.device_get(jnp.mean(p_y_and_c_test, axis=0)))
+    ct_lb = np.array(jax.device_get(jnp.percentile(p_y_and_c_test, 5, axis=0)))
+    ct_ub = np.array(jax.device_get(jnp.percentile(p_y_and_c_test, 95, axis=0)))
 
     return p_y_and_c_test, ct_mean, ct_lb, ct_ub
 
@@ -67,9 +73,26 @@ def main():
     h = MLPClassifier().fit(*L.Xy)
 
     V_P = h.predict_proba(V.X)
-    # TODO: build ct for validation
+    V_yhat = np.argmax(V_P, axis=1)
+    val_ct = confusion_matrix(V.y, V_yhat, labels=h.classes_)
 
     U_P = h.predict_proba(U.X)
+    U_yhat = np.argmax(U_P, axis=1)
+    posterior_count = F.counts_from_labels(U_yhat, h.classes_)
+
+    p_y_and_c_test, ct_mean, ct_lb, ct_ub = get_ct_samples(posterior_count, val_ct)
+    print("Confusion table mean")
+    print(ct_mean, type(ct_mean))
+
+    acc = cap.error.vanilla_acc(ct_mean)
+    true_acc = accuracy_score(U.y, U_yhat)
+
+    print("Predicted and true accuracy")
+    print(acc, true_acc)
+    print("Confusion table lb")
+    print(ct_lb)
+    print("Confusion table ub")
+    print(ct_ub)
 
 
 if __name__ == "__main__":
