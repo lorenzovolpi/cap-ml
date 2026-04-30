@@ -106,12 +106,12 @@ def gen_datasets() -> Iterable[tuple[str, tuple[LabelledCollection, LabelledColl
         "wdbc",
         # "yeast",
     ]
-    # _uci_bin_names = [d for d in UCI_BINARY_DATASETS if d in _uci_bin_native]
-    # coll = "uci_binary"
-    # _sorted_bin_names = sort_datasets_by_size(coll, _uci_bin_names, fetch_UCIBinaryDataset)
-    # for dn in _sorted_bin_names[:5]:
-    #     dval = fetch_UCIBinaryDataset(dn)
-    #     yield dn, dval
+    _uci_bin_names = [d for d in UCI_BINARY_DATASETS if d in _uci_bin_native]
+    coll = "uci_binary"
+    _sorted_bin_names = sort_datasets_by_size(coll, _uci_bin_names, fetch_UCIBinaryDataset)
+    for dn in _sorted_bin_names[:5]:
+        dval = fetch_UCIBinaryDataset(dn)
+        yield dn, dval
     _uci_mul_names = [d for d in UCI_MULTICLASS_DATASETS]
     coll = "uci_multiclass"
     _sorted_mul_names = sort_datasets_by_size(coll, _uci_mul_names, fetch_UCIMulticlassDataset)
