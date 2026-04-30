@@ -1,7 +1,7 @@
 import itertools as IT
 from abc import abstractmethod
 from copy import deepcopy
-from typing import Callable, override
+from typing import Callable, overload, override
 
 import numpy as np
 import scipy
@@ -79,7 +79,7 @@ class CAPContingencyTable(ClassifierAccuracyPrediction):
         self.acc_fn = acc_fn
 
     @abstractmethod
-    def predict_ct(self, X, posteriors, oracle_prev=None) -> np.ndarray:
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         """
         Predicts the contingency table for the test data
 
@@ -128,16 +128,7 @@ class NaiveCAP(CAPContingencyTable):
         self.cont_table = self.cont_table / self.cont_table.sum()
         return self
 
-    def predict_ct(self, test, posteriors):
-        """
-        This method disregards the test set, under the assumption that it is IID wrt the training. This meaning that
-        the confusion matrix for the test data should coincide with the one computed for training (using any cross
-        validation strategy).
-
-        :param test: test collection (ignored)
-        :param oracle_prev: ignored
-        :return: a confusion matrix in the return format of `sklearn.metrics.confusion_matrix`
-        """
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         return self.cont_table
 
 
@@ -151,7 +142,7 @@ class CBPE(CAPContingencyTable):
         self.n_classes = val.n_classes
         self.calibrator = LasCal()
 
-    def predict_ct(self, test, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         test_P_calib = self.calibrator(self.val_P, self.val_y, posteriors)
 
         estim_ct = []
@@ -181,29 +172,26 @@ class CAPContingencyTableQ(CAPContingencyTable, BaseEstimator):
     def preprocess_data(self, data: LabelledCollection, posteriors: np.ndarray) -> LabelledCollection:
         return data
 
-    def prepare_quantifier(self):
+    def prepare_quantifier(self, data: LabelledCollection):
         if self.reuse_h is not None:
             assert isinstance(self.q_class, AggregativeQuantifier), (
                 f"quantifier {self.q_class} is not of type aggregative"
             )
             self.q = deepcopy(self.q_class)
-            self.q.set_params(classifier=self.reuse_h)
+            self.q.set_params(classifier=self.reuse_h, fit_classifier=False, val_split=data.Xy)
         else:
             self.q = self.q_class
 
-    def quant_classifier_fit_predict(self, data: LabelledCollection) -> LabelledCollection:
-        if self.reuse_h is not None:
-            return self.q.classifier_fit_predict(data, fit_classifier=False, predict_on=data)
-        else:
-            return self.q.classifier_fit_predict(data)
+    def quantifier_fit_predict(self, data: LabelledCollection) -> np.ndarray:
+        return self.q.classifier_fit_predict(data.Xy)
 
-    def quant_aggregation_fit(self, classif_predictions: LabelledCollection, data: LabelledCollection):
-        self.q.aggregation_fit(classif_predictions, data)
+    def quant_aggregation_fit(self, classif_predictions: np.ndarray, data: LabelledCollection):
+        self.q.aggregation_fit(classif_predictions, data.y)
 
     def fit(self, data: LabelledCollection, posteriors):
         data = self.preprocess_data(data, posteriors)
-        self.prepare_quantifier()
-        classif_predictions = self.quant_classifier_fit_predict(data)
+        self.prepare_quantifier(data)
+        classif_predictions = self.quantifier_fit_predict(data)
         self.quant_aggregation_fit(classif_predictions, data)
         return self
 
@@ -233,7 +221,7 @@ class ContTableTransferCAP(CAPContingencyTableQ):
         self.train_prev = data.prevalence()
         return data
 
-    def predict_ct(self, test, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         """
         :param test: test collection (ignored)
         :param oracle_prev: np.ndarray with the class prevalence of the test set as estimated by
@@ -241,7 +229,7 @@ class ContTableTransferCAP(CAPContingencyTableQ):
             the errors in quantification performance
         :return: a confusion matrix in the return format of `sklearn.metrics.confusion_matrix`
         """
-        prev_hat = self.q.quantify(test)
+        prev_hat = self.q.predict(X)
         adjustment = prev_hat / self.train_prev
         return self.cont_table * adjustment[:, np.newaxis]
 
@@ -407,7 +395,7 @@ class NsquaredEquationsCAP(CAPContingencyTableQ):
 
         return b
 
-    def predict_ct(self, test, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         """
         :param test: test collection (ignored)
         :param oracle_prev: np.ndarray with the class prevalence of the test set as estimated by
@@ -421,7 +409,7 @@ class NsquaredEquationsCAP(CAPContingencyTableQ):
         h_label_preds = np.argmax(posteriors, axis=-1)
 
         cc_prev_estim = prevalence_from_labels(h_label_preds, self.classes_)
-        q_prev_estim = self.q.quantify(test)
+        q_prev_estim = self.q.predict(X)
 
         A = self.A
         b = self.partial_b
@@ -664,7 +652,7 @@ class OverConstrainedEquationsCAP(CAPContingencyTableQ):
 
         return b
 
-    def predict_ct(self, test, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         """
         :param test: test collection (ignored)
         :param oracle_prev: np.ndarray with the class prevalence of the test set as estimated by
@@ -678,7 +666,7 @@ class OverConstrainedEquationsCAP(CAPContingencyTableQ):
         h_label_preds = np.argmax(posteriors, axis=-1)
 
         cc_prev_estim = prevalence_from_labels(h_label_preds, self.classes_)
-        q_prev_estim = self.q.quantify(test)
+        q_prev_estim = self.q.quantify(X)
 
         A = self.A
         b = self.partial_b
@@ -799,14 +787,14 @@ class QuAcc(CAPContingencyTableQ):
         self.q_n_classes = data.n_classes
         class_compact_data, self.q_old_class_idx = data.compact_classes()
         if self._num_non_empty_classes() > 1:
-            return self.q.classifier_fit_predict(class_compact_data)
+            return self.q.classifier_fit_predict(class_compact_data.Xy)
         return None
 
-    def quant_aggregation_fit(self, classif_predictions: LabelledCollection, data: LabelledCollection):
+    def quant_aggregation_fit(self, classif_predictions: np.ndarray, data: LabelledCollection):
         self.q_n_classes = data.n_classes
         class_compact_data, _ = data.compact_classes()
         if self._num_non_empty_classes() > 1:
-            self.q.aggregation_fit(classif_predictions, class_compact_data)
+            self.q.aggregation_fit(classif_predictions, class_compact_data.y)
 
     def _safe_quantify(self, instances):
         num_instances = instances.shape[0]
@@ -820,7 +808,7 @@ class QuAcc(CAPContingencyTableQ):
             prev_vector[self.q_old_class_idx[0]] = 1
             return prev_vector
         else:
-            class_compact_prev = self.q.quantify(instances)
+            class_compact_prev = self.q.predict(instances)
             prev_vector = np.full(fill_value=0.0, shape=self.q_n_classes, dtype=float)
             prev_vector[self.q_old_class_idx] = class_compact_prev
             return prev_vector
@@ -842,7 +830,7 @@ class QuAcc1xN2(QuAcc):
     def prepare_quantifier(self):
         self.q = deepcopy(self.q_class)
 
-    def predict_ct(self, X: LabelledCollection, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         # pdb.set_trace()
         X_dot = self._get_X_dot(X, posteriors)
         flat_ct = self._safe_quantify(X_dot)
@@ -874,7 +862,7 @@ class QuAcc1xNp1(QuAcc):
         ct_hat[ct_rev_idx] = ct_compressed
         return ct_hat
 
-    def predict_ct(self, X: LabelledCollection, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors):
         X_dot = self._get_X_dot(X, posteriors)
         ct_compressed = self._safe_quantify(X_dot)
         return self._get_ct_hat(self.ncl, ct_compressed)
@@ -905,7 +893,7 @@ class QuAcc1xNN(QuAcc):
         ct_hat[ct_rev_idx] = ct_compressed
         return ct_hat
 
-    def predict_ct(self, X: LabelledCollection, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray):
         X_dot = self._get_X_dot(X, posteriors)
         ct_compressed = self._safe_quantify(X_dot)
         return self._get_ct_hat(self.ncl, ct_compressed)
@@ -929,7 +917,7 @@ class QuAccNxN(QuAcc):
 
     def prepare_quantifier(self):
         self.q: list[AggregativeQuantifier] = []
-        for class_i in self.classes_:
+        for _ in self.classes_:
             q_i = deepcopy(self.q_class)
             self.q.append(q_i)
 
@@ -964,7 +952,7 @@ class QuAccNxN(QuAcc):
                     preds = LabelledCollection(preds, data_i.y, classes=data_i.classes_)
                     q_i.classifier.fit(*data_i.Xy)
             else:
-                preds = q_i.classifier_fit_predict(data_i)
+                preds = q_i.classifier_fit_predict(data_i.Xy)
 
             classif_predictions.append(preds)
 
@@ -983,7 +971,7 @@ class QuAccNxN(QuAcc):
             self.q, classif_predictions.X, compact_data, self._num_non_empty_classes()
         ):
             if num_nec_i > 1:
-                q_i.aggregation_fit(cp_i, compact_data_i)
+                q_i.aggregation_fit(cp_i, compact_data_i.y)
 
     def _safe_quantify(self, instances_list):
         prev_vectors = []
@@ -999,14 +987,14 @@ class QuAccNxN(QuAcc):
                 prev_vector[qoci_i[0]] = 1
                 prev_vectors.append(prev_vector)
             else:
-                class_compact_prev = q_i.quantify(X)
+                class_compact_prev = q_i.predict(X)
                 prev_vector = np.full(fill_value=0.0, shape=n_classes_i, dtype=float)
                 prev_vector[qoci_i] = class_compact_prev
                 prev_vectors.append(prev_vector)
 
         return prev_vectors
 
-    def predict_ct(self, X: LabelledCollection, posteriors):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         pred_labels = np.argmax(posteriors, axis=-1)
         X_dot = self._get_X_dot(X, posteriors)
         pred_prev = prevalence_from_labels(pred_labels, self.classes_)

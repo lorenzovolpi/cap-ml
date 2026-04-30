@@ -111,8 +111,8 @@ class GridSearchCAP(CAPContingencyTable):
         def job(cls_params):
             model.set_params(**cls_params)
             data = model.preprocess_data(self._training, self._training_posteriors)
-            model.prepare_quantifier()
-            predictions = model.quant_classifier_fit_predict(data)
+            model.prepare_quantifier(data)
+            predictions = model.quantifier_fit_predict(data)
             return predictions, data
 
         output, status, took = self._error_handler(job, cls_params)
@@ -269,7 +269,7 @@ class GridSearchCAP(CAPContingencyTable):
 
         return self
 
-    def predict_ct(self, test, posteriors, oracle_prev=None):
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         """Estimate class prevalence values using the best model found after calling the :meth:`fit` method.
 
         :param instances: sample contanining the instances
@@ -277,7 +277,7 @@ class GridSearchCAP(CAPContingencyTable):
             by the model selection process.
         """
         assert hasattr(self, "best_model_"), "predict_ct called before fit"
-        return self.best_model().predict_ct(test, posteriors, oracle_prev=oracle_prev)
+        return self.best_model().predict_ct(X, posteriors)
 
     def set_params(self, **parameters):
         """Sets the hyper-parameters to explore.

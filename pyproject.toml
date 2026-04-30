@@ -10,7 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "numpy>=2.2.6",
     "pandas>=2.3.1",
-    "quapy>=0.1.9,<0.2.0",
+    "quapy",
     "scikit-learn>=1.7.1",
     "scipy>=1.15.3",
     "ucimlrepo>=0.0.7",
