@@ -183,7 +183,7 @@ class CAPContingencyTableQ(CAPContingencyTable, BaseEstimator):
             self.q = self.q_class
 
     def quantifier_fit_predict(self, data: LabelledCollection) -> np.ndarray:
-        return self.q.classifier_fit_predict(data.Xy)
+        return self.q.classifier_fit_predict(*data.Xy)
 
     def quant_aggregation_fit(self, classif_predictions: np.ndarray, data: LabelledCollection):
         self.q.aggregation_fit(classif_predictions, data.y)
