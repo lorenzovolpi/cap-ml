@@ -376,7 +376,7 @@ class Q_COT(CAPDirect):
     def predict(self, X, posteriors):
         sample_size = X.shape[0]
 
-        test_q_priors = self.q.quantify(X)
+        test_q_priors = self.q.predict(X)
         test_q_labels = _sample_label_dist(sample_size, test_q_priors, self.n_classes)
 
         test_q_one_hot = _one_hot(test_q_labels, num_classes=self.n_classes)
@@ -459,7 +459,7 @@ class PrediQuant(CAPDirect, NeedsValidationProtocol):
         return self
 
     def _predict_test_priors(self, X):
-        return self.q.quantify(X)
+        return self.q.predict(X)
 
     def _predict_from_test_priors(self, test_priors):
         sigma_acc = [self.acc(ct) for ct in self.sigma_ct]
@@ -550,7 +550,7 @@ class RQBS(CAPDirect):
                     prevs.append(prev_i)
             val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for q_hat in prevs]
         else:
-            q_hat = utils.smooth(self.q.quantify(X))
+            q_hat = utils.smooth(self.q.predict(X))
             val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for _ in range(self.n_vsamples)]
 
         val_sample_cts = []
