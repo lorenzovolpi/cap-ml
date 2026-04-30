@@ -666,7 +666,7 @@ class OverConstrainedEquationsCAP(CAPContingencyTableQ):
         h_label_preds = np.argmax(posteriors, axis=-1)
 
         cc_prev_estim = prevalence_from_labels(h_label_preds, self.classes_)
-        q_prev_estim = self.q.quantify(X)
+        q_prev_estim = self.q.predict(X)
 
         A = self.A
         b = self.partial_b
@@ -702,7 +702,7 @@ class OverConstrainedEquationsCAP(CAPContingencyTableQ):
                 h_label_preds = np.argmax(P, axis=-1)
 
                 cc_prev_estim = prevalence_from_labels(h_label_preds, self.classes_)
-                q_prev_estim = self.q.quantify(test.X)
+                q_prev_estim = self.q.predict(test.X)
 
                 # we need a copy for b, otherwise original object is updated at each iteration
                 b = self.partial_b.copy()
