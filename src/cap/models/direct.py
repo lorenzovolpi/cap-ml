@@ -369,7 +369,7 @@ class Q_COT(CAPDirect):
     def fit(self, val: LabelledCollection, posteriors):
         self.n_classes = val.n_classes
         self.classes = val.classes_
-        self.q.fit(val)
+        self.q.fit(*val.X)
 
         return self
 
@@ -435,10 +435,10 @@ class PrediQuant(CAPDirect, NeedsValidationProtocol):
 
         if self.reuse_h is not None:
             self.q = deepcopy(self.q)
-            self.q.set_params(classifier=self.reuse_h)
-            self.q.fit(val, fit_classifier=False, val_split=val)
+            self.q.set_params(classifier=self.reuse_h, fit_classifier=False, val_split=val.Xy)
+            self.q.fit(*val.Xy)
         else:
-            self.q.fit(val)
+            self.q.fit(*val.Xy)
 
         # precompute classifier predictions on samples
         self.prot_posteriors = [self.__check_posteriors(val.n_classes, P) for P in self.prot_posteriors]
@@ -534,7 +534,7 @@ class RQBS(CAPDirect):
             return np.median(accs)
 
     def fit(self, val: LabelledCollection, posteriors):
-        self.q.fit(val)
+        self.q.fit(*val.Xy)
         self.val_post = LabelledCollection(instances=posteriors, labels=val.y, classes=val.classes_)
         return self
 
