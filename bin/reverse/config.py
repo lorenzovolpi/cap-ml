@@ -9,8 +9,8 @@ from bin.reverse.util import all_results_exist
 from cap.error import f1, f1_macro, k_bin, k_macro, smooth, vanilla_acc
 from cap.models.base import CAP
 from cap.models.cont_table import O_LEAP
-from cap.models.direct import DoC
-from cap_exp.pretrain.data import DatasetBundle, PretrainInfo, load_info_paths
+from cap.models.direct import RQBS, DoC
+from cap_exp.pretrain.data import PretrainInfo, load_info_paths
 from cap_exp.pretrain.dataset import sort_datasets_by_size
 
 
@@ -55,6 +55,7 @@ def gen_methods() -> Iterable[Tuple[str, CAP]]:
     _, acc = next(gen_acc_measure(True))
     yield "O-LEAP", O_LEAP(acc, kdey())
     yield "DoC", DoC(acc)
+    yield "RQBS", RQBS(acc, kdey())
 
 
 def get_existing_dataset_names(experiment: str, domain: str, sort=True):
