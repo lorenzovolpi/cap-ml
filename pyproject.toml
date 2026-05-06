@@ -26,6 +26,7 @@ dependencies = [
     "jax<0.10.0",
     "jaxlib<0.10.0",
     "numpyro>=0.20.1",
+    "pandatex>=1.0.0",
 ]
 
 [dependency-groups]
