@@ -112,12 +112,12 @@ def gen_datasets() -> Iterable[tuple[str, tuple[LabelledCollection, LabelledColl
     for dn in _sorted_bin_names[:5]:
         dval = fetch_UCIBinaryDataset(dn)
         yield dn, dval
-    # _uci_mul_names = [d for d in UCI_MULTICLASS_DATASETS]
-    # coll = "uci_multiclass"
-    # _sorted_mul_names = sort_datasets_by_size(coll, _uci_mul_names, fetch_UCIMulticlassDataset)
-    # for dn in _sorted_mul_names:
-    #     dval = fetch_UCIMulticlassDataset(dn)
-    #     yield dn, dval
+    _uci_mul_names = [d for d in UCI_MULTICLASS_DATASETS]
+    coll = "uci_multiclass"
+    _sorted_mul_names = sort_datasets_by_size(coll, _uci_mul_names, fetch_UCIMulticlassDataset)
+    for dn in _sorted_mul_names:
+        dval = fetch_UCIMulticlassDataset(dn)
+        yield dn, dval
 
 
 def main():
