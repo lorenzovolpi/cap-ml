@@ -109,7 +109,7 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
         sample_size: int = None,
         random_state=None,
     ):
-        super().__init__(acc)
+        CAPContingencyTable.__init__(self, acc)
         self.q = AggregativeBootstrap(
             quantifier, n_train_samples=1, n_test_samples=num_samples, random_state=random_state
         )
@@ -148,7 +148,7 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
 
 class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
     def __init__(self, acc_fn: Callable, num_warmup: int = 500, num_samples: int = 1000, random_state: int = None):
-        super(CAPContingencyTable, self).__init__(acc_fn)
+        CAPContingencyTable.__init__(self, acc_fn)
         self.num_warmup = num_warmup
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
@@ -233,7 +233,7 @@ class BootstrapCTCAP(CAPContingencyTable, CTCAPWithConfidence):
 
 class BootstrapDirectCAP(CAPDirect, DirectCAPWithConfidence):
     def __init__(self, method: CAPDirect, num_samples: int = 1000, random_state: int = None):
-        super(CAPContingencyTable, self).__init__(method.acc)
+        CAPDirect.__init__(self, method.acc)
         self.method = method
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
