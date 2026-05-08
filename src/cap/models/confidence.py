@@ -202,7 +202,7 @@ class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
 
 class BootstrapCTCAP(CAPContingencyTable, CTCAPWithConfidence):
     def __init__(self, method: CAPContingencyTable, num_samples: int = 1000, random_state: int = None):
-        CAPContingencyTable.__init__(method.acc_fn)
+        CAPContingencyTable.__init__(self, method.acc_fn)
         self.method = method
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
