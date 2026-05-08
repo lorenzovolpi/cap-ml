@@ -200,7 +200,7 @@ class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
         return self.predict_ct_range(X, posteriors).mean(axis=0)
 
 
-class BootstrapCTCAP(CAPContingencyTable, CAPWithConfidence):
+class BootstrapCTCAP(CAPContingencyTable, CTCAPWithConfidence):
     def __init__(self, method: CAPContingencyTable, num_samples: int = 1000, random_state: int = None):
         super(CAPContingencyTable, self).__init__(method.acc_fn)
         self.method = method
