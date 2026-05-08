@@ -183,7 +183,8 @@ class CAPContingencyTableQ(CAPContingencyTable, BaseEstimator):
             self.q = self.q_class
 
     def quantifier_fit_predict(self, data: LabelledCollection) -> np.ndarray:
-        return self.q.classifier_fit_predict(*data.Xy)
+        classif_predictions, _ = self.q.classifier_fit_predict(*data.Xy)
+        return classif_predictions
 
     def quant_aggregation_fit(self, classif_predictions: np.ndarray, data: LabelledCollection):
         self.q.aggregation_fit(classif_predictions, data.y)
@@ -787,7 +788,8 @@ class QuAcc(CAPContingencyTableQ):
         self.q_n_classes = data.n_classes
         class_compact_data, self.q_old_class_idx = data.compact_classes()
         if self._num_non_empty_classes() > 1:
-            return self.q.classifier_fit_predict(class_compact_data.Xy)
+            classif_predictions, _ = self.q.classifier_fit_predict(class_compact_data.Xy)
+            return classif_predictions
         return None
 
     def quant_aggregation_fit(self, classif_predictions: np.ndarray, data: LabelledCollection):
@@ -952,7 +954,7 @@ class QuAccNxN(QuAcc):
                     preds = LabelledCollection(preds, data_i.y, classes=data_i.classes_)
                     q_i.classifier.fit(*data_i.Xy)
             else:
-                preds = q_i.classifier_fit_predict(data_i.Xy)
+                preds, _ = q_i.classifier_fit_predict(data_i.Xy)
 
             classif_predictions.append(preds)
 
