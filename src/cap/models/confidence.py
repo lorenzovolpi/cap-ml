@@ -200,15 +200,18 @@ class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
         return self.predict_ct_range(X, posteriors).mean(axis=0)
 
 
-class BootstrapCTCAP(CAPContingencyTable, CTCAPWithConfidence):
+class BootstrapCAP(ABC): ...
+
+
+class BootstrapCTCAP(CAPContingencyTable, BootstrapCAP, CTCAPWithConfidence):
     def __init__(self, method: CAPContingencyTable, num_samples: int = 1000, random_state: int = None):
         CAPContingencyTable.__init__(self, method.acc_fn)
-        self.method = method
+        self.base_method = method
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
 
     def fit(self, val: LabelledCollection, posteriors: np.ndarray) -> Self:
-        self.method.fit(val, posteriors)
+        self.base_method.fit(val, posteriors)
         return self
 
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
@@ -218,7 +221,7 @@ class BootstrapCTCAP(CAPContingencyTable, CTCAPWithConfidence):
         for idx in boostraps:
             X_ = X[idx]
             X_P = posteriors[idx]
-            cts.append(self.method.predict_ct(X_, X_P))
+            cts.append(self.base_method.predict_ct(X_, X_P))
 
         return np.asarray(cts)
 
@@ -227,19 +230,19 @@ class BootstrapCTCAP(CAPContingencyTable, CTCAPWithConfidence):
 
     def switch(self, acc_fn: Callable) -> Self:
         self.acc_fn = acc_fn
-        self.method.switch(acc_fn)
+        self.base_method.switch(acc_fn)
         return self
 
 
-class BootstrapDirectCAP(CAPDirect, DirectCAPWithConfidence):
+class BootstrapDirectCAP(CAPDirect, BootstrapCAP, DirectCAPWithConfidence):
     def __init__(self, method: CAPDirect, num_samples: int = 1000, random_state: int = None):
         CAPDirect.__init__(self, method.acc)
-        self.method = method
+        self.base_method = method
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
 
     def fit(self, val: LabelledCollection, posteriors: np.ndarray):
-        self.method.fit(val, posteriors)
+        self.base_method.fit(val, posteriors)
         return self
 
     def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
@@ -249,7 +252,7 @@ class BootstrapDirectCAP(CAPDirect, DirectCAPWithConfidence):
         for idx in boostraps:
             X_ = X[idx]
             X_P = posteriors[idx]
-            accs.append(self.method.predict(X_, X_P))
+            accs.append(self.base_method.predict(X_, X_P))
 
         return np.asarray(accs)
 
@@ -258,5 +261,5 @@ class BootstrapDirectCAP(CAPDirect, DirectCAPWithConfidence):
 
     def switch_and_fit(self, acc_fn, data, posteriors):
         self.acc = acc_fn
-        self.method.acc = acc_fn
+        self.base_method.acc = acc_fn
         return self.fit(data, posteriors)
