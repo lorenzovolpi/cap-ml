@@ -14,10 +14,8 @@ from scipy.sparse import issparse
 from sklearn.base import BaseEstimator
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import confusion_matrix
-from sklearn.utils import resample
 
 import cap
-import cap.models.utils as utils
 from cap.error import vanilla_acc
 from cap.models.base import ClassifierAccuracyPrediction, NeedsValidationProtocol
 from cap.models.utils import max_conf, neg_entropy
