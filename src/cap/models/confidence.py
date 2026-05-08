@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import Callable, Self
 
 import jax
@@ -67,10 +67,12 @@ class ConfidenceInterval(ABC):
 
 
 class CAPWithConfidence(ABC):
+    @abstractmethod
     def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval: ...
 
 
 class CTCAPWithConfidence(CAPWithConfidence):
+    @abstractmethod
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray: ...
 
     def ci_from_cts(self, cts: np.ndarray) -> ConfidenceInterval:
@@ -80,6 +82,15 @@ class CTCAPWithConfidence(CAPWithConfidence):
     def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval:
         cts = self.predict_ct_range(X, posteriors)
         return self.ci_from_cts(cts)
+
+
+class DirectCAPWithConfidence(CAPWithConfidence):
+    @abstractmethod
+    def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray: ...
+
+    def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval:
+        accs = self.predict_range(X, posteriors)
+        return ConfidenceInterval(accs)
 
 
 class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
@@ -137,10 +148,8 @@ class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
 
 
 class BootstrapCTCAP(CAPContingencyTable, CAPWithConfidence):
-    def __init__(
-        self, acc_fn: Callable, method: CAPContingencyTable, num_samples: int = 1000, random_state: int = None
-    ):
-        super(CAPContingencyTable, self).__init__(acc_fn)
+    def __init__(self, method: CAPContingencyTable, num_samples: int = 1000, random_state: int = None):
+        super(CAPContingencyTable, self).__init__(method.acc_fn)
         self.method = method
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
@@ -163,8 +172,13 @@ class BootstrapCTCAP(CAPContingencyTable, CAPWithConfidence):
     def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         return self.predict_ct_range(X, posteriors).mean(axis=0)
 
+    def switch(self, acc_fn: Callable) -> Self:
+        self.acc_fn = acc_fn
+        self.method.switch(acc_fn)
+        return self
 
-class BootstrapDirectCAP(CAPDirect, CAPWithConfidence):
+
+class BootstrapDirectCAP(CAPDirect, DirectCAPWithConfidence):
     def __init__(self, acc_fn: Callable, method: CAPDirect, num_samples: int = 1000, random_state: int = None):
         super(CAPContingencyTable, self).__init__(acc_fn)
         self.method = method
@@ -189,6 +203,7 @@ class BootstrapDirectCAP(CAPDirect, CAPWithConfidence):
     def predict(self, X: np.ndarray, posteriors: np.ndarray) -> float:
         return float(self.predict_range(X, posteriors).mean())
 
-    def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval:
-        accs = self.predict_range(X, posteriors)
-        return ConfidenceInterval(accs)
+    def switch_and_fit(self, acc_fn, data, posteriors):
+        self.acc = acc_fn
+        self.method.acc = acc_fn
+        return self.fit(data, posteriors)
