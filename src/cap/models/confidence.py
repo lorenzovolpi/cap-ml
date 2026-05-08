@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Callable, Self
+from typing import Callable, Literal, Self
 
 import jax
 import jax.numpy as jnp
@@ -7,11 +7,13 @@ import numpy as np
 import numpyro
 import numpyro.distributions as dist
 import quapy as qp
-from cvxpy import pos
 from quapy.data import LabelledCollection
+from quapy.method.aggregative import AggregativeQuantifier
+from quapy.method.confidence import AggregativeBootstrap
 from sklearn.metrics import confusion_matrix
+from sklearn.utils import resample
 
-from cap.models.base import CAP
+import cap.models.utils as utils
 from cap.models.cont_table import CAPContingencyTable
 from cap.models.direct import CAPDirect
 from cap.utils.commons import contingency_table
@@ -91,6 +93,57 @@ class DirectCAPWithConfidence(CAPWithConfidence):
     def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval:
         accs = self.predict_range(X, posteriors)
         return ConfidenceInterval(accs)
+
+
+class RQBS(CAPContingencyTable, CTCAPWithConfidence):
+    """
+    Reverse Quantification-Based Sampling
+    a.k.a. PabloCAP
+    """
+
+    def __init__(
+        self,
+        acc: Callable,
+        quantifier: AggregativeQuantifier,
+        num_samples: int = 1000,
+        sample_size: int = None,
+        random_state=None,
+    ):
+        super().__init__(acc)
+        self.q = AggregativeBootstrap(
+            quantifier, n_train_samples=1, n_test_samples=num_samples, random_state=random_state
+        )
+        self.num_samples = num_samples
+        self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
+        self.random_state = qp.environ["_R_SEED"] if random_state is None else random_state
+        if self.sample_size is None:
+            raise ValueError(
+                'sample_size cannot be None; it must be specified directly or by setting qp.environ["SAMPLE_SIZE"]'
+            )
+
+    def fit(self, val: LabelledCollection, posteriors):
+        self.q.fit(*val.Xy)
+        self.val_y = val.y
+        self.val_post = posteriors
+        self.classes_ = val.classes_
+        return self
+
+    def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray):
+        _, qhat_cr = self.q.predict_conf(X)
+        qhat_range = qhat_cr.samples
+        val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for q_hat in qhat_range]
+
+        val_sample_cts = []
+        for idx in val_samples_idx:
+            vali_yhat = self.val_post[idx, :].argmax(axis=1)
+            vali_y = self.val_y[idx]
+            vali_ct = contingency_table(vali_y, vali_yhat, self.val_post.n_classes)
+            val_sample_cts.append(vali_ct)
+
+        return np.asarray(val_sample_cts)
+
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        return self.predict_ct_range(X, posteriors).mean(axis=0)
 
 
 class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
@@ -179,8 +232,8 @@ class BootstrapCTCAP(CAPContingencyTable, CAPWithConfidence):
 
 
 class BootstrapDirectCAP(CAPDirect, DirectCAPWithConfidence):
-    def __init__(self, acc_fn: Callable, method: CAPDirect, num_samples: int = 1000, random_state: int = None):
-        super(CAPContingencyTable, self).__init__(acc_fn)
+    def __init__(self, method: CAPDirect, num_samples: int = 1000, random_state: int = None):
+        super(CAPContingencyTable, self).__init__(method.acc)
         self.method = method
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
