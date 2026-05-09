@@ -42,7 +42,7 @@ class ConfidenceInterval(ABC):
 
         low_perc = (self.alpha / 2.0) * 100
         high_perc = (1 - self.alpha / 2.0) * 100
-        low, high = np.percentile(self.samples_, q=[low_perc, high_perc])
+        low, high = np.percentile(self._samples, q=[low_perc, high_perc])
         self.I_low, self.I_high = float(low), float(high)
 
     def point_estimate(self):
