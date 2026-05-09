@@ -123,9 +123,7 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
 
     def fit(self, val: LabelledCollection, posteriors):
         self.q.fit(*val.Xy)
-        self.val_y = val.y
-        self.val_post = posteriors
-        self.classes_ = val.classes_
+        self.val_post = LabelledCollection(instances=posteriors, labels=val.y, classes=val.classes_)
         return self
 
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray):
@@ -135,8 +133,8 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
 
         val_sample_cts = []
         for idx in val_samples_idx:
-            vali_yhat = self.val_post[idx, :].argmax(axis=1)
-            vali_y = self.val_y[idx]
+            vali_yhat = self.val_post.X[idx, :].argmax(axis=1)
+            vali_y = self.val_post.y[idx]
             vali_ct = contingency_table(vali_y, vali_yhat, self.val_post.n_classes)
             val_sample_cts.append(vali_ct)
 
