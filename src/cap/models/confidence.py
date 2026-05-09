@@ -13,7 +13,7 @@ from quapy.method.confidence import AggregativeBootstrap
 from sklearn.metrics import confusion_matrix
 from sklearn.utils import resample
 
-import cap.models.utils as utils
+import cap.models.utils
 from cap.models.cont_table import CAPContingencyTable
 from cap.models.direct import CAPDirect
 from cap.utils.commons import contingency_table
@@ -128,7 +128,8 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
 
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray):
         _, qhat_cr = self.q.predict_conf(X)
-        qhat_range = qhat_cr.samples
+        # smooth prevalences to make them sum up to 1
+        qhat_range = [cap.models.utils.smooth(prev_i) for prev_i in qhat_cr.samples]
         val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for q_hat in qhat_range]
 
         val_sample_cts = []
