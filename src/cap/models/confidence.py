@@ -45,13 +45,18 @@ class ConfidenceInterval(ABC):
         low, high = np.percentile(self._samples, q=[low_perc, high_perc])
         self.I_low, self.I_high = float(low), float(high)
 
+    @property
+    def samples(self):
+        return self._samples
+
+    @property
     def point_estimate(self):
         """
         Returns the point estimate, the class-wise average of the bootstrapped estimates
 
         :return: np.ndarray of shape (n_classes,)
         """
-        return self.means_
+        return self._mean
 
     def coverage(self, true_value: float) -> float:
         """
