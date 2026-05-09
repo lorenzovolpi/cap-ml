@@ -38,7 +38,7 @@ class ConfidenceInterval(ABC):
 
         self._samples = X
         self._mean = X.mean()
-        self.aplha = 1 - confidence_level
+        self.alpha = 1 - confidence_level
 
         low_perc = (self.alpha / 2.0) * 100
         high_perc = (1 - self.alpha / 2.0) * 100
