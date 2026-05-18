@@ -788,9 +788,12 @@ class QuAcc(CAPContingencyTableQ):
         self.q_n_classes = data.n_classes
         class_compact_data, self.q_old_class_idx = data.compact_classes()
         if self._num_non_empty_classes() > 1:
-            classif_predictions, _ = self.q.classifier_fit_predict(class_compact_data.Xy)
+            classif_predictions, _ = self.q.classifier_fit_predict(*class_compact_data.Xy)
             return classif_predictions
         return None
+
+    def quantifier_fit_predict(self, data):
+        return self.quant_classifier_fit_predict(data)
 
     def quant_aggregation_fit(self, classif_predictions: np.ndarray, data: LabelledCollection):
         self.q_n_classes = data.n_classes
@@ -829,7 +832,7 @@ class QuAcc1xN2(QuAcc):
         y_dot = ct_class_idx[true_labels, pred_labels]
         return LabelledCollection(X_dot, y_dot, classes=classes_dot)
 
-    def prepare_quantifier(self):
+    def prepare_quantifier(self, data=None):
         self.q = deepcopy(self.q_class)
 
     def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
@@ -854,7 +857,7 @@ class QuAcc1xNp1(QuAcc):
         y_dot = ct_class_idx[true_labels, pred_labels]
         return LabelledCollection(X_dot, y_dot, classes=classes_dot)
 
-    def prepare_quantifier(self):
+    def prepare_quantifier(self, data=None):
         self.q = deepcopy(self.q_class)
 
     def _get_ct_hat(self, n, ct_compressed):
@@ -885,7 +888,7 @@ class QuAcc1xNN(QuAcc):
         y_dot = ct_class_idx[true_labels, pred_labels]
         return LabelledCollection(X_dot, y_dot, classes=classes_dot)
 
-    def prepare_quantifier(self):
+    def prepare_quantifier(self, data=None):
         self.q = deepcopy(self.q_class)
 
     def _get_ct_hat(self, n, ct_compressed):
@@ -917,7 +920,7 @@ class QuAccNxN(QuAcc):
 
         return datas
 
-    def prepare_quantifier(self):
+    def prepare_quantifier(self, data=None):
         self.q: list[AggregativeQuantifier] = []
         for _ in self.classes_:
             q_i = deepcopy(self.q_class)
@@ -954,7 +957,7 @@ class QuAccNxN(QuAcc):
                     preds = LabelledCollection(preds, data_i.y, classes=data_i.classes_)
                     q_i.classifier.fit(*data_i.Xy)
             else:
-                preds, _ = q_i.classifier_fit_predict(data_i.Xy)
+                preds, _ = q_i.classifier_fit_predict(*data_i.Xy)
 
             classif_predictions.append(preds)
 
@@ -970,9 +973,11 @@ class QuAccNxN(QuAcc):
     def quant_aggregation_fit(self, classif_predictions: LabelledCollection, data: list[LabelledCollection]):
         compact_data, _ = tuple(map(list, zip(*[data_i.compact_classes() for data_i in data])))
         for q_i, cp_i, compact_data_i, num_nec_i in zip(
-            self.q, classif_predictions.X, compact_data, self._num_non_empty_classes()
+            self.q, classif_predictions, compact_data, self._num_non_empty_classes()
         ):
             if num_nec_i > 1:
+                if isinstance(cp_i, LabelledCollection):
+                    cp_i = cp_i.X
                 q_i.aggregation_fit(cp_i, compact_data_i.y)
 
     def _safe_quantify(self, instances_list):
