@@ -14,6 +14,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.utils import resample
 
 import cap.models.utils
+from cap.models import _bayes
 from cap.models.cont_table import CAPContingencyTable
 from cap.models.direct import CAPDirect
 from cap.utils.commons import contingency_table
@@ -83,6 +84,9 @@ class CTCAPWithConfidence(CAPWithConfidence):
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray: ...
 
     def ci_from_cts(self, cts: np.ndarray) -> ConfidenceInterval:
+        if cts == np.nan:
+            return None
+
         accs = np.array([self.acc_fn(ct) for ct in cts])
         return ConfidenceInterval(accs)
 
@@ -150,7 +154,10 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
         return self.predict_ct_range(X, posteriors).mean(axis=0)
 
 
-class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
+class BayesCAP: ...
+
+
+class ACC_BayesCAP(CAPContingencyTable, CTCAPWithConfidence, BayesCAP):
     def __init__(self, acc_fn: Callable, num_warmup: int = 500, num_samples: int = 1000, random_state: int = None):
         CAPContingencyTable.__init__(self, acc_fn)
         self.num_warmup = num_warmup
@@ -201,6 +208,105 @@ class BayesCAP(CAPContingencyTable, CTCAPWithConfidence):
         return cts
 
     def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        return self.predict_ct_range(X, posteriors).mean(axis=0)
+
+
+class HD_BayesCAP(CAPContingencyTable, CTCAPWithConfidence, BayesCAP):
+    def __init__(
+        self,
+        acc_fn: Callable,
+        num_warmup: int = 500,
+        num_samples: int = 1000,
+        nbins: int = 4,
+        fixed_bins: bool = False,
+        prediction_threshold: float = 0.5,
+        random_state: int = None,
+    ):
+        CAPContingencyTable.__init__(self, acc_fn)
+        self.num_warmup = num_warmup
+        self.num_samples = num_samples
+        self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
+
+        if not 0 <= prediction_threshold <= 1:
+            raise ValueError(f"parameter {prediction_threshold=} must be in [0, 1]")
+
+        self.nbins = nbins
+        self.fixed_bins = fixed_bins
+        self.prediction_threshold = prediction_threshold
+
+        self.stan_code = _bayes.load_stan_file()
+
+    def fit(self, val: LabelledCollection, posteriors: np.ndarray):
+        self.n_classes = val.n_classes
+        if self.n_classes > 2:
+            return self
+
+        self.pos_label = val.classes_[1]
+        y_hat = posteriors[:, self.pos_label]
+
+        if self.fixed_bins:
+            bin_limits = np.linspace(0, 1, self.nbins + 1)
+        else:
+            bin_limits = np.quantile(y_hat, np.linspace(0, 1, self.nbins + 1))
+
+        if bin_limits[0] < self.prediction_threshold < bin_limits[-1]:
+            bin_limits = np.sort(np.append(bin_limits, self.prediction_threshold))
+        self.bin_limits = np.unique(bin_limits)
+        self.effective_nbins = len(self.bin_limits) - 1
+        if self.effective_nbins < 1:
+            raise ValueError("could not build valid bins from classifier predictions")
+
+        bin_indices = np.digitize(y_hat, self.bin_limits[1:-1], right=True)
+
+        pos_mask = val.y == self.pos_label
+        neg_mask = ~pos_mask
+
+        self.pos_hist = np.bincount(bin_indices[pos_mask], minlength=self.effective_nbins)
+        self.neg_hist = np.bincount(bin_indices[neg_mask], minlength=self.effective_nbins)
+        self.pred_pos_bins = (self.bin_limits[:-1] >= self.prediction_threshold).astype(float)
+        return self
+
+    def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray):
+        if self.n_classes > 2:
+            return np.nan
+
+        Px_test = posteriors[:, self.pos_label]
+        test_hist, _ = np.histogram(Px_test, bins=self.bin_limits)
+
+        samples = _bayes.hd_bayes_stan(
+            self.stan_code,
+            self.effective_nbins,
+            self.pos_hist,
+            self.neg_hist,
+            test_hist,
+            self.num_samples,
+            self.num_warmup,
+            self.randm_state,
+        )
+
+        prevs = samples["prev"]
+        p_pos_distrib = samples["p_pos"]
+        p_neg_distrib = samples["p_neg"]
+        tpr_distrib = p_pos_distrib @ self.pred_pos_bins
+        fpr_distrib = p_neg_distrib @ self.pred_pos_bins
+        tnr_distrib = 1 - fpr_distrib
+        fnr_distrib = 1 - tpr_distrib
+        ct_distrib = np.stack(
+            [
+                (1 - prevs) * tnr_distrib,
+                (1 - prevs) * fpr_distrib,
+                prevs * fnr_distrib,
+                prevs * tpr_distrib,
+            ],
+            axis=1,
+        ).reshape(-1, 2, 2)
+
+        return ct_distrib
+
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        if self.n_classes > 2:
+            return np.nan
+
         return self.predict_ct_range(X, posteriors).mean(axis=0)
 
 
