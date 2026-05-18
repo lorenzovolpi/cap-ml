@@ -46,6 +46,9 @@ cap_exp = "src/cap_exp"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"cap.models" = ["stan/*.stan"]
+
 [tool.pytest.ini_options]
 addopts = "--cov=quacc -rA --cov-report html"
 
