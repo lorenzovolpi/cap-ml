@@ -35,16 +35,21 @@ class ConfidenceInterval(ABC):
     def __init__(self, X, confidence_level=0.95):
         assert 0 < confidence_level < 1, f"{confidence_level=} must be in range(0,1)"
 
-        X = np.asarray(X)
+        if X is np.nan:
+            self._samples = np.nan
+            self._mean = np.nan
+            self.I_low, self.I_high = np.nan, np.nan
+        else:
+            X = np.asarray(X)
 
-        self._samples = X
-        self._mean = X.mean()
-        self.alpha = 1 - confidence_level
+            self._samples = X
+            self._mean = X.mean()
+            self.alpha = 1 - confidence_level
 
-        low_perc = (self.alpha / 2.0) * 100
-        high_perc = (1 - self.alpha / 2.0) * 100
-        low, high = np.percentile(self._samples, q=[low_perc, high_perc])
-        self.I_low, self.I_high = float(low), float(high)
+            low_perc = (self.alpha / 2.0) * 100
+            high_perc = (1 - self.alpha / 2.0) * 100
+            low, high = np.percentile(self._samples, q=[low_perc, high_perc])
+            self.I_low, self.I_high = float(low), float(high)
 
     @property
     def samples(self):
@@ -85,7 +90,7 @@ class CTCAPWithConfidence(CAPWithConfidence):
 
     def ci_from_cts(self, cts: np.ndarray) -> ConfidenceInterval:
         if cts is np.nan:
-            return None
+            return ConfidenceInterval(np.nan)
 
         accs = np.array([self.acc_fn(ct) for ct in cts])
         return ConfidenceInterval(accs)
