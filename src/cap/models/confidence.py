@@ -84,7 +84,7 @@ class CTCAPWithConfidence(CAPWithConfidence):
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray: ...
 
     def ci_from_cts(self, cts: np.ndarray) -> ConfidenceInterval:
-        if cts == np.nan:
+        if cts is np.nan:
             return None
 
         accs = np.array([self.acc_fn(ct) for ct in cts])
