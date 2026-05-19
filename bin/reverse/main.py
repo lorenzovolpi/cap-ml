@@ -1,256 +1,263 @@
-import os
-from argparse import ArgumentParser
-from dataclasses import dataclass
-from logging import Logger
-from time import time
-from traceback import print_exception
-from typing import Iterable
+import argparse
+from collections.abc import Callable, Iterable
+from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import quapy as qp
+from quapy.data import LabelledCollection
+from quapy.data.datasets import UCI_BINARY_DATASETS, UCI_MULTICLASS_DATASETS
+from quapy.method.aggregative import KDEyML
+from sklearn.metrics import accuracy_score
+from sklearn.neural_network import MLPClassifier
 
 import cap
-from bin.reverse.config import gen_acc_measure, gen_methods, get_acc_names, get_method_names
-from bin.reverse.env import PROJECT
-from bin.reverse.util import all_results_exist, local_path
-from cap import env as capenv
-from cap.models.base import CAP, NeedsValidationProtocol
-from cap.models.cont_table import CAPContingencyTable
-from cap.utils.commons import get_shift, parallel
-from cap_exp.pretrain.data import PretrainInfo, load_info_paths
-from cap_exp.results import RDF
-from cap_exp.util import get_logger, get_plain_prev, timestamp
+from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
+from cap.error import vanilla_acc
+from cap.models.confidence import PrediQuant, RQBS
+from cap_exp.pretrain.dataset import sort_datasets_by_size
 
-EXPERIMENT = "main"
-DOMAIN = "classic"
-
-NUM_TEST = 1000
-
-qp.environ["SAMPLE_SIZE"] = 1000
 qp.environ["_R_SEED"] = 0
 
+DEFAULT_SAMPLE_SIZE = 1000
+DEFAULT_NUM_TEST = 100
 
-@dataclass()
-class EXP:
-    code: int
-    p: PretrainInfo
-    acc_name: str
-    method_name: str
-    df: RDF = None
-    t_train: float = None
-    t_test_ave: float = None
-    err: Exception = None
+NATIVE_UCI_BINARY_DATASETS = [
+    "breast-cancer",
+    "german",
+    "haberman",
+    "ionosphere",
+    "mammographic",
+    "semeion",
+    "sonar",
+    "spambase",
+    "spectf",
+    "tictactoe",
+    "transfusion",
+    "wdbc",
+]
 
-    @classmethod
-    def SUCCESS(cls, *args, **kwargs):
-        return EXP(200, *args, **kwargs)
-
-    @classmethod
-    def EXISTS(cls, *args, **kwargs):
-        return EXP(300, *args, **kwargs)
-
-    @classmethod
-    def ERROR(cls, e, *args, **kwargs):
-        return EXP(400, *args, err=e, **kwargs)
-
-    @property
-    def ok(self):
-        return self.code == 200
-
-    @property
-    def old(self):
-        return self.code == 300
-
-    def error(self):
-        return self.code == 400
+Dataset = tuple[str, str, tuple[LabelledCollection, LabelledCollection, LabelledCollection]]
+MethodFactory = Callable[[], object]
 
 
-def fit_or_switch(method: CAP, V, V_posteriors, acc_fn, is_fit):
-    # TODO: add base class to better manage switch and switch_and_fit
-    if hasattr(method, "switch"):
-        method, t_train = method.switch(acc_fn), None
-        if not is_fit:
-            tinit = time()
-            method.fit(V, V_posteriors)
-            t_train = time() - tinit
-        return method, t_train
-    elif hasattr(method, "switch_and_fit"):
-        tinit = time()
-        method = method.switch_and_fit(acc_fn, V, V_posteriors)
-        t_train = time() - tinit
-        return method, t_train
-    else:
-        ValueError("invalid method")
+def method_df(num_rows: int, **data) -> pd.DataFrame:
+    _data = data | {k: [v] * num_rows for k, v in data.items() if not isinstance(v, list)}
+    return pd.DataFrame.from_dict(_data, orient="columns")
 
 
-def get_ct_predictions(method: CAP, test_prot, test_prot_posteriors):
-    tinit = time()
-    if isinstance(method, CAPContingencyTable):
-        estim_accs, estim_cts = method.batch_predict(test_prot, test_prot_posteriors, get_estim_cts=True)
-        estim_cts = [ct.tolist() for ct in estim_cts]
-    else:
-        estim_accs = method.batch_predict(test_prot, test_prot_posteriors)
-        estim_cts = [None] * len(estim_accs)
-    t_test_ave = (time() - tinit) / test_prot.total()
-    return estim_accs, estim_cts, t_test_ave
+def limit_names(names: list[str], max_datasets: int | None) -> list[str]:
+    if max_datasets is None or max_datasets < 0:
+        return names
+    return names[:max_datasets]
 
 
-def exp_protocol(args: tuple[str, str, CAP]) -> EXP:
-    # bundle_path, method_name, method, acc_name, acc_fn = args
-    # clsf, D, method_name, method, val, val_posteriors = args
-    info_path, method_name, method = args
-    results = []
-
-    p = PretrainInfo.load(info_path, fast=True)
-    d_info, h_info = p.d_info, p.h_info
-
-    all_exist = True
-    for acc in get_acc_names():
-        all_exist = all_exist and os.path.exists(
-            local_path(p.domain, d_info.name, h_info.full_name, method_name, acc, experiment=EXPERIMENT)
-        )
-    if all_exist:
-        results.append(EXP.EXISTS(p, "all", method_name))
-        return results
-
-    D = p.load_dataset_bundle()
-    h = p.load_pretrained_classifier(D)
-
-    D.with_test_data(NUM_TEST).with_posteriors(h)
-    if isinstance(method, NeedsValidationProtocol):
-        val, val_posteriors = D.V1, D.V1_posteriors
-        method.set_validation_protocol(D.V2_prot, D.V2_prot_posteriors)
-    else:
-        val, val_posteriors = D.V, D.V_posteriors
-
-    L_prev = get_plain_prev(D.L_prevalence)
-    val_prev = get_plain_prev(val.prevalence())
-    df_len = D.test_prot.total()
-    test_shift = get_shift(np.array([Ui.prevalence() for Ui in D.test_prot()]), D.L_prevalence).tolist()
-    tp_true_cts = D.test_prot_true_cts
-
-    t_train, is_fit = None, False
-
-    for acc_name, acc_fn in gen_acc_measure(d_info.n_classes > 2):
-        path = local_path(p.domain, d_info.name, h_info.full_name, method_name, acc_name, experiment=EXPERIMENT)
-        if os.path.exists(path):
-            results.append(EXP.EXISTS(p, acc_name, method_name))
-            continue
-
-        try:
-            method, _t_train = fit_or_switch(method, val, val_posteriors, acc_fn, is_fit)
-            t_train = t_train if _t_train is None else _t_train
-            is_fit = True
-            estim_accs, estim_cts, t_test_ave = get_ct_predictions(method, D.test_prot, D.test_prot_posteriors)
-            true_accs = [acc_fn(ct) for ct in tp_true_cts]
-            acc_err = cap.error.ae(np.array(true_accs), np.array(estim_accs)).tolist()
-        except Exception as e:
-            print_exception(e)
-            results.append(EXP.ERROR(e, p, acc_name, method_name))
-            continue
-
-        # df_len = len(estim_accs)
-        method_df = RDF.from_records(
-            df_len,
-            # uids=np.arange(df_len).tolist(),
-            shifts=test_shift,
-            true_cts=tp_true_cts,
-            estim_accs=estim_accs,
-            acc_err=acc_err,
-            estim_cts=estim_cts,
-            classifier=h_info.name,
-            method=method_name,
-            dataset=d_info.name,
-            collection=d_info.collection,
-            n_classes=d_info.n_classes,
-            acc_name=acc_name,
-            train_prev=[L_prev] * df_len,
-            val_prev=[val_prev] * df_len,
-            t_train=t_train,
-            t_test_ave=t_test_ave,
-        )
-
-        results.append(
-            EXP.SUCCESS(
-                p,
-                acc_name,
-                method_name,
-                df=method_df,
-                t_train=t_train,
-                t_test_ave=t_test_ave,
-            )
-        )
-
-    return results
+def gen_binary_datasets(max_datasets: int | None) -> Iterable[Dataset]:
+    if max_datasets == 0:
+        return
+    names = [d for d in UCI_BINARY_DATASETS if d in NATIVE_UCI_BINARY_DATASETS]
+    names = sort_datasets_by_size("uci_binary", names, descending=True)
+    for dataset_name in limit_names(names, max_datasets):
+        yield dataset_name, "uci_binary", fetch_UCIBinaryDataset(dataset_name)
 
 
-def experiments(log: Logger, domain: str):
-    experiment_args = []
-    info_paths = load_info_paths(domain=domain)
-    filtered_paths = []
-    for path in info_paths:
-        p = PretrainInfo.load(path, fast=True)
-        d_info, h_info = p.d_info, p.h_info
-        if not all_results_exist(
-            p.domain, d_info.name, h_info.full_name, get_method_names(), get_acc_names(), EXPERIMENT
-        ):
-            filtered_paths.append(path)
-        else:
-            log.info(f"[{h_info.name}@{d_info.name}] all results exist, skipping")
+def gen_multiclass_datasets(max_datasets: int | None) -> Iterable[Dataset]:
+    if max_datasets == 0:
+        return
+    names = sort_datasets_by_size("uci_multiclass", list(UCI_MULTICLASS_DATASETS), descending=True)
+    for dataset_name in limit_names(names, max_datasets):
+        yield dataset_name, "uci_multiclass", fetch_UCIMulticlassDataset(dataset_name)
 
-    for info_path in filtered_paths:
-        for method_name, method in gen_methods():
-            experiment_args.append((info_path, method_name, method))
 
-    results_gen: Iterable[list[EXP]] = parallel(
-        func=exp_protocol,
-        args_list=experiment_args,
-        n_jobs=capenv["N_JOBS"],
-        return_as="generator_unordered",
-        max_nbytes=None,
+def gen_datasets(max_binary: int | None, max_multiclass: int | None) -> Iterable[Dataset]:
+    yield from gen_binary_datasets(max_binary)
+    yield from gen_multiclass_datasets(max_multiclass)
+
+
+def random_prevalence_samples(
+    data: LabelledCollection,
+    sample_size: int,
+    repeats: int,
+    random_state: int,
+) -> list[LabelledCollection]:
+    rng = np.random.default_rng(random_state)
+    samples = []
+    for _ in range(repeats):
+        prevs = rng.dirichlet(np.ones(data.n_classes))
+        sample_index = data.sampling_index(sample_size, *prevs, random_state=int(rng.integers(0, 2**31 - 1)))
+        samples.append(data.sampling_from_index(sample_index))
+    return samples
+
+
+def kdey_reusing_classifier(classifier: MLPClassifier, val: LabelledCollection, seed: int) -> KDEyML:
+    return KDEyML(classifier=classifier, fit_classifier=False, val_split=val.Xy, random_state=seed)
+
+
+def method_factories(
+    classifier: MLPClassifier,
+    val: LabelledCollection,
+    sample_size: int,
+    num_samples: int,
+    alpha: float,
+    distance: str,
+    seed: int,
+) -> dict[str, MethodFactory]:
+    return {
+        "prediquant": lambda: PrediQuant(
+            vanilla_acc,
+            kdey_reusing_classifier(classifier, val, seed),
+            alpha=alpha,
+            num_samples=num_samples,
+            sample_size=sample_size,
+            distance=distance,
+            random_state=seed,
+        ),
+        "rqbs": lambda: RQBS(
+            vanilla_acc,
+            kdey_reusing_classifier(classifier, val, seed),
+            num_samples=num_samples,
+            sample_size=sample_size,
+            random_state=seed,
+        ),
+    }
+
+
+def evaluate_method(
+    method_name: str,
+    method,
+    dataset_name: str,
+    dataset_kind: str,
+    test_samples: list[LabelledCollection],
+    test_posteriors: list[np.ndarray],
+    true_accs: list[float],
+) -> pd.DataFrame:
+    estim_accs = []
+    ci_low = []
+    ci_high = []
+    ci_coverage = []
+
+    for sample, posteriors, true_acc in zip(test_samples, test_posteriors, true_accs):
+        ci = method.predict_with_confidence(sample.X, posteriors)
+        low, high = ci.interval()
+
+        estim_accs.append(ci.point_estimate)
+        ci_low.append(low)
+        ci_high.append(high)
+        ci_coverage.append(ci.coverage(true_acc))
+
+    aes = cap.error.ae(np.array(true_accs), np.array(estim_accs))
+    return method_df(
+        len(test_samples),
+        method=method_name,
+        dataset=dataset_name,
+        dataset_kind=dataset_kind,
+        n_classes=test_samples[0].n_classes,
+        estim_acc=estim_accs,
+        true_acc=true_accs,
+        ae=list(aes),
+        ci_low=ci_low,
+        ci_high=ci_high,
+        ci_width=list(np.array(ci_high) - np.array(ci_low)),
+        ci_coverage=ci_coverage,
     )
 
-    for res in results_gen:
-        for r in res:
-            if r.ok:
-                path = local_path(
-                    r.p.domain,
-                    r.p.d_info.name,
-                    r.p.h_info.full_name,
-                    r.method_name,
-                    r.acc_name,
-                    experiment=EXPERIMENT,
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Compare PrediQuant and RQBS on the largest native UCI binary and UCI multiclass datasets."
+    )
+    parser.add_argument(
+        "--max-binary",
+        type=int,
+        default=5,
+        help="Number of largest native UCI binary datasets to test; -1 for all native binary datasets.",
+    )
+    parser.add_argument(
+        "--max-multiclass",
+        type=int,
+        default=10,
+        help="Number of largest UCI multiclass datasets to test; -1 for all multiclass datasets.",
+    )
+    parser.add_argument("--sample-size", type=int, default=DEFAULT_SAMPLE_SIZE, help="Sample size for each test bag.")
+    parser.add_argument("--num-test", type=int, default=DEFAULT_NUM_TEST, help="Number of test bags per dataset.")
+    parser.add_argument("--num-samples", type=int, default=100, help="Confidence samples per method and test bag.")
+    parser.add_argument("--alpha", type=float, default=0.1, help="PrediQuant acceptance fraction.")
+    parser.add_argument(
+        "--distance",
+        choices=["l1", "hellinger", "jensen-shannon"],
+        default="l1",
+        help="Distance used by PrediQuant to match validation bags to test bags.",
+    )
+    parser.add_argument("--mlp-max-iter", type=int, default=200, help="max_iter for the MLP classifier.")
+    parser.add_argument("--seed", type=int, default=qp.environ["_R_SEED"], help="Random seed.")
+    parser.add_argument("--output-csv", type=Path, default=None, help="Optional path where the raw results are saved.")
+    return parser.parse_args()
+
+
+def main(args: argparse.Namespace):
+    if not 0 < args.alpha <= 1:
+        raise ValueError("--alpha must be in (0, 1]")
+
+    qp.environ["_R_SEED"] = args.seed
+    qp.environ["SAMPLE_SIZE"] = args.sample_size
+    dfs = []
+
+    for dataset_i, (dataset_name, dataset_kind, (L, V, U)) in enumerate(
+        gen_datasets(args.max_binary, args.max_multiclass)
+    ):
+        classifier = MLPClassifier(random_state=args.seed, max_iter=args.mlp_max_iter).fit(*L.Xy)
+        val_posteriors = classifier.predict_proba(V.X)
+
+        test_samples = random_prevalence_samples(
+            U,
+            sample_size=args.sample_size,
+            repeats=args.num_test,
+            random_state=args.seed + dataset_i,
+        )
+        test_posteriors = [classifier.predict_proba(sample.X) for sample in test_samples]
+        true_accs = [
+            accuracy_score(sample.y, np.argmax(posteriors, axis=1))
+            for sample, posteriors in zip(test_samples, test_posteriors)
+        ]
+
+        for method_name, method_factory in method_factories(
+            classifier,
+            V,
+            args.sample_size,
+            args.num_samples,
+            args.alpha,
+            args.distance,
+            args.seed,
+        ).items():
+            method = method_factory().fit(V, val_posteriors)
+            dfs.append(
+                evaluate_method(
+                    method_name,
+                    method,
+                    dataset_name,
+                    dataset_kind,
+                    test_samples,
+                    test_posteriors,
+                    true_accs,
                 )
-                r.df.save_result(path)
-                log.info(
-                    f"[{r.p.h_info.name}@{r.p.d_info.name}] {r.method_name} on {r.acc_name} done [{timestamp(r.t_train, r.t_test_ave)}]"
-                )
-            elif r.old:
-                log.info(f"[{r.p.h_info.name}@{r.p.d_info.name}] {r.method_name} on {r.acc_name} exists, skipping")
-            elif r.error:
-                log.warning(
-                    f"[{r.p.h_info.name}@{r.p.d_info.name}] {r.method_name}: {r.acc_name} gave error '{r.err}' - skipping"
-                )
+            )
 
+        print(f"{dataset_kind}/{dataset_name} done.")
 
-def main():
-    log = get_logger(id=f"{PROJECT}.{EXPERIMENT}")
+    df = pd.concat(dfs, axis=0)
+    if args.output_csv is not None:
+        args.output_csv.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(args.output_csv, index=False)
 
-    parser = ArgumentParser()
-    parser.add_argument("--text", action="store_const", dest="domain", const="text")
-    parser.add_argument("--image", action="store_const", dest="domain", const="image")
-    parser.add_argument("--classic", action="store_const", dest="domain", const="classic")
-    pargs = parser.parse_args()
-
-    try:
-        log.info("-" * 31 + "  start  " + "-" * 31)
-        experiments(log, pargs.domain)
-    except Exception as e:
-        log.error(e)
-        print_exception(e)
-    finally:
-        log.info("-" * 32 + "  end  " + "-" * 32)
+    pivot = pd.pivot_table(
+        df,
+        index=["dataset_kind", "dataset", "n_classes"],
+        columns=["method"],
+        values=["ae", "ci_coverage", "ci_width"],
+        aggfunc="mean",
+    )
+    print(pivot)
 
 
 if __name__ == "__main__":
-    main()
+    main(parse_args())
