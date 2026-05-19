@@ -1,4 +1,6 @@
+import itertools as IT
 from abc import ABC, abstractmethod
+from copy import deepcopy
 from typing import Callable, Literal, Self
 
 import jax
@@ -8,13 +10,17 @@ import numpyro
 import numpyro.distributions as dist
 import quapy as qp
 from quapy.data import LabelledCollection
+from quapy.functional import prevalence_from_labels
 from quapy.method.aggregative import AggregativeQuantifier
 from quapy.method.confidence import AggregativeBootstrap
+from quapy.protocol import UPP
+from sklearn.base import BaseEstimator
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 
 import cap.models.utils
-from cap.models import _bayes
+from cap.models import _bayes, utils
 from cap.models.cont_table import CAPContingencyTable
 from cap.models.direct import CAPDirect
 from cap.utils.commons import contingency_table
@@ -157,6 +163,107 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
 
     def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         return self.predict_ct_range(X, posteriors).mean(axis=0)
+
+
+class PrediQuant(CAPDirect, DirectCAPWithConfidence):
+    def __init__(
+        self,
+        acc: Callable,
+        quantifier: AggregativeQuantifier,
+        alpha=0.1,
+        num_samples: int = 1000,
+        sample_size: int = None,
+        distance: Literal["l1", "hellinger", "jensen-shannon"] = "l1",
+        reuse_h: BaseEstimator | None = None,
+        predict_train_prev=True,
+        random_state=None,
+    ):
+        super().__init__(acc)
+        self.q = quantifier
+        self.alpha = alpha
+        self.num_samples = num_samples
+        self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
+        self.error = self.__get_error(distance)
+        self.reuse_h = reuse_h
+        self.predict_train_prev = predict_train_prev
+        self.random_state = qp.environ["_R_SEED"] if random_state is None else random_state
+        if self.sample_size is None:
+            raise ValueError(
+                'sample_size cannot be None; it must be specified directly or by setting qp.environ["SAMPLE_SIZE"]'
+            )
+
+    def __get_error(self, error_name: str) -> Callable[[np.ndarray, np.ndarray], np.ndarray]:
+        if error_name == "l1":
+            return utils.l1_dist
+        elif error_name == "hellinger":
+            return utils.hellinger_dist
+        elif error_name == "jensen-shannon":
+            return utils.jensen_shannon_dist
+        else:
+            raise ValueError(f"unexpected error type: {error_name}. Must be one of l1, hellinger, jensen-shannon")
+
+    def __check_posteriors(self, n_classes: int, P: np.ndarray):
+        if P.ndim == 1:
+            P = P.reshape(-1, 1)
+        if P.shape[1] != n_classes:
+            P = np.hstack([P, 1.0 - P.sum(axis=1, keepdims=True)])
+
+        return P
+
+    def fit(self, val: LabelledCollection, posteriors):
+        V1_idx, V2_idx = train_test_split(
+            np.arange(len(val)), test_size=0.5, random_state=self.random_state, stratify=val.y
+        )
+        V1, V2 = val.sampling_from_index(V1_idx), val.sampling_from_index(V2_idx)
+        V2_post = posteriors[V2_idx, :]
+        sigma_idx = UPP(
+            V2,
+            sample_size=self.sample_size,
+            repeats=int(self.num_samples / self.alpha),
+            random_state=self.random_state,
+            return_type="index",
+        )
+        sigma_indices = list(sigma_idx())
+        sigma_y = [V2.y[idx] for idx in sigma_indices]
+        sigma_post = [V2_post[idx, :] for idx in sigma_indices]
+
+        if self.reuse_h is not None:
+            self.q = deepcopy(self.q)
+            self.q.set_params(classifier=self.reuse_h, fit_classifier=False, val_split=V1.Xy)
+            self.q.fit(*val.Xy)
+        else:
+            self.q.fit(*val.Xy)
+
+        # precompute classifier predictions on samples
+        self.prot_posteriors = [self.__check_posteriors(val.n_classes, P_i) for P_i in sigma_post]
+        self.sigma_ct = [
+            contingency_table(y_i, np.argmax(P_i, axis=-1), val.n_classes)
+            for y_i, P_i in IT.zip_longest(sigma_y, sigma_post)
+        ]
+
+        # precompute prevalence predictions on samples
+        if self.predict_train_prev:
+            self.sigma_pred_prevs = [self.q.aggregate(P_i) for P_i in sigma_post]
+        else:
+            self.sigma_pred_prevs = [prevalence_from_labels(y_i, val.classes_) for y_i in sigma_y]
+
+        return self
+
+    def _predict_test_prior(self, X):
+        return self.q.predict(X)
+
+    def _predict_closest_idx(self, test_priors: np.ndarray):
+        sigma_dists = self.error(np.array(self.sigma_pred_prevs), test_priors)
+        return np.argsort(sigma_dists)
+
+    def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        sigma_accs = np.array([self.acc(ct) for ct in self.sigma_ct])
+        test_prior = self._predict_test_prior(X)
+        closest_idx = self._predict_closest_idx(test_prior)
+        return sigma_accs[closest_idx][: self.num_samples]
+
+    def predict(self, X, posteriors):
+        return float(self.predict_range(X, posteriors).mean())
 
 
 class BayesCAP: ...

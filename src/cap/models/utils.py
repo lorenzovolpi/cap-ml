@@ -5,6 +5,7 @@ import numpy as np
 import scipy
 from quapy.data import LabelledCollection
 from quapy.method.aggregative import AggregativeQuantifier
+from scipy.spatial.distance import jensenshannon
 from sklearn.base import BaseEstimator
 
 
@@ -37,6 +38,26 @@ def max_inverse_softmax(P, keepdims=False):
     lgP = np.log(P)
     mis = np.max(lgP - lgP.mean(axis=1, keepdims=True), axis=1, keepdims=keepdims)
     return mis
+
+
+def _check_dist_params(P: np.ndarray, r: np.ndarray):
+    assert P.ndim == 2, "P must by a verctor of shape (n_samples, n_classes)"
+    assert P.shape[1] == r.shape[0], "P and r must have the same number of classes"
+
+
+def l1_dist(P: np.ndarray, r: np.ndarray) -> np.ndarray:
+    _check_dist_params(P, r)
+    return np.sum(np.abs(P - r), axis=1)
+
+
+def hellinger_dist(P: np.ndarray, r: np.ndarray) -> np.ndarray:
+    _check_dist_params(P, r)
+    return np.linalg.norm(np.sqrt(P) - np.sqrt(r), axis=1) / np.sqrt(2)
+
+
+def jensen_shannon_dist(P: np.ndarray, r: np.ndarray) -> np.ndarray:
+    _check_dist_params(P, r)
+    return jensenshannon(P, r, axis=1)
 
 
 def smooth(prevalences, epsilon=1e-5, axis=None):
