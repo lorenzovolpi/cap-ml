@@ -166,6 +166,8 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
 
 
 class PrediQuant(CAPDirect, DirectCAPWithConfidence):
+    DISTANCES = ["l1", "hellinger", "jensen-shannon"]
+
     def __init__(
         self,
         acc: Callable,
