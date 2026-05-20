@@ -57,6 +57,7 @@ def hellinger_dist(P: np.ndarray, r: np.ndarray) -> np.ndarray:
 
 def jensen_shannon_dist(P: np.ndarray, r: np.ndarray) -> np.ndarray:
     _check_dist_params(P, r)
+    r = np.broadcast_to(r, P.shape)
     return jensenshannon(P, r, axis=1)
 
 
