@@ -244,18 +244,23 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
         ]
 
         # precompute prevalence predictions on samples
-        if self.predict_train_prev:
-            self.sigma_pred_prevs = [self.q.aggregate(P_i) for P_i in sigma_post]
-        else:
-            self.sigma_pred_prevs = [prevalence_from_labels(y_i, val.classes_) for y_i in sigma_y]
+        self.sigma_pred_prevs = [self.q.aggregate(P_i) for P_i in sigma_post]
+        self.sigma_true_prevs = [prevalence_from_labels(y_i, val.classes_) for y_i in sigma_y]
 
         return self
+
+    @property
+    def sigma_prevs(self):
+        if self.predict_train_prev:
+            return self.sigma_pred_prevs
+        else:
+            return self.sigma_true_prevs
 
     def _predict_test_prior(self, X):
         return self.q.predict(X)
 
     def _predict_closest_idx(self, test_priors: np.ndarray):
-        sigma_dists = self.error(np.array(self.sigma_pred_prevs), test_priors)
+        sigma_dists = self.error(np.array(self.sigma_prevs), test_priors)
         return np.argsort(sigma_dists)
 
     def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
