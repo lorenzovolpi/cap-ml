@@ -17,7 +17,6 @@ from quapy.protocol import UPP
 from sklearn.base import BaseEstimator
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.utils import resample
 
 import cap.models.utils
 from cap.calib import BCTS
@@ -347,12 +346,13 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
 
     def __check_acc(self, acc_name: str) -> Literal["vanilla_accuracy"]:
         if acc_name not in self.VALID_ACCS:
-            raise ValueError(f"acc_name must be one of {self.VALID_ACCS}")
+            # raise ValueError(f"acc_name must be one of {self.VALID_ACCS}")
+            return None
         return acc_name
 
     def fit(self, val: LabelledCollection, posteriors) -> "CBPE":
         self.n_classes = val.n_classes
-        if self.n_classes > 2:
+        if self.n_classes > 2 or self.acc_name is None:
             if hasattr(self, "calib"):
                 del self.calib
             if hasattr(self, "val_prev"):
@@ -363,6 +363,14 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
         self.calib = BCTS()(posteriors, val_labels, posterior_supplied=True)
         self.val_prev = val.prevalence()
         return self
+
+    @override
+    def switch_and_fit(self, acc_fn, data, posteriors) -> "CAPDirect":
+        acc_name = acc_fn.__name__
+        if acc_name in ["vanilla_accuracy", "vanilla_acc"]:
+            acc_name = "vanilla_accuracy"
+        self.acc_name = self.__check_acc(acc_name)
+        return self.fit(data, posteriors)
 
     @staticmethod
     def __vanilla_acc(confidences: np.ndarray) -> np.ndarray:
@@ -388,6 +396,9 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
 
     def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         if self.n_classes > 2:
+            return np.nan
+
+        if self.acc_name is None:
             return np.nan
 
         posteriors_calib = self.calib(posteriors)
