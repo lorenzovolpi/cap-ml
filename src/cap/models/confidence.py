@@ -1,7 +1,7 @@
 import itertools as IT
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Callable, Literal, Self
+from typing import Callable, Literal, Self, override
 
 import jax
 import jax.numpy as jnp
@@ -44,7 +44,7 @@ class ConfidenceInterval(ABC):
         if X is np.nan:
             self._samples = np.nan
             self._mean = np.nan
-            self.I_low, self.I_high = np.nan, np.nan
+            self.low, self.high = np.nan, np.nan
         else:
             X = np.asarray(X)
 
@@ -55,7 +55,7 @@ class ConfidenceInterval(ABC):
             low_perc = (self.alpha / 2.0) * 100
             high_perc = (1 - self.alpha / 2.0) * 100
             low, high = np.percentile(self._samples, q=[low_perc, high_perc])
-            self.I_low, self.I_high = float(low), float(high)
+            self.low, self.high = float(low), float(high)
 
     @property
     def samples(self):
@@ -79,15 +79,22 @@ class ConfidenceInterval(ABC):
         :param true_value: a np.ndarray of shape (n_classes,) or shape (n_values, n_classes,)
         :return: float in [0,1]
         """
-        return 1.0 if (self.I_low <= true_value) and (true_value <= self.I_high) else 0.0
+        return 1.0 if (self.low <= true_value) and (true_value <= self.high) else 0.0
+
+    def amplitude(self) -> float:
+        return self.high - self.low
 
     def interval(self) -> tuple[float, float]:
-        return self.I_low, self.I_high
+        return self.low, self.high
 
 
 class CAPWithConfidence(ABC):
     @abstractmethod
     def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval: ...
+
+    @classmethod
+    def ci_from_accs(cls, accs: np.ndarray, confidence_level: float = 0.95) -> ConfidenceInterval:
+        return ConfidenceInterval(accs, confidence_level=confidence_level)
 
 
 class CTCAPWithConfidence(CAPWithConfidence):
@@ -99,7 +106,7 @@ class CTCAPWithConfidence(CAPWithConfidence):
             return ConfidenceInterval(np.nan)
 
         accs = np.array([self.acc_fn(ct) for ct in cts])
-        return ConfidenceInterval(accs)
+        return self.ci_from_accs(accs)
 
     def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval:
         cts = self.predict_ct_range(X, posteriors)
@@ -112,7 +119,7 @@ class DirectCAPWithConfidence(CAPWithConfidence):
 
     def predict_with_confidence(self, X: np.ndarray, posteriors: np.ndarray) -> ConfidenceInterval:
         accs = self.predict_range(X, posteriors)
-        return ConfidenceInterval(accs)
+        return self.ci_from_accs(accs)
 
 
 class RQBS(CAPContingencyTable, CTCAPWithConfidence):
@@ -271,6 +278,22 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
 
     def predict(self, X, posteriors):
         return float(self.predict_range(X, posteriors).mean())
+
+
+class CBPE(CAPDirect, DirectCAPWithConfidence):
+    def fit(self, val: LabelledCollection, posteriors):
+        pass
+
+    def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        pass
+
+    @classmethod
+    @override
+    def ci_from_accs(cls, accs: np.ndarray, confidence_level: float = 0.95) -> ConfidenceInterval:
+        pass
+
+    def predict(self, X, posteriors):
+        pass
 
 
 class BayesCAP: ...

@@ -46,7 +46,7 @@ class CAPDirect(ClassifierAccuracyPrediction):
         conf_table = confusion_matrix(y_true, y_pred=y_pred, labels=sample.classes_)
         return self.acc(conf_table)
 
-    def switch_and_fit(self, acc_fn, data, posteriors):
+    def switch_and_fit(self, acc_fn, data, posteriors) -> "CAPDirect":
         self.acc = acc_fn
         return self.fit(data, posteriors)
 
