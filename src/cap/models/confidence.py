@@ -378,7 +378,7 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
         return self.fit(data, posteriors)
 
     @staticmethod
-    def __vanilla_acc(confidences: np.ndarray) -> np.ndarray:
+    def __vanilla_acc(confidences: np.ndarray) -> list:
         n = len(confidences)
         if n == 0:
             raise ValueError(
@@ -413,7 +413,7 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
         confidences = posteriors_em.max(axis=1)
 
         if self.acc_name == "vanilla_accuracy":
-            return np.asarray(list(self.__vanilla_acc(confidences).items()))
+            return np.asarray(self.__vanilla_acc(confidences))
 
     @classmethod
     @override
