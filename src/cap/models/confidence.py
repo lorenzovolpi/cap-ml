@@ -86,6 +86,16 @@ class ConfidenceInterval(ABC):
     def amplitude(self) -> float:
         return self.high - self.low
 
+    def winkler(self, true_acc) -> float:
+        ampl = self.amplitude()
+        low, high = self.interval()
+
+        if true_acc < low:
+            ampl += (2 / self.alpha) * (low - true_acc)
+        elif true_acc > high:
+            ampl += (2 / self.alpha) * (true_acc - high)
+        return float(ampl)
+
     def interval(self) -> tuple[float, float]:
         return self.low, self.high
 
