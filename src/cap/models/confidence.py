@@ -11,7 +11,7 @@ import numpyro.distributions as dist
 import quapy as qp
 from quapy.data import LabelledCollection
 from quapy.functional import prevalence_from_labels
-from quapy.method.aggregative import AggregativeQuantifier
+from quapy.method.aggregative import EMQ, AggregativeQuantifier
 from quapy.method.confidence import AggregativeBootstrap
 from quapy.protocol import UPP
 from sklearn.base import BaseEstimator
@@ -20,7 +20,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 
 import cap.models.utils
+from cap.calib import BCTS
 from cap.models import _bayes, utils
+from cap.models._cbpe import PoiBin
 from cap.models.cont_table import CAPContingencyTable
 from cap.models.direct import CAPDirect
 from cap.utils.commons import contingency_table
@@ -86,6 +88,53 @@ class ConfidenceInterval(ABC):
 
     def interval(self) -> tuple[float, float]:
         return self.low, self.high
+
+
+class PoissonConfidenceInterval(ConfidenceInterval):
+    def __init__(self, X, confidence_level=0.95):
+        assert 0 < confidence_level < 1, f"{confidence_level=} must be in range(0,1)"
+
+        if X is np.nan:
+            super().__init__(X, confidence_level=confidence_level)
+        else:
+            X = np.asarray(X)
+
+            self._samples = X
+            self._mean = self.__compute_expected_value(X)
+            self.alpha = 1 - confidence_level
+            self.low, self.high = self.__compute_ci(X)
+
+    def __compute_expected_value(self, _samples: np.ndarray):
+        expectation = 0.0
+        for item in sorted(_samples.tolist()):
+            x, p = item
+            expectation += x * p
+        return expectation
+
+    def __compute_ci(self, _samples: np.ndarray):
+        sorted_items = sorted(_samples.tolist())
+        a = 0
+        b = len(sorted_items) - 1
+        tail_coverage = 0
+        bounds_not_found = True
+
+        while bounds_not_found is True:
+            low_p = sorted_items[a][1]
+            high_p = sorted_items[b][1]
+            if low_p < high_p:
+                if tail_coverage + low_p < self.alpha:
+                    tail_coverage += low_p
+                    a += 1
+                else:
+                    bounds_not_found = False
+            else:
+                if tail_coverage + high_p < self.alpha:
+                    tail_coverage += high_p
+                    b -= 1
+                else:
+                    bounds_not_found = False
+        limits = (sorted_items[a][0], sorted_items[b][0])
+        return limits
 
 
 class CAPWithConfidence(ABC):
@@ -281,19 +330,61 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
 
 
 class CBPE(CAPDirect, DirectCAPWithConfidence):
-    def fit(self, val: LabelledCollection, posteriors):
-        pass
+    VALID_ACCS = ["vanilla_accuracy"]
+
+    def __init__(self, acc_name: str):
+        self.acc_name = self.__check_acc(acc_name)
+
+    def __check_acc(self, acc_name: str) -> Literal["vanilla_accuracy"]:
+        if acc_name not in self.VALID_ACCS:
+            raise ValueError(f"acc_name must be one of {self.VALID_ACCS}")
+        return acc_name
+
+    def fit(self, val: LabelledCollection, posteriors) -> "CBPE":
+        val_labels = np.eye(val.n_classes)[val.y]
+        self.calib = BCTS()(posteriors, val_labels, posterior_supplied=True)
+        self.val_prev = val.prevalence()
+        return self
+
+    @staticmethod
+    def __vanilla_acc(confidences: np.ndarray) -> np.ndarray:
+        n = len(confidences)
+        if n == 0:
+            raise ValueError(
+                "\n\nEmpty list of confidence scores lead to zero division. Accuracy considered to be 0.0 in this case."
+                + "\nYou may change this behaviour by setting the parameter 'zero_division' value to 1,"
+                + "\nor suppress this warning by setting the parameter value to 0."
+            )
+
+        pos_confs = np.where(confidences >= 0.5, confidences, 1 - confidences)
+
+        pb = PoiBin(pos_confs)
+
+        k_values = list(range(n + 1))
+        pmf = pb.pmf(k_values)
+        accuracy_distribution = {}
+        for k in k_values:
+            accuracy_distribution[k / n] = pmf[k]
+
+        return accuracy_distribution
 
     def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
-        pass
+        posteriors_calib = self.calib(posteriors)
+        _, posteriors_em = EMQ.EM(self.val_prev, posteriors_calib)
+        confidences = posteriors_em.max(axis=1)
+
+        if self.acc_name == "vanilla_accuracy":
+            return np.asarray(list(self.__vanilla_acc(confidences).items()))
 
     @classmethod
     @override
     def ci_from_accs(cls, accs: np.ndarray, confidence_level: float = 0.95) -> ConfidenceInterval:
-        pass
+        return PoissonConfidenceInterval(accs, confidence_level=confidence_level)
 
     def predict(self, X, posteriors):
-        pass
+        accs = self.predict_range(X, posteriors)
+        ci = self.ci_from_accs(accs)
+        return ci.point_estimate
 
 
 class BayesCAP: ...
