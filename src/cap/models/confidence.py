@@ -106,7 +106,12 @@ class PoissonConfidenceInterval(ConfidenceInterval):
         if X is np.nan:
             super().__init__(X, confidence_level=confidence_level)
         else:
-            X = np.asarray(X)
+            _distrib = {}
+            n = len(X) - 1
+            for k, pmf in enumerate(X):
+                _distrib[k / n] = pmf
+
+            X = np.asarray(_distrib.items())
 
             self._samples = X
             self._mean = self.__compute_expected_value(X)
@@ -388,11 +393,13 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
 
         k_values = list(range(n + 1))
         pmf = pb.pmf(k_values)
-        accuracy_distribution = {}
-        for k in k_values:
-            accuracy_distribution[k / n] = pmf[k]
-
-        return accuracy_distribution
+        accs = [pmf[k] for k in k_values]
+        # accuracy_distribution = {}
+        # for k in k_values:
+        #     accuracy_distribution[k / n] = pmf[k]
+        #
+        # return accuracy_distribution
+        return accs
 
     def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         if self.n_classes > 2:
