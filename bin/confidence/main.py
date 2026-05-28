@@ -103,9 +103,7 @@ def method_factories(
     return {method_name: available[method_name] for method_name in method_names}
 
 
-def probability_mass_in_interval(acc_distribution: np.ndarray, low: float, high: float) -> float:
-    values = acc_distribution[:, 0]
-    probabilities = acc_distribution[:, 1]
+def probability_mass_in_interval(values: np.ndarray, probabilities: np.ndarray, low: float, high: float) -> float:
     in_interval = (low <= values) & (values <= high)
     return float(probabilities[in_interval].sum())
 
@@ -136,17 +134,14 @@ def assert_common_confidence_interface(method_name: str, method, sample: Labelle
 
 def assert_cbpe_confidence_interval(method: CBPE, sample: LabelledCollection, posteriors: np.ndarray):
     acc_distribution = method.predict_range(sample.X, posteriors)
-    values = acc_distribution[:, 0]
-    probabilities = acc_distribution[:, 1]
-    expected_values = np.arange(len(sample) + 1, dtype=float) / len(sample)
+    probabilities = np.asarray(acc_distribution)
+    values = np.arange(len(sample) + 1, dtype=float) / len(sample)
 
-    if acc_distribution.shape != (len(sample) + 1, 2):
+    if probabilities.shape != (len(sample) + 1,):
         raise AssertionError(
-            "CBPE.predict_range must return the Poisson-binomial accuracy distribution as "
-            f"(n + 1, 2), got {acc_distribution.shape} for n={len(sample)}"
+            "CBPE.predict_range must return the Poisson-binomial accuracy PMF as "
+            f"(n + 1,), got {probabilities.shape} for n={len(sample)}"
         )
-    if not np.allclose(values, expected_values):
-        raise AssertionError("CBPE accuracy support must be {0/n, 1/n, ..., n/n}")
     if np.any(probabilities < -1e-12):
         raise AssertionError("CBPE probability masses must be non-negative")
     if not np.isclose(probabilities.sum(), 1.0, atol=1e-8):
@@ -175,7 +170,7 @@ def assert_cbpe_confidence_interval(method: CBPE, sample: LabelledCollection, po
             f"90%={(low_90, high_90)} 95%={(low_95, high_95)}"
         )
 
-    mass_95 = probability_mass_in_interval(acc_distribution, low_95, high_95)
+    mass_95 = probability_mass_in_interval(values, probabilities, low_95, high_95)
     if mass_95 + 1e-10 < 0.95:
         raise AssertionError(f"CBPE 95% confidence interval covers only {mass_95:.6f} probability mass")
 
