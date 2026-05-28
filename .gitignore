@@ -32,6 +32,7 @@ htmlcov/
 *out
 out
 output
+output_local
 results
 old_results*
 tables
