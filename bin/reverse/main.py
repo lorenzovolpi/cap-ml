@@ -14,7 +14,7 @@ from sklearn.neural_network import MLPClassifier
 import cap
 from cap.data.datasets import fetch_UCIBinaryDataset, fetch_UCIMulticlassDataset
 from cap.error import vanilla_acc
-from cap.models.confidence import PrediQuant, RQBS
+from cap.models.confidence import RQBS, PrediQuant
 from cap_exp.pretrain.dataset import sort_datasets_by_size
 
 qp.environ["_R_SEED"] = 0
@@ -256,7 +256,7 @@ def main(args: argparse.Namespace):
         values=["ae", "ci_coverage", "ci_width"],
         aggfunc="mean",
     )
-    print(pivot)
+    pivot.to_markdown(Path(args.output_csv).with_suffix(".md"), index=True)
 
 
 if __name__ == "__main__":
