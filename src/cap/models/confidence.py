@@ -351,6 +351,14 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
         return acc_name
 
     def fit(self, val: LabelledCollection, posteriors) -> "CBPE":
+        self.n_classes = val.n_classes
+        if self.n_classes > 2:
+            if hasattr(self, "calib"):
+                del self.calib
+            if hasattr(self, "val_prev"):
+                del self.val_prev
+            return self
+
         val_labels = np.eye(val.n_classes)[val.y]
         self.calib = BCTS()(posteriors, val_labels, posterior_supplied=True)
         self.val_prev = val.prevalence()
@@ -379,6 +387,9 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
         return accuracy_distribution
 
     def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        if self.n_classes > 2:
+            return np.nan
+
         posteriors_calib = self.calib(posteriors)
         _, posteriors_em = EMQ.EM(self.val_prev, posteriors_calib)
         confidences = posteriors_em.max(axis=1)
