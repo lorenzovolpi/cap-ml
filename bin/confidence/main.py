@@ -180,6 +180,29 @@ def assert_cbpe_confidence_interval(method: CBPE, sample: LabelledCollection, po
         raise AssertionError(f"CBPE 95% confidence interval covers only {mass_95:.6f} probability mass")
 
 
+def assert_cbpe_multiclass_unsupported(method: CBPE, sample: LabelledCollection, posteriors: np.ndarray):
+    if hasattr(method, "calib") or hasattr(method, "val_prev"):
+        raise AssertionError("CBPE must not fit calibration state for multiclass problems")
+
+    acc_distribution = method.predict_range(sample.X, posteriors)
+    if not np.isnan(acc_distribution):
+        raise AssertionError(f"CBPE.predict_range must return np.nan for multiclass problems, got {acc_distribution}")
+
+    point_estimate = method.predict(sample.X, posteriors)
+    if not np.isnan(point_estimate):
+        raise AssertionError(f"CBPE.predict must return np.nan for multiclass problems, got {point_estimate}")
+
+    ci = method.predict_with_confidence(sample.X, posteriors)
+    if not isinstance(ci, ConfidenceInterval):
+        raise AssertionError(f"CBPE.predict_with_confidence must return ConfidenceInterval, got {type(ci)}")
+    low, high = ci.interval()
+    if not np.isnan([ci.point_estimate, low, high]).all():
+        raise AssertionError(
+            "CBPE.predict_with_confidence must return a nan confidence interval for multiclass problems: "
+            f"point={ci.point_estimate} interval={(low, high)}"
+        )
+
+
 def evaluate_method(
     method_name: str,
     method,
@@ -195,6 +218,14 @@ def evaluate_method(
     ci_coverage = []
 
     for sample, posteriors, true_acc in zip(test_samples, test_posteriors, true_accs):
+        if method_name == "cbpe" and sample.n_classes > 2:
+            assert_cbpe_multiclass_unsupported(method, sample, posteriors)
+            estim_accs.append(np.nan)
+            ci_low.append(np.nan)
+            ci_high.append(np.nan)
+            ci_coverage.append(np.nan)
+            continue
+
         ci = assert_common_confidence_interface(method_name, method, sample, posteriors)
         if method_name == "cbpe":
             assert_cbpe_confidence_interval(method, sample, posteriors)
