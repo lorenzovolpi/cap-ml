@@ -1,8 +1,17 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
+import lascal
 import numpy as np
 import scipy
 import scipy.optimize
+import torch
+
+
+def np2tensor(scores, probability_to_logit=False):
+    scores = torch.from_numpy(scores)
+    if probability_to_logit:
+        scores = torch.log(scores)
+    return scores
 
 
 def smooth(prevalences, epsilon=1e-12, axis=None):
@@ -361,3 +370,41 @@ class CrossValidatedBCTS(TempScaling):
         )
 
         return (optimal_t, biases)
+
+
+class LasCal(ABC):
+    def __init__(self, prob2logits=True):
+        self.prob2logits = prob2logits
+
+    def calibrate(self, val_post: np.ndarray, val_y: np.ndarray, test_post: np.ndarray):
+        calibrator = lascal.Calibrator(
+            experiment_path=None,
+            verbose=False,
+            covariate=False,
+        )
+
+        val_post = np2tensor(val_post, probability_to_logit=self.prob2logits)
+        test_post = np2tensor(test_post, probability_to_logit=self.prob2logits)
+        val_y = np2tensor(val_y)
+        yte = None
+
+        try:
+            calibrated_agg = calibrator.calibrate(
+                method_name="lascal",
+                source_agg={"y_logits": val_post, "y_true": val_y},
+                target_agg={"y_logits": test_post, "y_true": yte},
+                train_agg=None,
+            )
+            y_logits = calibrated_agg["target"]["y_logits"]
+            Pte_calib = y_logits.softmax(-1).numpy()
+        except Exception:
+            test_post = test_post.numpy()
+            if np.isclose(test_post.sum(axis=1), 1).all():
+                Pte_calib = test_post
+            else:
+                Pte_calib = softmax(test_post, axis=1)
+
+        return Pte_calib
+
+    def __call__(self, val_post, val_y):
+        return lambda test_post: self.calibrate(val_post, val_y, test_post)

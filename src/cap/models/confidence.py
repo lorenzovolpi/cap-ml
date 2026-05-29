@@ -19,7 +19,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
 import cap.models.utils
-from cap.calib import BCTS
+from cap.calib import BCTS, LasCal
 from cap.models import _bayes, utils
 from cap.models._cbpe import PoiBin
 from cap.models.cont_table import CAPContingencyTable
@@ -345,9 +345,11 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
 
 class CBPE(CAPDirect, DirectCAPWithConfidence):
     VALID_ACCS = ["vanilla_accuracy"]
+    VALID_CALIB_METHODS = ["bcts", "bcts+emq", "lascal"]
 
-    def __init__(self, acc_name: str):
+    def __init__(self, acc_name: str, calib_method: Literal["bcts", "bcts+emq", "lascal"]):
         self.acc_name = self.__check_acc(acc_name)
+        self.calib_method = self.__check_calib_method(calib_method)
 
     def __check_acc(self, acc_name: str) -> Literal["vanilla_accuracy"]:
         if acc_name not in self.VALID_ACCS:
@@ -355,18 +357,29 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
             return None
         return acc_name
 
+    def __check_calib_method(self, calib_metod: str) -> Literal["bcts", "bcts+emq", "lascal"]:
+        if calib_metod not in self.VALID_CALIB_METHODS:
+            return None
+        return calib_metod
+
     def fit(self, val: LabelledCollection, posteriors) -> "CBPE":
         self.n_classes = val.n_classes
         if self.n_classes > 2 or self.acc_name is None:
-            if hasattr(self, "calib"):
-                del self.calib
+            self.calib = None
             if hasattr(self, "val_prev"):
                 del self.val_prev
             return self
 
         val_labels = np.eye(val.n_classes)[val.y]
-        self.calib = BCTS()(posteriors, val_labels, posterior_supplied=True)
+        if self.calib_method in ["bcts", "bcts+emq"]:
+            self.calib = BCTS()(posteriors, val_labels, posterior_supplied=True)
+        elif self.calib_method == "lascal":
+            self.calib = LasCal()(posteriors, val.y)
+        else:
+            self.calib = None
+
         self.val_prev = val.prevalence()
+
         return self
 
     @override
@@ -394,11 +407,6 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
         k_values = list(range(n + 1))
         pmf = pb.pmf(k_values)
         accs = [pmf[k] for k in k_values]
-        # accuracy_distribution = {}
-        # for k in k_values:
-        #     accuracy_distribution[k / n] = pmf[k]
-        #
-        # return accuracy_distribution
         return accs
 
     def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
@@ -408,9 +416,17 @@ class CBPE(CAPDirect, DirectCAPWithConfidence):
         if self.acc_name is None:
             return np.nan
 
-        posteriors_calib = self.calib(posteriors)
-        _, posteriors_em = EMQ.EM(self.val_prev, posteriors_calib)
-        confidences = posteriors_em.max(axis=1)
+        if self.calib is None or self.calib_method is None:
+            return np.nan
+
+        if self.calib_method in ["bcts", "bcts+emq"]:
+            posteriors_calib = self.calib(posteriors)
+            if self.calib_method == "bcts+emq":
+                _, posteriors_calib = EMQ.EM(self.val_prev, posteriors_calib)
+        elif self.calib_method == "lascal":
+            posteriors_calib = self.calib(posteriors)
+
+        confidences = posteriors_calib.max(axis=1)
 
         if self.acc_name == "vanilla_accuracy":
             return np.asarray(self.__vanilla_acc(confidences))
