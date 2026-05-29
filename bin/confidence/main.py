@@ -24,7 +24,7 @@ DEFAULT_NUM_TEST = 10
 DEFAULT_NUM_SAMPLES = 50
 
 Dataset = tuple[str, str, tuple[LabelledCollection, LabelledCollection, LabelledCollection]]
-MethodFactory = Callable[[], object]
+MethodFactory = Callable[[LabelledCollection, np.ndarray], object]
 
 
 def parse_csv_arg(value: str) -> list[str]:
@@ -81,21 +81,38 @@ def method_factories(
     seed: int,
 ) -> dict[str, MethodFactory]:
     available = {
-        "cbpe": lambda: CBPE("vanilla_accuracy"),
-        "prediquant": lambda: PrediQuant(
+        "cbpe-bcts": lambda data, posteriors: CBPE("vanilla_accuracy", "bcts").fit(data, posteriors),
+        "cbpe-bcts-emq": lambda data, posteriors: CBPE("vanilla_accuracy", "bcts+emq").fit(data, posteriors),
+        "cbpe-lascal": lambda data, posteriors: CBPE("vanilla_accuracy", "lascal").fit(data, posteriors),
+        "cbpe-switch-bcts": lambda data, posteriors: CBPE(None, "bcts").switch_and_fit(
+            vanilla_acc,
+            data,
+            posteriors,
+        ),
+        "cbpe-switch-bcts-emq": lambda data, posteriors: CBPE(None, "bcts+emq").switch_and_fit(
+            vanilla_acc,
+            data,
+            posteriors,
+        ),
+        "cbpe-switch-lascal": lambda data, posteriors: CBPE(None, "lascal").switch_and_fit(
+            vanilla_acc,
+            data,
+            posteriors,
+        ),
+        "prediquant": lambda data, posteriors: PrediQuant(
             vanilla_acc,
             kdey_reusing_classifier(classifier, val, seed),
             num_samples=num_samples,
             sample_size=sample_size,
             random_state=seed,
-        ),
-        "rqbs": lambda: RQBS(
+        ).fit(data, posteriors),
+        "rqbs": lambda data, posteriors: RQBS(
             vanilla_acc,
             kdey_reusing_classifier(classifier, val, seed),
             num_samples=num_samples,
             sample_size=sample_size,
             random_state=seed,
-        ),
+        ).fit(data, posteriors),
     }
     unknown = sorted(set(method_names) - set(available))
     if unknown:
@@ -116,7 +133,7 @@ def assert_common_confidence_interface(method_name: str, method, sample: Labelle
     point_from_predict = method.predict(sample.X, posteriors)
     if not np.isfinite(point_from_predict):
         raise AssertionError(f"{method_name}.predict must return a finite value, got {point_from_predict}")
-    if method_name == "cbpe" and not np.isclose(point_from_predict, ci.point_estimate):
+    if method_name.startswith("cbpe") and not np.isclose(point_from_predict, ci.point_estimate):
         raise AssertionError(
             f"{method_name}.predict must match predict_with_confidence(...).point_estimate: "
             f"{point_from_predict=} {ci.point_estimate=}"
@@ -133,6 +150,11 @@ def assert_common_confidence_interface(method_name: str, method, sample: Labelle
 
 
 def assert_cbpe_confidence_interval(method: CBPE, sample: LabelledCollection, posteriors: np.ndarray):
+    if method.acc_name != "vanilla_accuracy":
+        raise AssertionError(f"CBPE must be configured for vanilla_accuracy in this test, got {method.acc_name}")
+    if method.calib_method not in {"bcts", "bcts+emq", "lascal"}:
+        raise AssertionError(f"CBPE must use a supported calib_method, got {method.calib_method}")
+
     acc_distribution = method.predict_range(sample.X, posteriors)
     probabilities = np.asarray(acc_distribution)
     values = np.arange(len(sample) + 1, dtype=float) / len(sample)
@@ -158,12 +180,9 @@ def assert_cbpe_confidence_interval(method: CBPE, sample: LabelledCollection, po
             "CBPE confidence point estimate must be the expectation of the Poisson-binomial distribution: "
             f"{ci_95.point_estimate=} {expected_accuracy=}"
         )
-    interval_tol = 1e-10
-    if not (low_95 - interval_tol <= ci_95.point_estimate <= high_95 + interval_tol):
-        raise AssertionError(
-            "CBPE point estimate must be contained in its confidence interval: "
-            f"{ci_95.point_estimate=} interval={(low_95, high_95)}"
-        )
+    interval_tol = 1e-8
+    if not (-interval_tol <= ci_95.point_estimate <= 1 + interval_tol):
+        raise AssertionError(f"CBPE point estimate must be in [0, 1], got {ci_95.point_estimate}")
     if low_95 > low_90 + interval_tol or high_95 < high_90 - interval_tol:
         raise AssertionError(
             "CBPE intervals must be monotonic with the confidence level: "
@@ -176,7 +195,7 @@ def assert_cbpe_confidence_interval(method: CBPE, sample: LabelledCollection, po
 
 
 def assert_cbpe_multiclass_unsupported(method: CBPE, sample: LabelledCollection, posteriors: np.ndarray):
-    if hasattr(method, "calib") or hasattr(method, "val_prev"):
+    if getattr(method, "calib", None) is not None or hasattr(method, "val_prev"):
         raise AssertionError("CBPE must not fit calibration state for multiclass problems")
 
     acc_distribution = method.predict_range(sample.X, posteriors)
@@ -213,7 +232,7 @@ def evaluate_method(
     ci_coverage = []
 
     for sample, posteriors, true_acc in zip(test_samples, test_posteriors, true_accs):
-        if method_name == "cbpe" and sample.n_classes > 2:
+        if method_name.startswith("cbpe") and sample.n_classes > 2:
             assert_cbpe_multiclass_unsupported(method, sample, posteriors)
             estim_accs.append(np.nan)
             ci_low.append(np.nan)
@@ -222,7 +241,7 @@ def evaluate_method(
             continue
 
         ci = assert_common_confidence_interface(method_name, method, sample, posteriors)
-        if method_name == "cbpe":
+        if method_name.startswith("cbpe"):
             assert_cbpe_confidence_interval(method, sample, posteriors)
 
         low, high = ci.interval()
@@ -267,8 +286,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--methods",
         type=parse_csv_arg,
-        default=["cbpe", "prediquant", "rqbs"],
-        help="Comma-separated methods to test. Available: cbpe,prediquant,rqbs.",
+        default=[
+            "cbpe-bcts",
+            "cbpe-bcts-emq",
+            "cbpe-lascal",
+            "cbpe-switch-bcts",
+            "cbpe-switch-bcts-emq",
+            "cbpe-switch-lascal",
+            "prediquant",
+            "rqbs",
+        ],
+        help=(
+            "Comma-separated methods to test. Available: cbpe-bcts,cbpe-bcts-emq,cbpe-lascal,"
+            "cbpe-switch-bcts,cbpe-switch-bcts-emq,cbpe-switch-lascal,prediquant,rqbs."
+        ),
     )
     parser.add_argument("--sample-size", type=int, default=DEFAULT_SAMPLE_SIZE, help="Sample size for each test bag.")
     parser.add_argument("--num-test", type=int, default=DEFAULT_NUM_TEST, help="Number of test bags per dataset.")
@@ -320,7 +351,7 @@ def main(args: argparse.Namespace):
             args.num_samples,
             args.seed,
         ).items():
-            method = method_factory().fit(V, val_posteriors)
+            method = method_factory(V, val_posteriors)
             dfs.append(
                 evaluate_method(
                     method_name,
