@@ -1,6 +1,7 @@
 import itertools as IT
 from abc import ABC, abstractmethod
 from copy import deepcopy
+from numbers import Number
 from typing import Callable, Literal, Self, override
 
 import jax
@@ -446,11 +447,19 @@ class BayesCAP: ...
 
 
 class ACC_BayesCAP(CAPContingencyTable, CTCAPWithConfidence, BayesCAP):
-    def __init__(self, acc_fn: Callable, num_warmup: int = 500, num_samples: int = 1000, random_state: int = None):
+    def __init__(
+        self,
+        acc_fn: Callable,
+        num_warmup: int = 500,
+        num_samples: int = 1000,
+        prior: str | Number | np.ndarray = "uniform",
+        random_state: int = None,
+    ):
         CAPContingencyTable.__init__(self, acc_fn)
         self.num_warmup = num_warmup
         self.num_samples = num_samples
         self.randm_state = qp.environ["_R_SEED"] if random_state is None else random_state
+        self.prior = prior
 
     def fit(self, val: LabelledCollection, posteriors: np.ndarray) -> Self:
         val_yhat = np.argmax(posteriors, axis=-1)
@@ -458,13 +467,14 @@ class ACC_BayesCAP(CAPContingencyTable, CTCAPWithConfidence, BayesCAP):
         self.val_ct = confusion_matrix(val.y, val_yhat, labels=val.classes)
         return self
 
-    def model(self, pred_posterior_count: np.ndarray, train_class_cond_count: np.ndarray):
+    def model(self, pred_posterior_count: np.ndarray, train_class_cond_count: np.ndarray, alpha: np.ndarray):
         train_class_count = train_class_cond_count.sum(axis=1)
 
         K = len(pred_posterior_count)
         L = len(train_class_count)
 
-        pi_ = numpyro.sample(P_TEST_Y, dist.Dirichlet(jnp.ones(L)))
+        # pi_ = numpyro.sample(P_TEST_Y, dist.Dirichlet(jnp.ones(L)))
+        pi_ = numpyro.sample(P_TEST_Y, dist.Dirichlet(jnp.asarray(alpha, dtype=jnp.float32)))
         p_c_cond_y = numpyro.sample(P_C_COND_Y, dist.Dirichlet(jnp.ones(K).repeat(L).reshape(L, K)))
 
         with numpyro.plate("plate", L):
@@ -473,7 +483,7 @@ class ACC_BayesCAP(CAPContingencyTable, CTCAPWithConfidence, BayesCAP):
         p_c = numpyro.deterministic(P_TEST_C, jnp.einsum("yc,y->c", p_c_cond_y, pi_))
         numpyro.sample("N_c", dist.Multinomial(jnp.sum(pred_posterior_count), p_c), obs=pred_posterior_count)
 
-    def sample_posterior(self, posterior_count: np.ndarray) -> dict:
+    def sample_posterior(self, posterior_count: np.ndarray, alpha: np.ndarray) -> dict:
         mcmc = numpyro.infer.MCMC(
             numpyro.infer.NUTS(self.model),
             num_warmup=self.num_warmup,
@@ -481,14 +491,24 @@ class ACC_BayesCAP(CAPContingencyTable, CTCAPWithConfidence, BayesCAP):
             progress_bar=False,
         )
         rng_key = jax.random.PRNGKey(self.randm_state)
-        mcmc.run(rng_key, pred_posterior_count=posterior_count, train_class_cond_count=self.val_ct)
+        mcmc.run(rng_key, pred_posterior_count=posterior_count, train_class_cond_count=self.val_ct, alpha=alpha)
         return mcmc.get_samples()
 
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         yhat = np.argmax(posteriors, axis=-1)
         posterior_count = qp.functional.counts_from_labels(yhat, self.classes)
 
-        samples = self.sample_posterior(posterior_count)
+        n_classes = len(self.classes)
+        if isinstance(self.prior, str) and self.prior == "uniform":
+            alpha = np.ones(n_classes, dtype=float)
+        elif isinstance(self.prior, Number):
+            alpha = np.full(n_classes, float(self.prior), dtype=float)
+        else:
+            alpha = np.asarray(self.prior, dtype=float)
+            if alpha.ndim != 1 or len(alpha) != n_classes:
+                raise ValueError(f"wrong shape for prior; expected {n_classes} values, found shape {alpha.shape}")
+
+        samples = self.sample_posterior(posterior_count, alpha=alpha)
 
         # compute P(Y,C) for all samples from P(Y) and P(C|Y)
         p_y_and_c_test = jnp.einsum("sy,syc->syc", samples[P_TEST_Y], samples[P_C_COND_Y])
