@@ -5,7 +5,7 @@ import os
 import sys
 
 import numpy as np
-import stan
+# import stan
 
 
 def load_stan_file():
@@ -22,6 +22,15 @@ def _suppress_stan_logging():
         finally:
             sys.stderr = old_stderr
 
+def _import_stan():
+    try:
+        import stan
+    except ImportError as error:
+        raise ImportError(
+            "HD_BayesCAP requires the optional Stan backend. "
+            "Install cap-ml with `cap-ml[stan]`."
+        ) from error
+    return stan
 
 def hd_bayes_stan(
     stan_code,
@@ -33,6 +42,7 @@ def hd_bayes_stan(
     num_warmup: int,
     random_state: int,
 ):
+    stan = _import_stan()
 
     logging.getLogger("stan.common").setLevel(logging.ERROR)
 
