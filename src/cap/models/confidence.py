@@ -234,7 +234,17 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
         return self.predict_ct_range(X, posteriors).mean(axis=0)
 
 
-class PrediQuant(CAPDirect, DirectCAPWithConfidence):
+class PrediQuant(CAPContingencyTable, CTCAPWithConfidence):
+    """
+    PrediQuant (SQS-S).
+
+    The prediction for a target sample is built from the ``num_samples`` candidate bags (drawn from ``V2``) whose
+    estimated prevalence is closest to the one of the target. ``predict_ct_range`` returns the contingency tables of
+    these bags (normalised, true classes on rows), ``predict_ct`` their mean. ``predict_range`` returns the accuracy of
+    each of these tables, and ``predict`` the accuracy of their mean table; since all the bags have the same size, for
+    the vanilla accuracy this equals the mean of ``predict_range``.
+    """
+
     DISTANCES = ["l1", "hellinger", "jensen-shannon"]
 
     def __init__(
@@ -248,7 +258,7 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
         predict_train_prev=True,
         random_state=None,
     ):
-        super().__init__(acc)
+        CAPContingencyTable.__init__(self, acc)
         self.q = quantifier
         self.alpha = alpha
         self.num_samples = num_samples
@@ -330,14 +340,28 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
         sigma_dists = self.error(np.array(self.sigma_prevs), test_priors)
         return np.argsort(sigma_dists)
 
-    def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
-        sigma_accs = np.array([self.acc(ct) for ct in self.sigma_ct])
-        test_prior = self._predict_test_prior(X)
-        closest_idx = self._predict_closest_idx(test_prior)
-        return sigma_accs[closest_idx][: self.num_samples]
+    @property
+    def acc(self) -> Callable:
+        """The accuracy function, an alias of ``acc_fn`` kept for backward compatibility."""
+        return self.acc_fn
 
-    def predict(self, X, posteriors):
-        return float(self.predict_range(X, posteriors).mean())
+    @acc.setter
+    def acc(self, acc_fn: Callable):
+        self.acc_fn = acc_fn
+
+    def switch_and_fit(self, acc_fn, data, posteriors) -> "PrediQuant":
+        return self.switch(acc_fn).fit(data, posteriors)
+
+    def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        test_prior = self._predict_test_prior(X)
+        closest_idx = self._predict_closest_idx(test_prior)[: self.num_samples]
+        return np.asarray(self.sigma_ct)[closest_idx]
+
+    def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        return self.predict_ct_range(X, posteriors).mean(axis=0)
+
+    def predict_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
+        return np.array([self.acc_fn(ct) for ct in self.predict_ct_range(X, posteriors)])
 
 
 class CBPE(CAPDirect, DirectCAPWithConfidence):

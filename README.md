@@ -1,8 +1,20 @@
 # cap-ml
 
-version: `0.1.1.9`
+version: `0.1.1.10`
 
 ## Changelog
+
+### v0.1.1.10
+
+- `PrediQuant` (SQS-S) is now a contingency-table method: it derives from `CAPContingencyTable` and `CTCAPWithConfidence` instead of `CAPDirect` and `DirectCAPWithConfidence`. The selection of the bags is unchanged:
+  - `predict_ct_range` returns the contingency tables (normalised, true classes on rows) of the `num_samples` candidate bags whose estimated prevalence is closest to the target's, i.e. the bags whose accuracies made up `predict_range` before;
+  - `predict_ct` returns the mean of these tables;
+  - `predict_range` returns the accuracy of each table of `predict_ct_range`, as before;
+  - `predict` is inherited from `CAPContingencyTable`: the accuracy of the mean table. All the bags have the same size, so for the vanilla accuracy it equals the mean of `predict_range`, as before; for a non-linear measure (e.g. F1) it can differ from that mean;
+  - `predict_with_confidence` builds the interval from the accuracies of the tables of the range, so its samples and its point estimate (their mean) are unchanged.
+- The accuracy function is stored as `acc_fn` (the attribute of `CAPContingencyTable`); `acc` is kept as an alias, and `switch_and_fit` is kept.
+- Results of `PrediQuant` obtained with v0.1.1.9 stay comparable: the accuracy ranges, the intervals and the mean of the range are unchanged; what is new is that a caller dispatching on `CAPContingencyTable` now gets the tables (`predict_ct_range`, `predict_ct`).
+- Added tests to `tests/test_prediquant.py`.
 
 ### v0.1.1.9
 

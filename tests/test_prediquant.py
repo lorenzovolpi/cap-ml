@@ -79,3 +79,36 @@ def test_bags_and_target_go_through_the_same_estimator():
     for idx, bag_prev in zip(bags[:10], method.sigma_pred_prevs[:10]):
         # a target equal to the candidate bag gets exactly the bag's estimate: same surrogate pipeline
         assert np.allclose(method._predict_test_prior(V2.X[idx]), bag_prev)
+
+
+def test_table_range_is_the_closest_bags():
+    method, _, h = _fitted_method()
+    X_test, _ = _data(SAMPLE_SIZE, seed=2)
+    P = h.predict_proba(X_test)
+    cts = method.predict_ct_range(X_test, P)
+    closest = method._predict_closest_idx(method._predict_test_prior(X_test))[: method.num_samples]
+    assert cts.shape == (method.num_samples, N_CLASSES, N_CLASSES)
+    assert np.allclose(cts, np.asarray(method.sigma_ct)[closest])
+    # the accuracy range is the accuracy of each table of the range
+    assert np.allclose(method.predict_range(X_test, P), [method.acc_fn(ct) for ct in cts])
+    assert np.allclose(method.predict_ct(X_test, P), cts.mean(axis=0))
+
+
+def test_mean_table_gives_the_mean_vanilla_accuracy():
+    method, _, h = _fitted_method()
+    X_test, _ = _data(SAMPLE_SIZE, seed=3)
+    P = h.predict_proba(X_test)
+    # equal-size bags: the trace of the mean table is the mean of the traces
+    assert np.isclose(method.predict(X_test, P), method.predict_range(X_test, P).mean())
+    assert np.isclose(method.predict_with_confidence(X_test, P).point_estimate, method.predict(X_test, P))
+
+
+def test_acc_alias_and_switch():
+    method, _, _ = _fitted_method()
+    assert method.acc is method.acc_fn
+
+    def other(ct):
+        return ct[0, 0]
+
+    method.switch(other)
+    assert method.acc is other
