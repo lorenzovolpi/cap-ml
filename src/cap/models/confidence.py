@@ -1,6 +1,5 @@
 import itertools as IT
 from abc import ABC, abstractmethod
-from copy import deepcopy
 from numbers import Number
 from typing import Callable, Literal, Self, override
 
@@ -15,7 +14,6 @@ from quapy.functional import prevalence_from_labels
 from quapy.method.aggregative import EMQ, AggregativeQuantifier
 from quapy.method.confidence import AggregativeBootstrap
 from quapy.protocol import UPP
-from sklearn.base import BaseEstimator
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
@@ -247,7 +245,6 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
         num_samples: int = 1000,
         sample_size: int = None,
         distance: Literal["l1", "hellinger", "jensen-shannon"] = "l1",
-        reuse_h: BaseEstimator | None = None,
         predict_train_prev=True,
         random_state=None,
     ):
@@ -257,7 +254,6 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
         self.num_samples = num_samples
         self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
         self.error = self.__get_error(distance)
-        self.reuse_h = reuse_h
         self.predict_train_prev = predict_train_prev
         self.random_state = qp.environ["_R_SEED"] if random_state is None else random_state
         if self.sample_size is None:
@@ -300,12 +296,12 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
         sigma_y = [V2.y[idx] for idx in sigma_indices]
         sigma_post = [V2_post[idx, :] for idx in sigma_indices]
 
-        if self.reuse_h is not None:
-            self.q = deepcopy(self.q)
-            self.q.set_params(classifier=self.reuse_h, fit_classifier=False, val_split=V1.Xy)
-            self.q.fit(*val.Xy)
-        else:
-            self.q.fit(*val.Xy)
+        # the surrogate quantifier (its classifier and its aggregation) is trained on V1 only,
+        # so that it never sees the bag-sampling subset V2
+        self.q.fit(*V1.Xy)
+        # surrogate posteriors on V2, computed once: the prevalence of every candidate bag and of the
+        # target sample are estimated by the same surrogate pipeline (classify, then aggregate)
+        V2_qpost = self.q.classify(V2.X)
 
         # precompute classifier predictions on samples
         self.prot_posteriors = [self.__check_posteriors(val.n_classes, P_i) for P_i in sigma_post]
@@ -315,7 +311,7 @@ class PrediQuant(CAPDirect, DirectCAPWithConfidence):
         ]
 
         # precompute prevalence predictions on samples
-        self.sigma_pred_prevs = [self.q.aggregate(P_i) for P_i in sigma_post]
+        self.sigma_pred_prevs = [self.q.aggregate(V2_qpost[idx]) for idx in sigma_indices]
         self.sigma_true_prevs = [prevalence_from_labels(y_i, val.classes_) for y_i in sigma_y]
 
         return self

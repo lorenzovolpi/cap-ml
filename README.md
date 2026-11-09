@@ -1,8 +1,17 @@
 # cap-ml
 
-version: `0.1.1.8`
+version: `0.1.1.9`
 
 ## Changelog
+
+### v0.1.1.9
+
+- Fixed `PrediQuant` (SQS-S), so that it follows the method as defined: `V` is split 50/50 (stratified) into `V1` and `V2`; the quantifier is trained on `V1` and the candidate bags are drawn from `V2`. Two problems are fixed:
+  - the quantifier was trained on all of `V`, so the quantifier-training subset and the bag-sampling subset overlapped; it is now trained on `V1` only;
+  - the prevalences of the candidate bags and of the target sample were estimated by two different estimators: the bags by aggregating the posteriors of the classifier `h` under evaluation with the quantifier's aggregation (fitted on the posteriors of the quantifier's own classifier), the target with the quantifier's full pipeline (its own classifier, then its aggregation). The nearest-bag selection therefore compared estimates from different spaces. Both are now estimated by the quantifier's own pipeline: its classifier's posteriors on `V2` are computed once in `fit` and aggregated for every candidate bag, as the target is in `predict`; `h` is used only to build the contingency tables of the bags.
+- Removed the `reuse_h` parameter of `PrediQuant`.
+- Results of `PrediQuant` obtained with earlier versions are not comparable with the new ones.
+- Added `tests/test_prediquant.py`.
 
 ### v0.1.1.8
 
