@@ -1,8 +1,17 @@
 # cap-ml
 
-version: `0.1.1.12`
+version: `0.1.1.13`
 
 ## Changelog
+
+### v0.1.1.13
+
+- `RQBS` (SQS-H) has a new parameter `bootstrap` (default `True`), which selects how the prevalences of its `num_samples` validation bags are chosen:
+  - `bootstrap=True`: the prevalence of the target is estimated on `num_samples` bootstrap resamples of the target, and one bag is drawn at each estimate (the variant implemented so far; SQS-H with a bootstrap of the prevalence);
+  - `bootstrap=False`: the prevalence of the target is estimated once, on the whole target, and all the bags are drawn at that estimate (SQS-H as defined in the paper).
+- With `bootstrap=True` the draws are those of v0.1.1.11, so results of `RQBS` obtained with v0.1.1.11 and v0.1.1.12 are unchanged. Both variants draw from NumPy's global state seeded by `random_state` at each call (as in v0.1.1.11).
+- No other method changes.
+- Added tests on both variants to `tests/test_rqbs.py` (the bags of `bootstrap=False` are all at the estimate on the whole target; the range of `bootstrap=True` equals the one of v0.1.1.11, rebuilt step by step).
 
 ### v0.1.1.12
 
