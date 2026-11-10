@@ -1,6 +1,8 @@
-"""Protocol tests for PrediQuant (SQS-S): split of V and consistency of the prevalence estimates."""
+"""Protocol tests for PrediQuant (SQS-S): split of V (also with rho), consistency of the prevalence estimates, stored
+quantities after a prediction."""
 
 import numpy as np
+import pytest
 from quapy.data import LabelledCollection
 from quapy.method.aggregative import PACC
 from quapy.protocol import UPP
@@ -33,7 +35,7 @@ class RecordingPACC(PACC):
         return super().classify(X)
 
 
-def _fitted_method():
+def _fitted_method(rho=None, seed=0):
     X_tr, y_tr = _data(300, seed=0)
     h = LogisticRegression().fit(X_tr, y_tr)
     X_val, y_val = _data(400, seed=1)
@@ -48,7 +50,8 @@ def _fitted_method():
         alpha=0.5,
         num_samples=20,
         sample_size=SAMPLE_SIZE,
-        random_state=0,
+        random_state=seed,
+        rho=rho,
     )
     method.fit(val, h.predict_proba(X_val))
     return method, val, h
@@ -112,3 +115,86 @@ def test_acc_alias_and_switch():
 
     method.switch(other)
     assert method.acc is other
+
+
+RHOS = [0.1, 0.3, 0.5, 0.7, 0.9]
+
+
+def test_default_split_is_train_test_split():
+    method, val, _ = _fitted_method()
+    Vq_idx, Vb_idx = train_test_split(np.arange(len(val)), test_size=0.5, random_state=0, stratify=val.y)
+    assert np.array_equal(method.Vq_idx, Vq_idx)
+    assert np.array_equal(method.Vb_idx, Vb_idx)
+
+
+@pytest.mark.parametrize("rho", RHOS)
+def test_rho_split_partitions_v_with_the_right_class_counts(rho):
+    method, val, _ = _fitted_method(rho=rho)
+    Vq, Vb = set(method.Vq_idx.tolist()), set(method.Vb_idx.tolist())
+    assert Vq.isdisjoint(Vb)
+    assert Vq | Vb == set(range(len(val)))
+    for c in val.classes_:
+        n_c = int((val.y == c).sum())
+        assert int((val.y[method.Vq_idx] == c).sum()) == int(np.floor(rho * n_c + 0.5))
+
+
+def test_rho_splits_are_nested():
+    vqs = [set(_fitted_method(rho=rho)[0].Vq_idx.tolist()) for rho in RHOS]
+    for small, large in zip(vqs[:-1], vqs[1:]):
+        assert small < large
+
+
+def test_rho_split_depends_on_the_seed():
+    a = _fitted_method(rho=0.3, seed=0)[0].Vq_idx
+    b = _fitted_method(rho=0.3, seed=1)[0].Vq_idx
+    assert not np.array_equal(a, b)
+
+
+@pytest.mark.parametrize("rho", [0.0, 1.0, -0.2, 1.5])
+def test_rho_out_of_range_is_rejected(rho):
+    with pytest.raises(ValueError):
+        PrediQuant(lambda ct: 0.0, PACC(LogisticRegression()), sample_size=SAMPLE_SIZE, rho=rho)
+
+
+def test_rho_that_empties_a_class_is_rejected():
+    X_val, y_val = _data(400, seed=1)
+    y_val[:] = 0
+    y_val[:2] = 1
+    y_val[2:4] = 2
+    val = LabelledCollection(X_val, y_val, classes=np.arange(N_CLASSES))
+    method = PrediQuant(lambda ct: 0.0, PACC(LogisticRegression()), sample_size=SAMPLE_SIZE, random_state=0, rho=0.1)
+    with pytest.raises(ValueError):
+        method.fit(val, np.full((len(val), N_CLASSES), 1.0 / N_CLASSES))
+
+
+@pytest.mark.parametrize("rho", RHOS)
+def test_rho_quantifier_never_sees_vb_and_bags_share_the_estimator(rho):
+    method, val, _ = _fitted_method(rho=rho)
+    assert _rows(method.q.fit_X) == _rows(val.X[method.Vq_idx])
+    assert _rows(method.q.classified_X[0]) == _rows(val.X[method.Vb_idx])
+    Vb_X = val.X[method.Vb_idx]
+    for idx, bag_prev in zip(method.sigma_indices[:5], method.sigma_pred_prevs[:5]):
+        assert np.allclose(method._predict_test_prior(Vb_X[idx]), bag_prev)
+
+
+def test_stored_prevalence_and_selected_bags():
+    method, _, h = _fitted_method(rho=0.3)
+    X_test, _ = _data(SAMPLE_SIZE, seed=4)
+    cts = method.predict_ct_range(X_test, h.predict_proba(X_test))
+    assert np.allclose(method.last_test_prev, method.q.predict(X_test))
+    assert len(method.last_selected_bags) == method.num_samples
+    assert np.allclose(cts, np.asarray(method.sigma_ct)[method.last_selected_bags])
+
+
+def test_class_support_on_known_bags():
+    method, _, _ = _fitted_method()
+    Vb_y = np.array([0, 0, 1, 1, 2, 2, 2, 2])
+    method.Vb_y = Vb_y
+    method.classes_ = np.arange(N_CLASSES)
+    method.sigma_indices = [np.array([0, 2, 4]), np.array([0, 0, 5]), np.array([1, 3, 6])]
+    # bags 0 and 1: class 0 -> {0}, class 1 -> {2}, class 2 -> {4, 5}
+    assert np.allclose(method.class_support([0, 1]), [1 / 2, 1 / 2, 2 / 4])
+    # all bags: classes 0 and 1 fully covered, class 2 -> {4, 5, 6}
+    assert np.allclose(method.class_support([0, 1, 2]), [1.0, 1.0, 3 / 4])
+    method.last_selected_bags = np.array([2])
+    assert np.allclose(method.class_support(), [1 / 2, 1 / 2, 1 / 4])

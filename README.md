@@ -1,8 +1,15 @@
 # cap-ml
 
-version: `0.1.1.11`
+version: `0.1.1.12`
 
 ## Changelog
+
+### v0.1.1.12
+
+- `PrediQuant` (SQS-S) has a new parameter `rho` (default `None`), the share of `V` that trains the quantifier (`Vq`); the rest (`Vb`) is used to draw the candidate bags. With `rho=None` the split is unchanged (`train_test_split(test_size=0.5, stratify=y)` seeded by `random_state`). With `rho` in `(0, 1)`, the validation indices of each class are permuted once, seeded by `random_state`, and `Vq` takes the first `round(rho * |V_j|)` of each class (half rounded up), so that, for the same seed, the splits at different values of `rho` are nested. A `rho` outside `(0, 1)`, or one that leaves a class empty in `Vq` or in `Vb`, raises `ValueError`.
+- After `fit`, `PrediQuant` keeps the indices in `V` of the split (`Vq_idx`, `Vb_idx`), the positions in `Vb` of the instances of each candidate bag (`sigma_indices`) and the labels of `Vb` (`Vb_y`). After each `predict_ct_range` call (and so after `predict_ct`, `predict_range`, `predict`), it keeps the estimated prevalence of the target (`last_test_prev`) and the positions of the selected candidate bags (`last_selected_bags`). New method `class_support(selected_bags=None)`: for each class, the share of the instances of that class in `Vb` that appear in at least one selected bag (by default, the bags of the last prediction).
+- Results of `PrediQuant` with `rho=None` are unchanged. No other method changes.
+- Added tests on the split with `rho`, the stored quantities and `class_support` in `tests/test_prediquant.py`.
 
 ### v0.1.1.11
 

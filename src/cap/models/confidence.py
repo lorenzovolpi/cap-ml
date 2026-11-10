@@ -269,6 +269,18 @@ class PrediQuant(CAPContingencyTable, CTCAPWithConfidence):
     these bags (normalised, true classes on rows), ``predict_ct`` their mean. ``predict_range`` returns the accuracy of
     each of these tables, and ``predict`` the accuracy of their mean table; since all the bags have the same size, for
     the vanilla accuracy this equals the mean of ``predict_range``.
+
+    ``V`` is split into ``V1`` (``Vq``), which trains the quantifier, and ``V2`` (``Vb``), from which the candidate bags
+    are drawn. With ``rho=None`` the split is ``train_test_split(test_size=0.5, stratify=y)`` seeded by
+    ``random_state``. With ``rho`` in ``(0, 1)``, the validation indices of each class are permuted once (seeded by
+    ``random_state``, classes in the order of ``val.classes_``) and ``Vq`` takes the first ``round(rho * |V_j|)``
+    of each class (half rounded up), so that, for the same seed, ``Vq`` grows with ``rho`` and the splits at two
+    values of ``rho`` are nested.
+
+    After each call to ``predict_ct_range`` (and so to ``predict_ct``, ``predict_range``, ``predict``), the estimated
+    prevalence of the target is kept in ``last_test_prev`` and the positions of the selected candidate bags in
+    ``last_selected_bags``; ``class_support`` gives, for each class, the share of the instances of that class in
+    ``Vb`` that appear in at least one selected bag.
     """
 
     DISTANCES = ["l1", "hellinger", "jensen-shannon"]
@@ -283,6 +295,7 @@ class PrediQuant(CAPContingencyTable, CTCAPWithConfidence):
         distance: Literal["l1", "hellinger", "jensen-shannon"] = "l1",
         predict_train_prev=True,
         random_state=None,
+        rho: float = None,
     ):
         CAPContingencyTable.__init__(self, acc)
         self.q = quantifier
@@ -292,6 +305,9 @@ class PrediQuant(CAPContingencyTable, CTCAPWithConfidence):
         self.error = self.__get_error(distance)
         self.predict_train_prev = predict_train_prev
         self.random_state = qp.environ["_R_SEED"] if random_state is None else random_state
+        if rho is not None and not 0.0 < rho < 1.0:
+            raise ValueError(f"rho must be None or in (0, 1), got {rho}")
+        self.rho = rho
         if self.sample_size is None:
             raise ValueError(
                 'sample_size cannot be None; it must be specified directly or by setting qp.environ["SAMPLE_SIZE"]'
@@ -315,10 +331,27 @@ class PrediQuant(CAPContingencyTable, CTCAPWithConfidence):
 
         return P
 
+    def _split(self, val: LabelledCollection) -> tuple[np.ndarray, np.ndarray]:
+        """Indices in ``val`` of ``Vq`` (trains the quantifier) and ``Vb`` (bag sampling)."""
+        if self.rho is None:
+            return train_test_split(np.arange(len(val)), test_size=0.5, random_state=self.random_state, stratify=val.y)
+
+        rng = np.random.RandomState(self.random_state)
+        Vq_idx, Vb_idx = [], []
+        for c in val.classes_:
+            idx_c = rng.permutation(np.flatnonzero(val.y == c))
+            n_q = int(np.floor(self.rho * len(idx_c) + 0.5))
+            if n_q == 0 or n_q == len(idx_c):
+                raise ValueError(
+                    f"rho={self.rho} leaves class {c} ({len(idx_c)} validation instances) empty in Vq or in Vb"
+                )
+            Vq_idx.append(idx_c[:n_q])
+            Vb_idx.append(idx_c[n_q:])
+        return np.sort(np.concatenate(Vq_idx)), np.sort(np.concatenate(Vb_idx))
+
     def fit(self, val: LabelledCollection, posteriors):
-        V1_idx, V2_idx = train_test_split(
-            np.arange(len(val)), test_size=0.5, random_state=self.random_state, stratify=val.y
-        )
+        V1_idx, V2_idx = self._split(val)
+        self.Vq_idx, self.Vb_idx = V1_idx, V2_idx
         V1, V2 = val.sampling_from_index(V1_idx), val.sampling_from_index(V2_idx)
         V2_post = posteriors[V2_idx, :]
         sigma_idx = UPP(
@@ -329,6 +362,10 @@ class PrediQuant(CAPContingencyTable, CTCAPWithConfidence):
             return_type="index",
         )
         sigma_indices = list(sigma_idx())
+        # positions in Vb of the instances of each candidate bag, and the labels of Vb (for class_support)
+        self.sigma_indices = sigma_indices
+        self.Vb_y = V2.y
+        self.classes_ = val.classes_
         sigma_y = [V2.y[idx] for idx in sigma_indices]
         sigma_post = [V2_post[idx, :] for idx in sigma_indices]
 
@@ -381,7 +418,22 @@ class PrediQuant(CAPContingencyTable, CTCAPWithConfidence):
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         test_prior = self._predict_test_prior(X)
         closest_idx = self._predict_closest_idx(test_prior)[: self.num_samples]
+        self.last_test_prev = np.asarray(test_prior)
+        self.last_selected_bags = closest_idx
         return np.asarray(self.sigma_ct)[closest_idx]
+
+    def class_support(self, selected_bags: np.ndarray = None) -> np.ndarray:
+        """
+        For each class, the number of distinct instances of that class in ``Vb`` that appear in at least one of the
+        selected bags, divided by the number of instances of that class in ``Vb``. ``selected_bags`` are positions in
+        the list of candidate bags; by default, the bags selected by the last call to ``predict_ct_range``.
+        """
+        if selected_bags is None:
+            selected_bags = self.last_selected_bags
+        used = np.zeros(len(self.Vb_y), dtype=bool)
+        for b in selected_bags:
+            used[self.sigma_indices[b]] = True
+        return np.array([used[self.Vb_y == c].sum() / (self.Vb_y == c).sum() for c in self.classes_])
 
     def predict_ct(self, X: np.ndarray, posteriors: np.ndarray) -> np.ndarray:
         return self.predict_ct_range(X, posteriors).mean(axis=0)
