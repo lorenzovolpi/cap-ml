@@ -1,8 +1,15 @@
 # cap-ml
 
-version: `0.1.1.13`
+version: `0.1.1.14`
 
 ## Changelog
+
+### v0.1.1.14
+
+- `fetch_UCIMulticlassDataset` has a new parameter `min_class_support` (default `100`), passed to QuaPy's `fetch_UCIMulticlassDataset`: the classes with fewer instances than `min_class_support` in the full collection are dropped before the split, and the remaining classes are relabelled `0, …, K-1`. QuaPy also accepts a float, read as a share of the collection.
+- With the default the data are unchanged (`100` was already QuaPy's default), so results obtained with earlier versions are unchanged.
+- Why: on large collections QuaPy caps the training part at `max_train_instances=25000`, and `split_train` halves it into `T` and `V`, so a class kept by the threshold of `100` can have very few instances in `V` (on `poker_hand`, class 7 has 236 instances out of 1,024,985 and about 3 in `V`). A caller can now pass a larger threshold for such datasets.
+- No other function changes.
 
 ### v0.1.1.13
 

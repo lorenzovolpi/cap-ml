@@ -251,8 +251,8 @@ def fetch_UCIBinaryDataset(dataset_name, data_home=env["QUAPY_DATA"], train_val_
     return T, V, U
 
 
-def fetch_UCIMulticlassDataset(dataset_name, data_home=env["QUAPY_DATA"], train_val_split=0.5):
-    train, U = UCIMulti(dataset_name, data_home=data_home).train_test
+def fetch_UCIMulticlassDataset(dataset_name, data_home=env["QUAPY_DATA"], train_val_split=0.5, min_class_support=100):
+    train, U = UCIMulti(dataset_name, data_home=data_home, min_class_support=min_class_support).train_test
     T, V = split_train(train, train_val_split)
     return T, V, U
 
