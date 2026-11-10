@@ -1,8 +1,18 @@
 # cap-ml
 
-version: `0.1.1.10`
+version: `0.1.1.11`
 
 ## Changelog
+
+### v0.1.1.11
+
+- `RQBS` (SQS-H, bootstrap variant) is now reproducible from `random_state` (default `qp.environ["_R_SEED"]`). Two sources of randomness ignored the seed:
+  - the bootstrap of the target prevalence was computed by QuaPy's `AggregativeBootstrap.predict_conf`, which draws its resamples in joblib workers (`Parallel(n_jobs=-1)`) from their own global NumPy state, and received the constructor argument `random_state` (`None` by default) instead of the resolved seed;
+  - the bags were drawn from `V` with `sampling_index` without a `random_state`, i.e. from NumPy's global state.
+- `RQBS` no longer wraps its quantifier in `AggregativeBootstrap`: `fit` trains the quantifier on `V` (as `AggregativeBootstrap` did with one training sample), and `predict_ct_range` draws the `num_samples` bootstrap resamples of the target's classifier outputs, aggregates each of them, smooths the estimates and draws one bag per estimate, sequentially, from NumPy's global state seeded by `random_state` at each call and restored afterwards (new helper `_temp_np_seed`, which, unlike `quapy.util.temp_seed`, does not write `qp.environ["_R_SEED"]`). The range of a target therefore depends only on the target, on the fitted quantifier and on `random_state`, also inside joblib workers, and the global NumPy state is left untouched. `self.q` is now the quantifier itself.
+- The method is unchanged in distribution (the same bootstrap of the target and the same bag sampling), but results of `RQBS` obtained with earlier versions cannot be reproduced draw by draw; they agree with the new ones up to the run-to-run variation. The randomness of the quantifier itself (e.g. an unseeded `MLPClassifier`) is up to the caller.
+- No other method changes.
+- Added `tests/test_rqbs.py`.
 
 ### v0.1.1.10
 

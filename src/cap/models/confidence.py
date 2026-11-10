@@ -1,5 +1,6 @@
 import itertools as IT
 from abc import ABC, abstractmethod
+from contextlib import contextmanager
 from numbers import Number
 from typing import Callable, Literal, Self, override
 
@@ -12,7 +13,6 @@ import quapy as qp
 from quapy.data import LabelledCollection
 from quapy.functional import prevalence_from_labels
 from quapy.method.aggregative import EMQ, AggregativeQuantifier
-from quapy.method.confidence import AggregativeBootstrap
 from quapy.protocol import UPP
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -184,10 +184,31 @@ class DirectCAPWithConfidence(CAPWithConfidence):
         return self.ci_from_accs(accs)
 
 
+@contextmanager
+def _temp_np_seed(random_state: int):
+    """Seed NumPy's global state within the context and restore it afterwards.
+
+    Unlike ``quapy.util.temp_seed``, it does not write ``random_state`` into ``qp.environ["_R_SEED"]``.
+    """
+    state = np.random.get_state()
+    np.random.seed(random_state)
+    try:
+        yield
+    finally:
+        np.random.set_state(state)
+
+
 class RQBS(CAPContingencyTable, CTCAPWithConfidence):
     """
     Reverse Quantification-Based Sampling
     a.k.a. PabloCAP
+
+    The quantifier is trained on ``V``. For a target sample, its prevalence is estimated on ``num_samples`` bootstrap
+    resamples of the target (the aggregation applied to the classifier outputs of each resample, as QuaPy's
+    ``AggregativeBootstrap`` with one training sample); for each estimate, a bag of ``sample_size`` instances is drawn
+    from ``V`` at that prevalence, and ``predict_ct_range`` returns the contingency tables of the bags (normalised, true
+    classes on rows). The resamples and the bags are drawn from the NumPy state seeded by ``random_state`` at each
+    call, so the range of a target depends only on the target, on the fitted quantifier and on ``random_state``.
     """
 
     def __init__(
@@ -199,9 +220,7 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
         random_state=None,
     ):
         CAPContingencyTable.__init__(self, acc)
-        self.q = AggregativeBootstrap(
-            quantifier, n_train_samples=1, n_test_samples=num_samples, random_state=random_state
-        )
+        self.q = quantifier
         self.num_samples = num_samples
         self.sample_size = qp.environ["SAMPLE_SIZE"] if sample_size is None else sample_size
         self.random_state = qp.environ["_R_SEED"] if random_state is None else random_state
@@ -216,10 +235,17 @@ class RQBS(CAPContingencyTable, CTCAPWithConfidence):
         return self
 
     def predict_ct_range(self, X: np.ndarray, posteriors: np.ndarray):
-        _, qhat_cr = self.q.predict_conf(X)
-        # smooth prevalences to make them sum up to 1
-        qhat_range = [cap.models.utils.smooth(prev_i) for prev_i in qhat_cr.samples]
-        val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for q_hat in qhat_range]
+        predictions = self.q.classify(X)
+        n = len(predictions)
+        # the bootstrap is drawn here, sequentially, and not with AggregativeBootstrap.predict_conf, whose resamples are
+        # drawn in joblib workers that do not see its seed
+        with _temp_np_seed(self.random_state):
+            # smooth prevalences to make them sum up to 1
+            qhat_range = [
+                cap.models.utils.smooth(self.q.aggregate(predictions[np.random.randint(0, n, n)]))
+                for _ in range(self.num_samples)
+            ]
+            val_samples_idx = [self.val_post.sampling_index(self.sample_size, *q_hat) for q_hat in qhat_range]
 
         val_sample_cts = []
         for idx in val_samples_idx:
